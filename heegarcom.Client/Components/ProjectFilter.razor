@@ -1,0 +1,134 @@
+@rendermode InteractiveWebAssembly
+
+<div class="mx-auto max-w-4xl px-6 pb-24">
+    <div class="flex flex-wrap gap-2">
+        <button @onclick="@(() => Select(null))" class="@TagClass(null)">All</button>
+        @foreach (var tag in AllTags)
+        {
+            <button @onclick="@(() => Select(tag))" class="@TagClass(tag)">@tag</button>
+        }
+    </div>
+
+    <div class="mt-10 space-y-6">
+        @foreach (var p in Filtered)
+        {
+            <article class="rounded-lg border border-line p-6 transition-colors hover:border-orange">
+                <div class="flex items-center justify-between gap-3">
+                    <span class="text-xs font-semibold uppercase tracking-widest @(p.Kind == "Demo" ? "text-orange" : "text-muted")">
+                        @p.Kind
+                    </span>
+                    @if (p.Kind == "Demo")
+                    {
+                        @if (p.Url is null)
+                        {
+                            <span class="rounded-full bg-orange/10 px-2.5 py-0.5 text-xs font-medium text-orange">Coming soon</span>
+                        }
+                        else
+                        {
+                            <a href="@p.Url" class="text-sm font-medium text-orange hover:underline">Open demo &rarr;</a>
+                        }
+                    }
+                </div>
+
+                <h3 class="mt-2 text-xl font-semibold text-navy">@p.Title</h3>
+                <p class="mt-1 text-muted">@p.Summary</p>
+
+                @if (p.Kind == "Case Study")
+                {
+                    <dl class="mt-4 space-y-3 text-sm leading-relaxed">
+                        <div>
+                            <dt class="font-semibold text-ink">Problem</dt>
+                            <dd class="text-muted">@p.Problem</dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold text-ink">What I built</dt>
+                            <dd class="text-muted">@p.Built</dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold text-ink">Outcome</dt>
+                            <dd class="text-muted">@p.Outcome</dd>
+                        </div>
+                    </dl>
+                }
+
+                <div class="mt-4 flex flex-wrap gap-2">
+                    @foreach (var tag in p.Tags)
+                    {
+                        <span class="rounded-full border border-line px-2.5 py-1 text-xs text-muted">@tag</span>
+                    }
+                </div>
+            </article>
+        }
+    </div>
+</div>
+
+@code {
+    private string? selectedTag;
+
+    private void Select(string? tag) => selectedTag = tag;
+
+    private IEnumerable<ProjectItem> Filtered =>
+        selectedTag is null ? Items : Items.Where(p => p.Tags.Contains(selectedTag));
+
+    private IEnumerable<string> AllTags =>
+        Items.SelectMany(p => p.Tags).Distinct().OrderBy(t => t);
+
+    private string TagClass(string? tag) =>
+        (selectedTag == tag
+            ? "bg-orange text-white "
+            : "border border-line text-ink hover:border-orange hover:text-orange ")
+        + "rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors";
+
+    private record ProjectItem(
+        string Title,
+        string Summary,
+        string[] Tags,
+        string Kind,
+        string? Problem = null,
+        string? Built = null,
+        string? Outcome = null,
+        string? Url = null);
+
+    // Case-study text is scaffolded — replace the [bracketed] prompts with real detail.
+    private static readonly ProjectItem[] Items =
+    {
+        new(
+            "AI Integration",
+            "Agentic AI workflows built into an EMR for automated document generation.",
+            new[] { "AI", "C# / .NET", "Healthcare", "Automation" },
+            "Case Study",
+            Problem: "[Fill in: the clinical/documentation burden this addressed.]",
+            Built: "Agentic AI workflows that generate EMR documents. [Fill in: models, orchestration, guardrails, review steps.]",
+            Outcome: "[Fill in: documents automated, time saved, accuracy/adoption.]"),
+        new(
+            "eRx Integration",
+            "Electronic prescribing integration connecting the EMR to an external eRx network.",
+            new[] { "Integration", "eRx", "C# / .NET", "Healthcare", "API" },
+            "Case Study",
+            Problem: "[Fill in: the prescribing / interoperability need.]",
+            Built: "[Fill in: endpoints, message formats, error handling, compliance.]",
+            Outcome: "[Fill in: throughput, reliability, providers served.]"),
+        new(
+            "DB Updater",
+            "A tool that applies versioned database changes safely across environments.",
+            new[] { "SQL Server", "C# / .NET", "Tooling", "DevOps" },
+            "Case Study",
+            Problem: "[Fill in: schema drift / risky manual deployments.]",
+            Built: "[Fill in: how updates are versioned, validated, and applied.]",
+            Outcome: "[Fill in: deployment safety, time saved, environments covered.]"),
+        new(
+            "DB Merge",
+            "A process for merging data across databases while preserving integrity.",
+            new[] { "SQL Server", "Data Migration", "C# / .NET", "Tooling" },
+            "Case Study",
+            Problem: "[Fill in: why databases needed merging — practices, tenants, acquisitions.]",
+            Built: "[Fill in: matching, de-duplication, referential integrity, rollback.]",
+            Outcome: "[Fill in: records merged, integrity results, downtime.]"),
+        new(
+            "ICD-10 ↔ SNOMED Mapper",
+            "Search a diagnosis and see its ICD-10 and SNOMED CT cross-mappings — running live on this site.",
+            new[] { "SQLite", "Blazor WASM", "Healthcare", "Data" },
+            "Demo",
+            Url: null),
+    };
+}

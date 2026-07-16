@@ -1,0 +1,26 @@
+@inherits LayoutComponentBase
+
+<div class="flex min-h-screen flex-col">
+    <NavMenu />
+
+    <main class="flex-1">
+        @Body
+    </main>
+
+    <footer class="border-t border-line">
+        <div class="mx-auto flex max-w-3xl flex-col gap-3 px-6 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+            <span>© 2026 Adam Heeg</span>
+            <div class="flex gap-5">
+                <a href="https://www.linkedin.com/in/heegar" target="_blank" rel="noopener" class="transition-colors hover:text-orange">LinkedIn</a>
+                <a href="https://github.com/AdamHeeg" target="_blank" rel="noopener" class="transition-colors hover:text-orange">GitHub</a>
+                <a href="mailto:heegar@protonmail.com" class="transition-colors hover:text-orange">Email</a>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>

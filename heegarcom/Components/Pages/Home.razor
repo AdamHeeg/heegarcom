@@ -1,0 +1,115 @@
+@page "/"
+
+<PageTitle>Adam Heeg — Software Developer</PageTitle>
+
+<!-- Hero -->
+<section class="mx-auto max-w-4xl px-6 pt-20 pb-16 sm:pt-28">
+    <div class="flex items-center gap-2.5 text-sm font-medium text-muted">
+        <span class="relative flex h-2.5 w-2.5">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange opacity-75"></span>
+            <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-orange"></span>
+        </span>
+        Currently building healthcare software at Optivate Health
+    </div>
+
+    <h1 class="mt-6 text-6xl font-bold tracking-tight text-navy sm:text-7xl">
+        Adam Heeg
+    </h1>
+
+    <p class="mt-4 flex flex-wrap items-center gap-x-3 text-lg font-medium text-ink">
+        <span>Developer</span>
+        <span class="text-orange">·</span>
+        <span>Educator</span>
+        <span class="text-orange">·</span>
+        <span>Coach</span>
+    </p>
+
+    <p class="mt-8 max-w-2xl text-2xl leading-snug text-ink">
+        I build healthcare software that
+        <span class="rounded bg-orange/10 px-1.5 font-semibold text-orange">has to work</span>
+        — the EMR systems clinicians rely on every day, kept alive and evolving
+        across a decade of change.
+    </p>
+
+    <div class="mt-6 max-w-2xl space-y-4 text-lg leading-relaxed text-muted">
+        <p>
+            15+ years across healthcare and financial services, centered on C#/.NET
+            backend development, SQL Server database design, and third-party API
+            integrations — with the long-term system ownership that comes from living
+            inside a production codebase through years of change.
+        </p>
+        <p>
+            Outside of code, I coach competitive swimming — including a state champion —
+            and spent years in the classroom before that.
+        </p>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="border-t border-line">
+    <div class="mx-auto grid max-w-4xl grid-cols-1 gap-8 px-6 py-14 sm:grid-cols-3">
+        <div>
+            <div class="text-4xl font-bold text-orange">15+</div>
+            <div class="mt-1 text-sm text-muted">Years building enterprise software</div>
+        </div>
+        <div>
+            <div class="text-4xl font-bold text-orange">10+</div>
+            <div class="mt-1 text-sm text-muted">Years evolving one EMR platform</div>
+        </div>
+        <div>
+            <div class="text-4xl font-bold text-orange">.NET 2 &rarr; 10</div>
+            <div class="mt-1 text-sm text-muted">Modernized across a decade</div>
+        </div>
+    </div>
+</section>
+
+<!-- What I do -->
+<section class="border-t border-line">
+    <div class="mx-auto max-w-4xl px-6 py-16">
+        <h2 class="text-sm font-semibold uppercase tracking-widest text-orange">What I do</h2>
+        <div class="mt-8 grid gap-6 sm:grid-cols-3">
+            <div class="rounded-lg border border-line p-6 transition-colors hover:border-orange">
+                <h3 class="font-semibold text-navy">Backend .NET</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">
+                    C#/.NET services, APIs, and integrations built to live in production for years.
+                </p>
+            </div>
+            <div class="rounded-lg border border-line p-6 transition-colors hover:border-orange">
+                <h3 class="font-semibold text-navy">Databases &amp; SQL Server</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">
+                    Schemas, complex T-SQL, and careful data fixes that keep clinical data trustworthy.
+                </p>
+            </div>
+            <div class="rounded-lg border border-line p-6 transition-colors hover:border-orange">
+                <h3 class="font-semibold text-navy">Modernization &amp; AI</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">
+                    Reworking legacy patterns into maintainable ones, and building agentic AI
+                    workflows for EMR document generation.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stack & tools -->
+<section class="border-t border-line">
+    <div class="mx-auto max-w-4xl px-6 py-16">
+        <h2 class="text-sm font-semibold uppercase tracking-widest text-orange">Stack &amp; tools</h2>
+        <div class="mt-6 flex flex-wrap gap-2.5">
+            @foreach (var tech in Stack)
+            {
+                <span class="rounded-full border border-line px-3.5 py-1.5 text-sm text-ink transition-colors hover:border-orange hover:text-orange">
+                    @tech
+                </span>
+            }
+        </div>
+    </div>
+</section>
+
+@code {
+    private static readonly string[] Stack =
+    {
+        "C#", ".NET", "ASP.NET", "SQL Server", "T-SQL", "Entity Framework",
+        "JavaScript", "jQuery", "Git", "Visual Studio", "GitHub Copilot", "Claude"
+    };
+}

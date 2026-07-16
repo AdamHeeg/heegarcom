@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\heegarcom.Client\heegarcom.Client.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.5" />
+  </ItemGroup>
+
+  <!-- The pinned Tailwind CLI is git-ignored (108 MB > GitHub's 100 MB limit);
+       download it on a fresh checkout so the build is self-contained. Windows-only. -->
+  <Target Name="EnsureTailwindCli" BeforeTargets="BuildTailwindCss"
+          Condition="!Exists('$(MSBuildProjectDirectory)\..\tools\tailwindcss.exe')">
+    <MakeDir Directories="$(MSBuildProjectDirectory)\..\tools" />
+    <Exec Command="curl -sL -o &quot;$(MSBuildProjectDirectory)\..\tools\tailwindcss.exe&quot; https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.3/tailwindcss-windows-x64.exe" />
+  </Target>
+
+  <Target Name="BuildTailwindCss" BeforeTargets="Compile">
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\tools\tailwindcss.exe&quot; --input &quot;$(MSBuildProjectDirectory)\Styles\app.css&quot; --output &quot;$(MSBuildProjectDirectory)\wwwroot\css\app.css&quot; --minify" />
+  </Target>
+
+</Project>

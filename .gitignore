@@ -1,0 +1,28 @@
+## .NET build output
+[Bb]in/
+[Oo]bj/
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userprefs
+
+## Publish output
+publish/
+*.pubxml.user
+
+## Tailwind standalone CLI — 108 MB, exceeds GitHub's 100 MB limit.
+## Restored automatically on build (see EnsureTailwindCli target in heegarcom.csproj).
+tools/tailwindcss.exe
+
+## Generated CSS — compiled from Styles/app.css by the Tailwind CLI on build.
+heegarcom/wwwroot/css/app.css
+
+## Local SQLite databases (added in the mapper step)
+*.db-shm
+*.db-wal
+
+## OS
+Thumbs.db
+.DS_Store
