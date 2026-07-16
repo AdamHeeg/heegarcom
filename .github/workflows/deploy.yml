@@ -1,0 +1,54 @@
+name: Deploy to SmarterASP.NET
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: nuget-
+
+      # The pinned Tailwind CLI is git-ignored (108 MB); cache it so it isn't
+      # re-downloaded on every run. On a cache miss the build downloads it.
+      - name: Cache Tailwind CLI
+        uses: actions/cache@v4
+        with:
+          path: tools/tailwindcss.exe
+          key: tailwind-v4.3.3-windows-x64
+
+      - name: Ensure Web Deploy is available
+        run: choco install webdeploy -y --no-progress
+
+      # Builds the server + WASM client, runs Tailwind, then deploys via Web Deploy.
+      # EnableMSDeployAppOffline drops app_offline.htm so locked DLLs release cleanly.
+      - name: Build and deploy (Web Deploy)
+        run: >
+          dotnet publish heegarcom/heegarcom.csproj -c Release
+          /p:DeployOnBuild=true
+          /p:WebPublishMethod=MSDeploy
+          /p:MSDeployServiceURL="${{ secrets.MSDEPLOY_URL }}"
+          /p:MSDeploySite="${{ secrets.MSDEPLOY_SITE }}"
+          /p:UserName="${{ secrets.MSDEPLOY_USERNAME }}"
+          /p:Password="${{ secrets.MSDEPLOY_PASSWORD }}"
+          /p:AllowUntrustedCertificate=true
+          /p:EnableMSDeployAppOffline=true
