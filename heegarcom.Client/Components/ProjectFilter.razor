@@ -33,6 +33,48 @@
                 <h3 class="mt-2 text-xl font-semibold text-navy">@p.Title</h3>
                 <p class="mt-1 text-muted">@p.Summary</p>
 
+                @if (p.Metrics is not null)
+                {
+                    <div class="mt-4 grid grid-cols-3 gap-3">
+                        @foreach (var m in p.Metrics)
+                        {
+                            <div class="rounded-lg bg-navy/5 p-3">
+                                <div class="text-lg font-bold text-orange">@m.Value</div>
+                                <div class="mt-0.5 text-xs leading-snug text-muted">@m.Label</div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if (p.Visual == "version-trail")
+                {
+                    <div class="mt-4 flex flex-wrap items-center gap-1.5">
+                        @for (var i = 0; i < VersionTrail.Length; i++)
+                        {
+                            var isLast = i == VersionTrail.Length - 1;
+                            <span class="@(isLast ? "border-orange text-orange" : "border-line text-muted") rounded-full border px-2.5 py-0.5 text-xs">@VersionTrail[i]</span>
+                            @if (!isLast)
+                            {
+                                <span class="text-muted">&rarr;</span>
+                            }
+                        }
+                    </div>
+                }
+                else if (p.Visual == "monolith-split")
+                {
+                    <div class="mt-4 flex items-center gap-4">
+                        <div class="flex h-20 w-24 shrink-0 items-center justify-center rounded-lg border border-line text-center text-xs text-muted">
+                            Monolith<br />20k lines
+                        </div>
+                        <span class="text-orange">&rarr;</span>
+                        <div class="flex flex-1 flex-col gap-1.5">
+                            <div class="rounded-md border border-line px-3 py-1.5 text-xs text-muted">UI</div>
+                            <div class="rounded-md border border-line px-3 py-1.5 text-xs text-muted">Business logic</div>
+                            <div class="rounded-md border border-line px-3 py-1.5 text-xs text-muted">Data access (shared base)</div>
+                        </div>
+                    </div>
+                }
+
                 @if (p.Kind == "Case Study")
                 {
                     <dl class="mt-4 space-y-3 text-sm leading-relaxed">
@@ -79,6 +121,8 @@
             : "border border-line text-ink hover:border-orange hover:text-orange ")
         + "rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors";
 
+    private record MetricItem(string Value, string Label);
+
     private record ProjectItem(
         string Title,
         string Summary,
@@ -87,11 +131,46 @@
         string? Problem = null,
         string? Built = null,
         string? Outcome = null,
-        string? Url = null);
+        string? Url = null,
+        MetricItem[]? Metrics = null,
+        string? Visual = null);
+
+    private static readonly string[] VersionTrail = { ".NET 2", "3.5", "4.x", "Core 3", "8", "10" };
 
     // Case-study text is scaffolded — replace the [bracketed] prompts with real detail.
+    // Metric values are starter figures — confirm the real numbers.
     private static readonly ProjectItem[] Items =
     {
+        new(
+            "Legacy Modernization",
+            "Drove a healthcare platform from .NET 2 to .NET 10 across a decade — without a rewrite.",
+            new[] { "Modernization", "Architecture", "C# / .NET", "Healthcare" },
+            "Case Study",
+            Problem: "Core platform stuck on .NET 2 — mounting security and maintainability risk.",
+            Built: "Incremental, in-place framework upgrades under production load — never a stop-the-world rewrite.",
+            Outcome: "Current on .NET 10; a decade of uninterrupted delivery.",
+            Metrics: new[]
+            {
+                new MetricItem("10+ yrs", "continuous ownership"),
+                new MetricItem("6", "framework jumps"),
+                new MetricItem("0", "big-bang rewrites"),
+            },
+            Visual: "version-trail"),
+        new(
+            "Monolith to N-Tier",
+            "Broke a 20,000-line monolith into clean layers and unified 200+ data-access files.",
+            new[] { "Architecture", "Refactoring", "C# / .NET", "SQL Server" },
+            "Case Study",
+            Problem: "One 20k-line project; data-access logic copy-pasted across 200+ files.",
+            Built: "Extracted UI / business / data tiers; consolidated connections into one base class.",
+            Outcome: "Changes land in one place; far lower risk of drift and duplication bugs.",
+            Metrics: new[]
+            {
+                new MetricItem("20k", "lines untangled"),
+                new MetricItem("200+→1", "data files unified"),
+                new MetricItem("3", "clean layers"),
+            },
+            Visual: "monolith-split"),
         new(
             "AI Integration",
             "Agentic AI workflows built into an EMR for automated document generation.",
