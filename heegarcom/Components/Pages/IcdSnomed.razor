@@ -1,0 +1,17 @@
+@page "/demos/icd-snomed"
+@using heegarcom.Client.Components
+
+<PageTitle>ICD-10 ↔ SNOMED Mapper — Adam Heeg</PageTitle>
+
+<section class="mx-auto max-w-3xl px-6 pt-20 pb-8 sm:pt-24">
+    <p class="text-sm font-medium uppercase tracking-widest text-orange">Live demo</p>
+    <h1 class="mt-4 text-4xl font-bold tracking-tight text-navy">ICD-10 &harr; SNOMED Mapper</h1>
+    <div class="mt-6 h-1 w-16 rounded-full bg-orange"></div>
+    <p class="mt-8 text-lg leading-relaxed text-muted">
+        Search an eye-care diagnosis or ICD-10 code. Results run live from a SQLite database on
+        the server — the ophthalmology chapter (~3,000 codes) plus diabetic-eye codes. SNOMED CT
+        cross-mappings are being added.
+    </p>
+</section>
+
+<IcdMapper @rendermode="@(new InteractiveWebAssemblyRenderMode(prerender: false))" />

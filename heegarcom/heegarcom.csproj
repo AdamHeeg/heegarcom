@@ -10,6 +10,15 @@
   <ItemGroup>
     <ProjectReference Include="..\heegarcom.Client\heegarcom.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
+  </ItemGroup>
+
+  <!-- Terminology SQLite DB — copied to output/publish, queried server-side only
+       (lives outside wwwroot so it is never served to the browser). -->
+  <ItemGroup>
+    <Content Include="Data\terminology.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <!-- The pinned Tailwind CLI is git-ignored (108 MB > GitHub's 100 MB limit);
