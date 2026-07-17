@@ -29,7 +29,7 @@ jobs:
           restore-keys: nuget-
 
       # The pinned Tailwind CLI is git-ignored (108 MB); cache it so it isn't
-      # re-downloaded on every run. On a cache miss the build downloads it.
+      # re-downloaded every run. On a cache miss the build downloads it.
       - name: Cache Tailwind CLI
         uses: actions/cache@v4
         with:
@@ -39,16 +39,22 @@ jobs:
       - name: Ensure Web Deploy is available
         run: choco install webdeploy -y --no-progress
 
-      # Builds the server + WASM client, runs Tailwind, then deploys via Web Deploy.
-      # EnableMSDeployAppOffline drops app_offline.htm so locked DLLs release cleanly.
-      - name: Build and deploy (Web Deploy)
-        run: >
-          dotnet publish heegarcom/heegarcom.csproj -c Release
-          /p:DeployOnBuild=true
-          /p:WebPublishMethod=MSDeploy
-          /p:MSDeployServiceURL="${{ secrets.MSDEPLOY_URL }}"
-          /p:MSDeploySite="${{ secrets.MSDEPLOY_SITE }}"
-          /p:UserName="${{ secrets.MSDEPLOY_USERNAME }}"
-          /p:Password="${{ secrets.MSDEPLOY_PASSWORD }}"
-          /p:AllowUntrustedCertificate=true
-          /p:EnableMSDeployAppOffline=true
+      # Plain publish to a folder — builds server + WASM client + runs Tailwind.
+      # (No DeployOnBuild here, so nothing leaks into the client project.)
+      - name: Publish
+        run: dotnet publish heegarcom/heegarcom.csproj -c Release -o publish
+
+      # Deploy the published folder with Web Deploy directly.
+      # AppOffline releases locked DLLs; allowUntrusted covers the shared-host cert.
+      - name: Deploy via Web Deploy
+        shell: pwsh
+        run: |
+          $msdeploy = "${env:ProgramFiles}\IIS\Microsoft Web Deploy V3\msdeploy.exe"
+          if (-not (Test-Path $msdeploy)) { throw "msdeploy.exe not found at $msdeploy" }
+          & $msdeploy `
+            -verb:sync `
+            -source:contentPath="${{ github.workspace }}\publish" `
+            -dest:contentPath="${{ secrets.MSDEPLOY_SITE }}",ComputerName="${{ secrets.MSDEPLOY_URL }}",UserName="${{ secrets.MSDEPLOY_USERNAME }}",Password="${{ secrets.MSDEPLOY_PASSWORD }}",AuthType="Basic" `
+            -allowUntrusted `
+            -enableRule:AppOffline
+          if ($LASTEXITCODE -ne 0) { throw "Web Deploy failed with exit code $LASTEXITCODE" }
