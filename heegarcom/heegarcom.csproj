@@ -20,7 +20,9 @@
     <Exec Command="curl -sL -o &quot;$(MSBuildProjectDirectory)\..\tools\tailwindcss.exe&quot; https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.3/tailwindcss-windows-x64.exe" />
   </Target>
 
-  <Target Name="BuildTailwindCss" BeforeTargets="Compile">
+  <!-- Must run BEFORE static web assets are catalogued, or the generated CSS
+       isn't registered/deployed and 404s in production. -->
+  <Target Name="BuildTailwindCss" BeforeTargets="ResolveStaticWebAssetsInputs;Compile">
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\tools\tailwindcss.exe&quot; --input &quot;$(MSBuildProjectDirectory)\Styles\app.css&quot; --output &quot;$(MSBuildProjectDirectory)\wwwroot\css\app.css&quot; --minify" />
   </Target>
 

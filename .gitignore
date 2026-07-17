@@ -16,10 +16,12 @@ publish/
 ## Restored automatically on build (see EnsureTailwindCli target in heegarcom.csproj).
 tools/tailwindcss.exe
 
-## Generated CSS — compiled from Styles/app.css by the Tailwind CLI on build.
-heegarcom/wwwroot/css/app.css
+## NOTE: heegarcom/wwwroot/css/app.css (Tailwind output) is intentionally COMMITTED.
+## Blazor registers static assets from the wwwroot glob at project-load time, so a
+## purely build-generated file never becomes a served endpoint (404 in production).
+## Committing it makes it a first-class asset; the build overwrites it with fresh CSS.
 
-## Local SQLite databases (added in the mapper step)
+## Local SQLite databases
 *.db-shm
 *.db-wal
 
