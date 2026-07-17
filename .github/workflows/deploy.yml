@@ -44,17 +44,21 @@ jobs:
       - name: Publish
         run: dotnet publish heegarcom/heegarcom.csproj -c Release -o publish
 
-      # Deploy the published folder with Web Deploy directly.
-      # AppOffline releases locked DLLs; allowUntrusted covers the shared-host cert.
+      # Deploy the published folder with Web Deploy directly, via cmd so the
+      # -dest:...,... argument (commas + quotes) isn't mangled by PowerShell.
+      # Secrets are passed as env vars and expanded by cmd. AppOffline releases
+      # locked DLLs; allowUntrusted covers the shared-host certificate.
       - name: Deploy via Web Deploy
-        shell: pwsh
-        run: |
-          $msdeploy = "${env:ProgramFiles}\IIS\Microsoft Web Deploy V3\msdeploy.exe"
-          if (-not (Test-Path $msdeploy)) { throw "msdeploy.exe not found at $msdeploy" }
-          & $msdeploy `
-            -verb:sync `
-            -source:contentPath="${{ github.workspace }}\publish" `
-            -dest:contentPath="${{ secrets.MSDEPLOY_SITE }}",ComputerName="${{ secrets.MSDEPLOY_URL }}",UserName="${{ secrets.MSDEPLOY_USERNAME }}",Password="${{ secrets.MSDEPLOY_PASSWORD }}",AuthType="Basic" `
-            -allowUntrusted `
-            -enableRule:AppOffline
-          if ($LASTEXITCODE -ne 0) { throw "Web Deploy failed with exit code $LASTEXITCODE" }
+        shell: cmd
+        env:
+          MSDEPLOY_SITE: ${{ secrets.MSDEPLOY_SITE }}
+          MSDEPLOY_URL: ${{ secrets.MSDEPLOY_URL }}
+          MSDEPLOY_USER: ${{ secrets.MSDEPLOY_USERNAME }}
+          MSDEPLOY_PASS: ${{ secrets.MSDEPLOY_PASSWORD }}
+        run: >
+          "%ProgramFiles%\IIS\Microsoft Web Deploy V3\msdeploy.exe"
+          -verb:sync
+          -source:contentPath="%GITHUB_WORKSPACE%\publish"
+          -dest:contentPath="%MSDEPLOY_SITE%",ComputerName="%MSDEPLOY_URL%",UserName="%MSDEPLOY_USER%",Password="%MSDEPLOY_PASS%",AuthType="Basic"
+          -allowUntrusted
+          -enableRule:AppOffline
