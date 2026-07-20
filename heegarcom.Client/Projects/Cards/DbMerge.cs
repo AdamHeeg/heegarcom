@@ -6,12 +6,12 @@ public sealed class DbMerge : IProjectSource
 
     public ProjectItem Card => new()
     {
-        Title = "DB Merge",
+        Title = "DB Merge - AI With Oversight",
         Summary = "A process for merging data across databases while preserving integrity.",
         Tags = new[] { "SQL Server", "Data Migration", "C# / .NET", "Tooling" },
         Kind = "Case Study",
-        Problem = "[Fill in: why databases needed merging — practices, tenants, acquisitions.]",
-        Built = "[Fill in: matching, de-duplication, referential integrity, rollback.]",
-        Outcome = "[Fill in: records merged, integrity results, downtime.]",
+        Problem = "Doctors move between locations and practices.  They need access to only their patients and data.  This solution provides an easy in product way to safely transfer a provider's patient data between system.",
+        Built = "Simple Win-Forms project which safely connects to multiple propritary databases preserving hashing, auditing, and encryption while transfering selected data to the new system.",
+        Outcome = "This solution proved 90% faster in exporting and importing provider patient data between our systems solving the problem of either long weekends or missed days of productivity for the clients.",
     };
 }
