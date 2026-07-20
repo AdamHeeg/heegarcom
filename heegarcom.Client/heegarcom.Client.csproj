@@ -13,4 +13,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.5" />
   </ItemGroup>
 
+  <!-- Project cards are found by reflection (see ProjectCatalog). Root this assembly
+       so the WebAssembly trimmer doesn't strip the card classes in a Release publish. -->
+  <ItemGroup>
+    <TrimmerRootAssembly Include="heegarcom.Client" />
+  </ItemGroup>
+
 </Project>

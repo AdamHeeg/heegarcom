@@ -1,0 +1,94 @@
+<article class="rounded-lg border border-line p-6 transition-colors hover:border-orange">
+    <div class="flex items-center justify-between gap-3">
+        <span class="text-xs font-semibold uppercase tracking-widest @(Item.Kind == "Demo" ? "text-orange" : "text-muted")">
+            @Item.Kind
+        </span>
+        @if (Item.Kind == "Demo")
+        {
+            @if (Item.Url is null)
+            {
+                <span class="rounded-full bg-orange/10 px-2.5 py-0.5 text-xs font-medium text-orange">Coming soon</span>
+            }
+            else
+            {
+                <a href="@Item.Url" class="text-sm font-medium text-orange hover:underline">Open demo &rarr;</a>
+            }
+        }
+    </div>
+
+    <h3 class="mt-2 text-xl font-semibold text-navy">@Item.Title</h3>
+    <p class="mt-1 text-muted">@Item.Summary</p>
+
+    @if (Item.Metrics is not null)
+    {
+        <div class="mt-4 grid grid-cols-3 gap-3">
+            @foreach (var m in Item.Metrics)
+            {
+                <div class="rounded-lg bg-navy/5 p-3">
+                    <div class="text-lg font-bold text-orange">@m.Value</div>
+                    <div class="mt-0.5 text-xs leading-snug text-muted">@m.Label</div>
+                </div>
+            }
+        </div>
+    }
+
+    @if (Item.Visual == "version-trail")
+    {
+        <div class="mt-4 flex flex-wrap items-center gap-1.5">
+            @for (var i = 0; i < VersionTrail.Length; i++)
+            {
+                var isLast = i == VersionTrail.Length - 1;
+                <span class="@(isLast ? "border-orange text-orange" : "border-line text-muted") rounded-full border px-2.5 py-0.5 text-xs">@VersionTrail[i]</span>
+                @if (!isLast)
+                {
+                    <span class="text-muted">&rarr;</span>
+                }
+            }
+        </div>
+    }
+    else if (Item.Visual == "monolith-split")
+    {
+        <div class="mt-4 flex items-center gap-4">
+            <div class="flex h-20 w-24 shrink-0 items-center justify-center rounded-lg border border-line text-center text-xs text-muted">
+                Monolith<br />20k lines
+            </div>
+            <span class="text-orange">&rarr;</span>
+            <div class="flex flex-1 flex-col gap-1.5">
+                <div class="rounded-md border border-line px-3 py-1.5 text-xs text-muted">UI</div>
+                <div class="rounded-md border border-line px-3 py-1.5 text-xs text-muted">Business logic</div>
+                <div class="rounded-md border border-line px-3 py-1.5 text-xs text-muted">Data access (shared base)</div>
+            </div>
+        </div>
+    }
+
+    @if (Item.Kind == "Case Study")
+    {
+        <dl class="mt-4 space-y-3 text-sm leading-relaxed">
+            <div>
+                <dt class="font-semibold text-ink">Problem</dt>
+                <dd class="text-muted">@Item.Problem</dd>
+            </div>
+            <div>
+                <dt class="font-semibold text-ink">What I built</dt>
+                <dd class="text-muted">@Item.Built</dd>
+            </div>
+            <div>
+                <dt class="font-semibold text-ink">Outcome</dt>
+                <dd class="text-muted">@Item.Outcome</dd>
+            </div>
+        </dl>
+    }
+
+    <div class="mt-4 flex flex-wrap gap-2">
+        @foreach (var tag in Item.Tags)
+        {
+            <span class="rounded-full border border-line px-2.5 py-1 text-xs text-muted">@tag</span>
+        }
+    </div>
+</article>
+
+@code {
+    [Parameter, EditorRequired] public ProjectItem Item { get; set; } = default!;
+
+    private static readonly string[] VersionTrail = { ".NET 2", "3.5", "4.x", "Core 3", "8", "10" };
+}
