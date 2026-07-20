@@ -7,8 +7,8 @@ public sealed class IcdSnomedMapper : IProjectSource
     public ProjectItem Card => new()
     {
         Title = "ICD-10 ↔ SNOMED Mapper",
-        Summary = "Search a diagnosis and see its ICD-10 and SNOMED CT cross-mappings — running live on this site.",
-        Tags = new[] { "SQLite", "Blazor WASM", "Healthcare", "Data" },
+        Summary = "Two-way lookup between ophthalmology ICD-10 codes and SNOMED CT concepts — live from a SQLite database.",
+        Tags = new[] { "SQLite", "Blazor WASM", "Healthcare", "SNOMED", "Data" },
         Kind = "Demo",
         Url = "/demos/icd-snomed",
     };
