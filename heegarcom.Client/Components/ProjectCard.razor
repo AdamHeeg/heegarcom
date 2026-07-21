@@ -21,7 +21,7 @@
 
     @if (Item.Metrics is not null)
     {
-        <div class="mt-4 grid grid-cols-3 gap-3">
+        <div class="mt-4 grid gap-3" style="grid-template-columns: repeat(@(Math.Min(Item.Metrics.Length, 3)), minmax(0, 1fr));">
             @foreach (var m in Item.Metrics)
             {
                 <div class="rounded-lg bg-navy/5 p-3">
