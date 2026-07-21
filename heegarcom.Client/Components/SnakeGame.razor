@@ -1,0 +1,143 @@
+@implements IDisposable
+
+<div class="mx-auto max-w-3xl px-6 pb-24">
+    <div class="flex items-center justify-between">
+        <p class="text-sm text-muted">Score: <span class="font-semibold text-ink">@score</span></p>
+        <p class="text-xs text-muted">Arrow keys / WASD</p>
+    </div>
+
+    <div class="mt-3 flex justify-center">
+        <div @ref="board" tabindex="0" @onkeydown="OnKey" @onkeydown:preventDefault
+             class="relative rounded-lg outline-none ring-1 ring-line"
+             style="width:@(Cols * Cell)px; height:@(Rows * Cell)px; background: var(--brand-navy);">
+
+            @foreach (var s in snake)
+            {
+                <div class="absolute rounded-sm"
+                     style="left:@(s.X * Cell + 1)px; top:@(s.Y * Cell + 1)px; width:@(Cell - 2)px; height:@(Cell - 2)px; background: var(--brand-orange);"></div>
+            }
+
+            @if (running)
+            {
+                <div class="absolute rounded-full"
+                     style="left:@(food.X * Cell + 2)px; top:@(food.Y * Cell + 2)px; width:@(Cell - 4)px; height:@(Cell - 4)px; background: #ffffff;"></div>
+            }
+
+            @if (!running)
+            {
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg"
+                     style="background: rgba(10, 49, 97, 0.88);">
+                    <p class="text-lg font-semibold text-white">
+                        @(gameOver ? $"Game over — score {score}" : "Snake")
+                    </p>
+                    <button @onclick="Start"
+                            class="rounded-md bg-orange px-5 py-2 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5">
+                        @(gameOver ? "Play again" : "Start")
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private const int Cols = 21, Rows = 21, Cell = 16;
+
+    private List<(int X, int Y)> snake = new();
+    private (int X, int Y) dir = (1, 0);
+    private (int X, int Y) pendingDir = (1, 0);
+    private (int X, int Y) food;
+    private int score;
+    private bool running;
+    private bool gameOver;
+
+    private ElementReference board;
+    private readonly Random rng = new();
+    private CancellationTokenSource? cts;
+
+    private async Task Start()
+    {
+        int cx = Cols / 2, cy = Rows / 2;
+        snake = new() { (cx, cy), (cx - 1, cy), (cx - 2, cy) };
+        dir = (1, 0);
+        pendingDir = (1, 0);
+        score = 0;
+        gameOver = false;
+        running = true;
+        PlaceFood();
+
+        cts?.Cancel();
+        cts = new CancellationTokenSource();
+        var token = cts.Token;
+
+        await board.FocusAsync();
+        _ = Loop(token);
+    }
+
+    private async Task Loop(CancellationToken token)
+    {
+        try
+        {
+            while (!token.IsCancellationRequested)
+            {
+                await Task.Delay(Math.Max(70, 150 - score * 4), token);
+                Step();
+                StateHasChanged();
+                if (gameOver) break;
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // cancelled on restart/dispose
+        }
+    }
+
+    private void Step()
+    {
+        dir = pendingDir;
+        var head = (X: snake[0].X + dir.X, Y: snake[0].Y + dir.Y);
+
+        if (head.X < 0 || head.Y < 0 || head.X >= Cols || head.Y >= Rows || snake.Contains(head))
+        {
+            gameOver = true;
+            running = false;
+            return;
+        }
+
+        snake.Insert(0, head);
+        if (head == food)
+        {
+            score++;
+            PlaceFood();
+        }
+        else
+        {
+            snake.RemoveAt(snake.Count - 1);
+        }
+    }
+
+    private void PlaceFood()
+    {
+        var occupied = new HashSet<(int, int)>(snake);
+        (int, int) cell;
+        do { cell = (rng.Next(Cols), rng.Next(Rows)); } while (occupied.Contains(cell));
+        food = cell;
+    }
+
+    private void OnKey(KeyboardEventArgs e)
+    {
+        (int X, int Y) d = e.Key switch
+        {
+            "ArrowUp" or "w" or "W" => (0, -1),
+            "ArrowDown" or "s" or "S" => (0, 1),
+            "ArrowLeft" or "a" or "A" => (-1, 0),
+            "ArrowRight" or "d" or "D" => (1, 0),
+            _ => (0, 0)
+        };
+        if (d == (0, 0)) return;
+        if (d.X == -dir.X && d.Y == -dir.Y) return; // no direct reversal
+        pendingDir = d;
+    }
+
+    public void Dispose() => cts?.Cancel();
+}

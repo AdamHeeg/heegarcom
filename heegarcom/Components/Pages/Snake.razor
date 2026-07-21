@@ -1,0 +1,16 @@
+@page "/demos/snake"
+@using heegarcom.Client.Components
+
+<PageTitle>Snake — Adam Heeg</PageTitle>
+
+<section class="mx-auto max-w-3xl px-6 pt-20 pb-6 sm:pt-24">
+    <p class="text-sm font-medium uppercase tracking-widest text-orange">Live demo</p>
+    <h1 class="mt-4 text-4xl font-bold tracking-tight text-navy">Snake</h1>
+    <div class="mt-6 h-1 w-16 rounded-full bg-orange"></div>
+    <p class="mt-8 text-lg leading-relaxed text-muted">
+        A little Snake written in C# and running in your browser via Blazor WebAssembly — no
+        JavaScript. Click Start, then use the arrow keys or WASD.
+    </p>
+</section>
+
+<SnakeGame @rendermode="@(new InteractiveWebAssemblyRenderMode(prerender: false))" />

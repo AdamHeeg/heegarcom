@@ -1,23 +1,24 @@
-<article class="rounded-lg border border-line p-6 transition-colors hover:border-orange">
-    <div class="flex items-center justify-between gap-3">
-        <span class="text-xs font-semibold uppercase tracking-widest @(Item.Kind == "Demo" ? "text-orange" : "text-muted")">
+<article class="overflow-hidden rounded-lg border border-line transition-colors hover:border-orange">
+    <div class="flex items-center justify-between gap-3 bg-orange px-6 py-2">
+        <span class="text-xs font-semibold uppercase tracking-widest text-white">
             @Item.Kind
         </span>
         @if (Item.Kind == "Demo")
         {
             @if (Item.Url is null)
             {
-                <span class="rounded-full bg-orange/10 px-2.5 py-0.5 text-xs font-medium text-orange">Coming soon</span>
+                <span class="rounded-full bg-white/25 px-2.5 py-0.5 text-xs font-medium text-white">Coming soon</span>
             }
             else
             {
-                <a href="@Item.Url" class="text-sm font-medium text-orange hover:underline">Open demo &rarr;</a>
+                <a href="@Item.Url" class="text-xs font-semibold uppercase tracking-wide text-white hover:underline">Open demo &rarr;</a>
             }
         }
     </div>
 
-    <h3 class="mt-2 text-xl font-semibold text-navy">@Item.Title</h3>
-    <p class="mt-1 text-muted">@((MarkupString)Item.Summary)</p>
+    <div class="p-6">
+        <h3 class="text-xl font-semibold text-navy">@Item.Title</h3>
+        <p class="mt-1 text-muted">@((MarkupString)Item.Summary)</p>
 
     @if (Item.Metrics is not null)
     {
@@ -79,11 +80,12 @@
         </dl>
     }
 
-    <div class="mt-4 flex flex-wrap gap-2">
-        @foreach (var tag in Item.Tags)
-        {
-            <span class="rounded-full border border-line px-2.5 py-1 text-xs text-muted">@tag</span>
-        }
+        <div class="mt-4 flex flex-wrap gap-2">
+            @foreach (var tag in Item.Tags)
+            {
+                <span class="rounded-full border border-line px-2.5 py-1 text-xs text-muted">@tag</span>
+            }
+        </div>
     </div>
 </article>
 
