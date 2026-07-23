@@ -3,16 +3,15 @@
         <span class="text-xs font-semibold uppercase tracking-widest text-white">
             @Item.Kind
         </span>
-        @if (Item.Kind == "Demo")
+        @if (Item.Url is not null)
         {
-            @if (Item.Url is null)
-            {
-                <span class="rounded-full bg-white/25 px-2.5 py-0.5 text-xs font-medium text-white">Coming soon</span>
-            }
-            else
-            {
-                <a href="@Item.Url" class="text-xs font-semibold uppercase tracking-wide text-white hover:underline">Open demo &rarr;</a>
-            }
+            <a href="@Item.Url" class="text-xs font-semibold uppercase tracking-wide text-white hover:underline">
+                @(Item.LinkText ?? (Item.Kind == "Demo" ? "Open demo" : "View")) &rarr;
+            </a>
+        }
+        else if (Item.Kind == "Demo")
+        {
+            <span class="rounded-full bg-white/25 px-2.5 py-0.5 text-xs font-medium text-white">Coming soon</span>
         }
     </div>
 

@@ -16,7 +16,8 @@ public record ProjectItem
     public string? Problem { get; init; }
     public string? Built { get; init; }
     public string? Outcome { get; init; }
-    public string? Url { get; init; }            // demo cards: link to the live page
+    public string? Url { get; init; }            // optional link (demo page, screenshots, external)
+    public string? LinkText { get; init; }       // label for the link (defaults per Kind)
     public MetricItem[]? Metrics { get; init; }  // optional stat tiles
     public string? Visual { get; init; }         // "version-trail" | "monolith-split"
 }

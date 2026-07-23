@@ -1,0 +1,23 @@
+@page "/projects/tribetime"
+@using heegarcom.Client.Components
+
+<PageTitle>TribeTime — Adam Heeg</PageTitle>
+
+<section class="mx-auto max-w-4xl px-6 pt-20 pb-6 sm:pt-24">
+    <p class="text-sm font-medium uppercase tracking-widest text-orange">Project</p>
+    <h1 class="mt-4 text-4xl font-bold tracking-tight text-navy">TribeTime</h1>
+    <div class="mt-6 h-1 w-16 rounded-full bg-orange"></div>
+    <p class="mt-8 max-w-2xl text-lg leading-relaxed text-muted">
+        A cross-platform mobile app I built solo with Expo / React Native and Supabase — group
+        &ldquo;tribes&rdquo;, a shared event calendar, and notifications. iOS, Android, and web
+        from one codebase.
+    </p>
+    <div class="mt-4 flex flex-wrap gap-2">
+        @foreach (var t in new[] { "React Native", "Expo", "TypeScript", "Supabase", "Mobile" })
+        {
+            <span class="rounded-full border border-line px-2.5 py-1 text-xs text-muted">@t</span>
+        }
+    </div>
+</section>
+
+<TribeTimeCarousel @rendermode="InteractiveWebAssembly" />
