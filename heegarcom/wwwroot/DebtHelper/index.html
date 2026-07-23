@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DebtHelper for Attorneys — A Court-Approved Referral Partner</title>
+  <meta name="description" content="DebtHelper is an EOUST-approved, nonprofit credit counseling agency. A reliable referral partner for bankruptcy attorneys and their struggling clients." />
+  <style>
+    /* ---- Theming variables (swap these later for final brand theme) ---- */
+    :root {
+      --navy: #12335b;
+      --navy-deep: #0c2440;
+      --navy-soft: #1c4a80;
+      --coral: #e8622e;
+      --coral-dark: #cf5323;
+      --ink: #1f2933;
+      --muted: #5b6b7a;
+      --line: #e2e8f0;
+      --bg: #ffffff;
+      --bg-alt: #f5f8fc;
+      --bg-navy-tint: #eef3fa;
+      --white: #ffffff;
+      --radius: 12px;
+      --shadow: 0 6px 24px rgba(18, 51, 91, 0.08);
+      --maxw: 1080px;
+      --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+    a { color: var(--navy-soft); }
+    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
+    h1 { font-size: clamp(1.9rem, 4vw, 3rem); }
+    h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
+    p { margin: 0 0 1rem; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    .eyebrow {
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--coral);
+      margin-bottom: 1rem;
+    }
+    .lead { font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+
+    /* ---- Buttons ---- */
+    .btn {
+      display: inline-block;
+      padding: 14px 26px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform .06s ease, background .2s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--coral); color: #fff; }
+    .btn-primary:hover { background: var(--coral-dark); }
+    .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,.7); }
+    .btn-secondary:hover { background: rgba(255,255,255,.12); }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 1.6rem; }
+
+    /* ---- Header ---- */
+    .site-header {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--line);
+    }
+    .site-header .wrap { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; letter-spacing: -.01em; }
+    .brand span { color: var(--coral); }
+    .nav-links { display: flex; gap: 22px; align-items: center; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; }
+    .nav-links a:hover { color: var(--coral); }
+    .nav-cta { background: var(--navy); color: #fff !important; padding: 9px 18px; border-radius: 7px; }
+    .nav-cta:hover { background: var(--navy-deep); }
+
+    /* ---- Hero ---- */
+    .hero {
+      background: linear-gradient(160deg, var(--navy-deep), var(--navy) 60%, var(--navy-soft));
+      color: #fff;
+      padding: 72px 0 84px;
+    }
+    .hero h1 { color: #fff; max-width: 18ch; }
+    .hero .lead { color: rgba(255,255,255,.85); }
+    .hero-meta { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 10px; }
+    .pill {
+      font-size: .82rem; font-weight: 600;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      color: #fff; padding: 6px 14px; border-radius: 999px;
+    }
+
+    /* ---- Sections ---- */
+    section { padding: 64px 0; }
+    section.alt { background: var(--bg-alt); }
+    .section-head { max-width: 62ch; margin-bottom: 2.5rem; }
+    .section-head p { color: var(--muted); font-size: 1.08rem; }
+
+    /* ---- Requirements list ---- */
+    .req-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .req {
+      background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--coral);
+      border-radius: var(--radius); padding: 22px 24px;
+    }
+    .req h3 { font-size: 1.1rem; margin-bottom: .35em; }
+    .req .cite { font-size: .8rem; color: var(--muted); font-weight: 600; }
+
+    /* ---- Pipeline ---- */
+    .pipeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+    .stage {
+      background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 28px 26px; box-shadow: var(--shadow); position: relative;
+    }
+    .stage .step {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--navy); color: #fff; font-weight: 800; margin-bottom: 14px;
+    }
+    .stage h3 { font-size: 1.18rem; }
+    .stage .who { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--coral); margin-bottom: 6px; }
+    .stage .benefit { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); font-size: .95rem; color: var(--muted); }
+    .stage .benefit strong { color: var(--navy); }
+
+    /* ---- Trust badges ---- */
+    .badges { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .badge {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px;
+    }
+    .badge .mark {
+      flex: none; width: 40px; height: 40px; border-radius: 8px;
+      background: var(--bg-navy-tint); color: var(--navy); display: flex; align-items: center; justify-content: center; font-weight: 800;
+    }
+    .badge h3 { font-size: 1rem; margin: 0 0 3px; }
+    .badge p { font-size: .9rem; color: var(--muted); margin: 0; }
+
+    /* ---- Marah section ---- */
+    .marah { background: var(--navy-deep); color: #fff; }
+    .marah h2 { color: #fff; }
+    .marah p { color: rgba(255,255,255,.85); }
+    .marah .lead { color: rgba(255,255,255,.9); }
+
+    /* ---- Legal / credentials ---- */
+    .legal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .legal-card {
+      background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px;
+    }
+    .legal-card h3 { font-size: 1.05rem; }
+    .legal-card p { font-size: .92rem; color: var(--muted); }
+    .legal-card a { font-weight: 600; }
+    .disclaimer {
+      margin-top: 28px; font-size: .82rem; color: var(--muted);
+      background: var(--bg-navy-tint); border-radius: var(--radius); padding: 18px 22px; border: 1px solid var(--line);
+    }
+
+    /* ---- CTA band ---- */
+    .cta-band { background: var(--coral); color: #fff; text-align: center; }
+    .cta-band h2 { color: #fff; }
+    .cta-band p { color: rgba(255,255,255,.92); max-width: 56ch; margin: 0 auto 1.6rem; }
+    .cta-band .btn-primary { background: #fff; color: var(--coral-dark); }
+    .cta-band .btn-primary:hover { background: #f3f3f3; }
+    .cta-band .btn-secondary { border-color: rgba(255,255,255,.8); }
+    .cta-band .btn-group { justify-content: center; }
+
+    /* ---- Footer ---- */
+    footer { background: var(--navy-deep); color: rgba(255,255,255,.8); padding: 48px 0 32px; font-size: .92rem; }
+    footer h4 { color: #fff; font-size: 1rem; margin: 0 0 10px; }
+    .foot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+    footer a { color: #fff; }
+    .foot-bottom { margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.15); font-size: .8rem; color: rgba(255,255,255,.6); }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hero { padding: 52px 0 60px; }
+      section { padding: 48px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">Debt<span>Helper</span></a>
+      <nav class="nav-links">
+        <a href="#pipeline">How Referrals Work</a>
+        <a href="#why">Why DebtHelper</a>
+        <a href="#legal">Credentials</a>
+        <a class="nav-cta" href="refer-a-client.html">Refer a Client</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">For Bankruptcy Attorneys</span>
+      <h1>A court-approved partner for every client who walks through your door.</h1>
+      <p class="lead">
+        DebtHelper is a nonprofit, EOUST-approved credit counseling agency. Refer struggling
+        clients for the two mandatory bankruptcy courses &mdash; or a debt-management alternative
+        when filing isn't the right answer. Counseling is free to your client, and certificates
+        are issued fast to keep your filing timeline on track.
+      </p>
+      <div class="btn-group">
+        <a class="btn btn-primary" href="refer-a-client.html">Refer a Client</a>
+        <a class="btn btn-secondary" href="become-a-partner.html">Become a Referral Partner</a>
+      </div>
+      <div class="hero-meta">
+        <span class="pill">501(c)(3) Nonprofit</span>
+        <span class="pill">EOUST / U.S. Trustee Approved</span>
+        <span class="pill">ISO 9001 Certified</span>
+        <span class="pill">Serving Clients Nationwide</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= THE HOOK ================= -->
+  <section id="requirements">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">The Requirement</span>
+        <h2>Every consumer bankruptcy has the same two mandatory courses.</h2>
+        <p>
+          Your client cannot file &mdash; or be discharged &mdash; without them, and both must come
+          from a provider approved by the Executive Office for U.S. Trustees. DebtHelper is approved
+          for both. And for clients who shouldn't file at all, there's still a path.
+        </p>
+      </div>
+      <div class="req-grid">
+        <div class="req">
+          <h3>Pre-Filing Credit Counseling</h3>
+          <p>Required within the 180 days <em>before</em> a client is eligible to file.</p>
+          <span class="cite">11 U.S.C. &sect; 109(h)</span>
+        </div>
+        <div class="req">
+          <h3>Pre-Discharge Debtor Education</h3>
+          <p>The personal financial management course required <em>before</em> discharge is granted.</p>
+          <span class="cite">11 U.S.C. &sect; 111 / &sect; 727</span>
+        </div>
+        <div class="req">
+          <h3>When Filing Isn't Right</h3>
+          <p>Some clients are better served by a debt-management plan than a petition. DebtHelper gives them a real alternative.</p>
+          <span class="cite">Debt Management &amp; Counseling</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PIPELINE ================= -->
+  <section id="pipeline" class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How Referrals Work</span>
+        <h2>One partner across the whole client journey.</h2>
+        <p>Send every struggling client through DebtHelper. Where they go next depends on what's right for them &mdash; and each path keeps you looking good.</p>
+      </div>
+      <div class="pipeline">
+        <div class="stage">
+          <div class="step">1</div>
+          <div class="who">Client Files</div>
+          <h3>DebtHelper issues both required certificates.</h3>
+          <p>Pre-filing counseling and pre-discharge education, from a single EOUST-approved source.</p>
+          <div class="benefit"><strong>Your benefit:</strong> certificates delivered promptly, so your filing timeline never slips.</div>
+        </div>
+        <div class="stage">
+          <div class="step">2</div>
+          <div class="who">Client Shouldn't File</div>
+          <h3>A debt-management alternative.</h3>
+          <p>Counseling and a structured plan that can lower payments and interest without a petition.</p>
+          <div class="benefit"><strong>Your benefit:</strong> you're never the one saying "no" &mdash; the client still has a path forward.</div>
+        </div>
+        <div class="stage">
+          <div class="step">3</div>
+          <div class="who">After Discharge</div>
+          <h3>Marah Mutual rebuilds credit.</h3>
+          <p>Post-bankruptcy credit profile rehabilitation so the fresh start is more than a filing.</p>
+          <div class="benefit"><strong>Your benefit:</strong> clients remember who set them up to actually recover.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WHY DEBTHELPER ================= -->
+  <section id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Why DebtHelper</span>
+        <h2>A partner your clients &mdash; and the court &mdash; can trust.</h2>
+      </div>
+      <div class="badges">
+        <div class="badge"><div class="mark">501</div><div><h3>Nonprofit 501(c)(3)</h3><p>IRS-recognized nonprofit. Counseling is free to your client.</p></div></div>
+        <div class="badge"><div class="mark">§</div><div><h3>EOUST Approved</h3><p>Approved by the U.S. Trustee for both required bankruptcy courses.</p></div></div>
+        <div class="badge"><div class="mark">ISO</div><div><h3>ISO 9001 Certified</h3><p>Quality-management certified, audited by BSI North America.</p></div></div>
+        <div class="badge"><div class="mark">★</div><div><h3>AICCCA &amp; NFCC</h3><p>Member of national credit-counseling standards associations.</p></div></div>
+        <div class="badge"><div class="mark">BBB</div><div><h3>BBB Accredited</h3><p>Accredited business with a public, verifiable profile.</p></div></div>
+        <div class="badge"><div class="mark">HUD</div><div><h3>HUD Housing Counseling</h3><p>Approved for comprehensive housing and foreclosure counseling.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MARAH MUTUAL ================= -->
+  <section class="marah">
+    <div class="wrap">
+      <span class="eyebrow">The Fresh Start</span>
+      <h2>Marah Mutual completes the arc.</h2>
+      <p class="lead">
+        Discharge is the beginning of recovery, not the end of it. Marah Mutual works with your
+        clients after their case closes &mdash; credit profile analysis, rehabilitation, and financial
+        enhancement &mdash; so the fresh start the court grants becomes a fresh start they can actually build on.
+      </p>
+      <p>Sister organizations, one continuum: DebtHelper before and during, Marah Mutual after.</p>
+    </div>
+  </section>
+
+  <!-- ================= LEGAL / CREDENTIALS ================= -->
+  <section id="legal" class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Verify For Yourself</span>
+        <h2>Credentials, licenses &amp; public records.</h2>
+        <p>We don't ask you to take our word for it. Every credential below is verifiable through a public, independent source.</p>
+      </div>
+      <div class="legal-grid">
+        <div class="legal-card">
+          <h3>U.S. Trustee Approval</h3>
+          <p>Search the DOJ's public lists of approved providers by agency name and state.</p>
+          <p>
+            <a href="https://www.justice.gov/ust/list-credit-counseling-agencies-approved-pursuant-11-usc-111" target="_blank" rel="noopener">Approved Credit Counseling Agencies &rarr;</a><br />
+            <a href="https://www.justice.gov/ust/credit-counseling-and-debtor-education-providers" target="_blank" rel="noopener">Credit Counseling &amp; Debtor Education Providers &rarr;</a>
+          </p>
+        </div>
+        <div class="legal-card">
+          <h3>Nonprofit Status (IRS)</h3>
+          <p>Confirm 501(c)(3) status for Credit Card Management Services, Inc. (d.b.a. Debthelper.com).</p>
+          <p><a href="https://apps.irs.gov/app/eos/" target="_blank" rel="noopener">IRS Tax-Exempt Organization Search &rarr;</a></p>
+        </div>
+        <div class="legal-card">
+          <h3>Better Business Bureau</h3>
+          <p>Accreditation, rating, and complaint history on the public BBB profile.</p>
+          <p><a href="https://www.bbb.org/us/fl/west-palm-beach/profile/credit-and-debt-counseling/debthelpercom-0633-17000563" target="_blank" rel="noopener">View BBB Profile &rarr;</a></p>
+        </div>
+        <div class="legal-card">
+          <h3>HUD Housing Counseling</h3>
+          <p>Verify approved housing counseling agencies through HUD's directory.</p>
+          <p><a href="https://www.hud.gov/i_want_to/talk_to_a_housing_counselor" target="_blank" rel="noopener">HUD Counselor Directory &rarr;</a></p>
+        </div>
+        <div class="legal-card">
+          <h3>Industry Membership</h3>
+          <p>Member of national consumer credit-counseling associations.</p>
+          <p>
+            <a href="https://www.aiccca.org/" target="_blank" rel="noopener">AICCCA &rarr;</a><br />
+            <a href="https://www.nfcc.org/" target="_blank" rel="noopener">NFCC &rarr;</a>
+          </p>
+        </div>
+        <div class="legal-card">
+          <h3>State Licensing</h3>
+          <p>Licensed, bonded, and insured to provide debt management services in the states it serves.</p>
+          <p><a href="https://www.debthelper.com/" target="_blank" rel="noopener">Licensing details &rarr;</a></p>
+        </div>
+      </div>
+
+      <p class="disclaimer">
+        <strong>Required disclosure:</strong> The United States Trustee Program does not endorse or recommend
+        any particular credit counseling agency or debtor education provider, and approval does not
+        guarantee or endorse the quality of a provider's counseling or instructional services.
+        DebtHelper (Credit Card Management Services, Inc.) does not provide legal advice or legal
+        representation. Attorney referrals are informational and do not create an attorney&ndash;client
+        or referral-fee relationship.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= CTA BAND ================= -->
+  <section class="cta-band">
+    <div class="wrap">
+      <h2>Give your next struggling client a real path forward.</h2>
+      <p>Refer a single client, or set your firm up as an ongoing referral partner. It takes a few minutes and costs your client nothing.</p>
+      <div class="btn-group">
+        <a class="btn btn-primary" href="refer-a-client.html">Refer a Client</a>
+        <a class="btn btn-secondary" href="become-a-partner.html">Become a Referral Partner</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <h4>DebtHelper</h4>
+          <p>Credit Card Management Services, Inc.<br />1325 N. Congress Ave.<br />West Palm Beach, FL</p>
+          <p>(800) 920-2262<br />(561) 472-8000<br /><a href="mailto:counseling@DebtHelper.com">counseling@DebtHelper.com</a></p>
+        </div>
+        <div>
+          <h4>Marah Mutual</h4>
+          <p>Post-discharge credit rehabilitation and financial enhancement.</p>
+          <p>1-412-609-3400<br /><a href="https://www.marahmutual.com/" target="_blank" rel="noopener">marahmutual.com</a></p>
+        </div>
+        <div>
+          <h4>For Attorneys</h4>
+          <p>
+            <a href="refer-a-client.html">Refer a Client</a><br />
+            <a href="become-a-partner.html">Become a Referral Partner</a><br />
+            <a href="#legal">Credentials &amp; Verification</a>
+          </p>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        &copy; <span id="year">2026</span> Credit Card Management Services, Inc. (d.b.a. Debthelper.com). All rights reserved.
+        This page is intended for licensed attorneys and their staff and is informational only.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

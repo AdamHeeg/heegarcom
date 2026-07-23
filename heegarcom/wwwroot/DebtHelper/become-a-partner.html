@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Become a Referral Partner — DebtHelper for Attorneys</title>
+  <meta name="description" content="Set your firm up as an ongoing DebtHelper referral partner and request a referral kit." />
+  <style>
+    :root {
+      --navy: #12335b; --navy-deep: #0c2440; --navy-soft: #1c4a80;
+      --coral: #e8622e; --coral-dark: #cf5323;
+      --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
+      --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
+      --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
+      --maxw: 760px; --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --err: #c0392b;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg-alt); line-height: 1.6; }
+    a { color: var(--navy-soft); }
+    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    .site-header { background: #fff; border-bottom: 1px solid var(--line); }
+    .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; }
+    .brand span { color: var(--coral); }
+    .back { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; }
+    .back:hover { color: var(--coral); }
+
+    .intro { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 70%); color: #fff; padding: 48px 0 40px; }
+    .intro h1 { color: #fff; }
+    .intro p { color: rgba(255,255,255,.85); margin: 0; max-width: 60ch; }
+    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--coral); margin-bottom: 1rem; }
+
+    .perks { max-width: 1080px; margin: 34px auto -10px; padding: 0 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .perk { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); }
+    .perk h3 { font-size: 1rem; margin: 0 0 4px; }
+    .perk p { font-size: .9rem; color: var(--muted); margin: 0; }
+
+    .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; margin: 34px 0 48px; }
+    fieldset { border: none; padding: 0; margin: 0 0 28px; }
+    legend { font-weight: 800; color: var(--navy); font-size: 1.1rem; padding: 0; margin-bottom: 4px; }
+    .legend-note { font-size: .88rem; color: var(--muted); margin-bottom: 18px; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .field { margin-bottom: 18px; }
+    .field.full { grid-column: 1 / -1; }
+    label { display: block; font-weight: 600; font-size: .92rem; margin-bottom: 6px; }
+    .req-star { color: var(--coral); }
+    input, select, textarea {
+      width: 100%; padding: 11px 13px; font: inherit; color: var(--ink);
+      border: 1px solid var(--line); border-radius: 8px; background: #fff;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--navy-soft); box-shadow: 0 0 0 3px rgba(28,74,128,.12); }
+    textarea { min-height: 90px; resize: vertical; }
+    .error-msg { color: var(--err); font-size: .82rem; margin-top: 5px; display: none; }
+    .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--err); }
+    .field.invalid .error-msg { display: block; }
+
+    .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .check { display: flex; gap: 10px; align-items: center; background: var(--bg-navy-tint); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+    .check input { width: auto; flex: none; }
+    .check label { margin: 0; font-weight: 500; font-size: .9rem; }
+
+    .btn { display: inline-block; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; border: 2px solid transparent; background: var(--coral); color: #fff; }
+    .btn:hover { background: var(--coral-dark); }
+    .btn:active { transform: translateY(1px); }
+
+    .success { display: none; background: #eaf7ef; border: 1px solid #b7e0c6; color: #1e5b37; border-radius: var(--radius); padding: 20px 22px; margin-bottom: 22px; }
+    .success.show { display: block; }
+
+    .devnote { font-size: .8rem; color: var(--muted); background: #fff8ec; border: 1px dashed #e6c58a; border-radius: 8px; padding: 12px 14px; margin-top: 20px; }
+
+    footer { background: var(--navy-deep); color: rgba(255,255,255,.7); padding: 30px 0; font-size: .85rem; }
+    footer a { color: #fff; }
+
+    @media (max-width: 560px) { .grid2, .checks { grid-template-columns: 1fr; } .card { padding: 22px; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">Debt<span>Helper</span></a>
+      <a class="back" href="index.html">&larr; Back to overview</a>
+    </div>
+  </header>
+
+  <section class="intro">
+    <div class="wrap">
+      <span class="eyebrow">For Bankruptcy Attorneys</span>
+      <h1>Become a referral partner</h1>
+      <p>Set your firm up once and make DebtHelper your standing partner for every client who needs the required courses or a debt-management alternative. We'll send a referral kit and a direct line to a counselor.</p>
+    </div>
+  </section>
+
+  <div class="perks">
+    <div class="perk"><h3>One trusted vendor</h3><p>Both EOUST-approved courses from a single nonprofit source.</p></div>
+    <div class="perk"><h3>Co-branded materials</h3><p>Client-ready handouts and intake links for your office.</p></div>
+    <div class="perk"><h3>A direct counselor line</h3><p>A named contact instead of a general queue.</p></div>
+    <div class="perk"><h3>No cost to clients</h3><p>Counseling is free; there are no referral fees either way.</p></div>
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="success" id="success" role="status" aria-live="polite">
+        <strong>Thank you.</strong> Your firm's partner request has been received. We'll follow up shortly with your referral kit and a direct counselor contact.
+      </div>
+
+      <form id="partnerForm" novalidate>
+        <fieldset>
+          <legend>Your firm</legend>
+          <p class="legend-note">Tell us who you are and how to reach you.</p>
+          <div class="grid2">
+            <div class="field">
+              <label for="firm">Firm name <span class="req-star">*</span></label>
+              <input type="text" id="firm" name="firm" required />
+              <div class="error-msg">Please enter your firm's name.</div>
+            </div>
+            <div class="field">
+              <label for="contact">Primary contact <span class="req-star">*</span></label>
+              <input type="text" id="contact" name="contact" required />
+              <div class="error-msg">Please enter a contact name.</div>
+            </div>
+            <div class="field">
+              <label for="email">Email <span class="req-star">*</span></label>
+              <input type="email" id="email" name="email" required />
+              <div class="error-msg">Please enter a valid email address.</div>
+            </div>
+            <div class="field">
+              <label for="phone">Phone <span class="req-star">*</span></label>
+              <input type="tel" id="phone" name="phone" required />
+              <div class="error-msg">Please enter a phone number.</div>
+            </div>
+            <div class="field">
+              <label for="state">State(s) you practice in</label>
+              <input type="text" id="state" name="state" placeholder="e.g. FL, GA" />
+            </div>
+            <div class="field">
+              <label for="volume">Approx. clients referred / month</label>
+              <select id="volume" name="volume">
+                <option value="">Select…</option>
+                <option>1–5</option>
+                <option>6–15</option>
+                <option>16–40</option>
+                <option>40+</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>What would help your office?</legend>
+          <p class="legend-note">Optional &mdash; check anything you'd like us to include.</p>
+          <div class="checks">
+            <div class="check"><input type="checkbox" id="k1" name="interest" value="Referral kit" /><label for="k1">Printed referral kit</label></div>
+            <div class="check"><input type="checkbox" id="k2" name="interest" value="Co-branded intake link" /><label for="k2">Co-branded intake link</label></div>
+            <div class="check"><input type="checkbox" id="k3" name="interest" value="Counselor contact" /><label for="k3">Direct counselor contact</label></div>
+            <div class="check"><input type="checkbox" id="k4" name="interest" value="Lunch-and-learn" /><label for="k4">Staff lunch-and-learn</label></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <div class="field full">
+            <label for="notes">Anything else?</label>
+            <textarea id="notes" name="notes" placeholder="Questions, preferred contact time, etc."></textarea>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn">Request partnership</button>
+
+        <p class="devnote">
+          <strong>Developer note:</strong> this form validates in the browser and does not send data anywhere yet.
+          Wire the <code>submit</code> handler below to your CRM / intake API before going live.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      DebtHelper &mdash; Credit Card Management Services, Inc. &middot; (800) 920-2262 &middot;
+      <a href="mailto:counseling@DebtHelper.com">counseling@DebtHelper.com</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var form = document.getElementById('partnerForm');
+      var success = document.getElementById('success');
+
+      function fieldOf(el) { return el.closest('.field'); }
+      function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var ok = true;
+
+        ['firm', 'contact', 'phone'].forEach(function (id) {
+          var el = document.getElementById(id);
+          var bad = !el.value.trim();
+          fieldOf(el).classList.toggle('invalid', bad);
+          if (bad) ok = false;
+        });
+
+        var email = document.getElementById('email');
+        var emailBad = !isEmail(email.value.trim());
+        fieldOf(email).classList.toggle('invalid', emailBad);
+        if (emailBad) ok = false;
+
+        if (!ok) {
+          var firstBad = form.querySelector('.field.invalid');
+          if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        // TODO (developer): POST the collected data to your intake API here.
+        form.style.display = 'none';
+        success.classList.add('show');
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      form.addEventListener('input', function (e) {
+        var f = e.target.closest('.field');
+        if (f) f.classList.remove('invalid');
+      });
+    })();
+  </script>
+</body>
+</html>

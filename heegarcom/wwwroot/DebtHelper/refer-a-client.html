@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Refer a Client — DebtHelper for Attorneys</title>
+  <meta name="description" content="Refer a struggling client to DebtHelper for court-approved bankruptcy counseling or a debt-management alternative." />
+  <style>
+    :root {
+      --navy: #12335b; --navy-deep: #0c2440; --navy-soft: #1c4a80;
+      --coral: #e8622e; --coral-dark: #cf5323;
+      --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
+      --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
+      --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
+      --maxw: 760px; --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --err: #c0392b;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg-alt); line-height: 1.6; }
+    a { color: var(--navy-soft); }
+    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    .site-header { background: #fff; border-bottom: 1px solid var(--line); }
+    .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; }
+    .brand span { color: var(--coral); }
+    .back { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; }
+    .back:hover { color: var(--coral); }
+
+    .intro { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 70%); color: #fff; padding: 48px 0 40px; }
+    .intro h1 { color: #fff; }
+    .intro p { color: rgba(255,255,255,.85); margin: 0; max-width: 60ch; }
+    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--coral); margin-bottom: 1rem; }
+
+    .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; margin: -28px 0 48px; }
+    fieldset { border: none; padding: 0; margin: 0 0 28px; }
+    legend { font-weight: 800; color: var(--navy); font-size: 1.1rem; padding: 0; margin-bottom: 4px; }
+    .legend-note { font-size: .88rem; color: var(--muted); margin-bottom: 18px; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .field { margin-bottom: 18px; }
+    .field.full { grid-column: 1 / -1; }
+    label { display: block; font-weight: 600; font-size: .92rem; margin-bottom: 6px; }
+    .req-star { color: var(--coral); }
+    input, select, textarea {
+      width: 100%; padding: 11px 13px; font: inherit; color: var(--ink);
+      border: 1px solid var(--line); border-radius: 8px; background: #fff;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--navy-soft); box-shadow: 0 0 0 3px rgba(28,74,128,.12); }
+    textarea { min-height: 96px; resize: vertical; }
+    .hint { font-size: .82rem; color: var(--muted); margin-top: 5px; }
+    .error-msg { color: var(--err); font-size: .82rem; margin-top: 5px; display: none; }
+    .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--err); }
+    .field.invalid .error-msg { display: block; }
+
+    .consent { display: flex; gap: 12px; align-items: flex-start; background: var(--bg-navy-tint); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; }
+    .consent input { width: auto; margin-top: 4px; flex: none; }
+    .consent label { font-weight: 500; font-size: .9rem; margin: 0; }
+    .field.invalid .consent { border-color: var(--err); }
+
+    .btn { display: inline-block; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; border: 2px solid transparent; background: var(--coral); color: #fff; }
+    .btn:hover { background: var(--coral-dark); }
+    .btn:active { transform: translateY(1px); }
+
+    .success { display: none; background: #eaf7ef; border: 1px solid #b7e0c6; color: #1e5b37; border-radius: var(--radius); padding: 20px 22px; margin-bottom: 22px; }
+    .success.show { display: block; }
+
+    .devnote { font-size: .8rem; color: var(--muted); background: #fff8ec; border: 1px dashed #e6c58a; border-radius: 8px; padding: 12px 14px; margin-top: 20px; }
+
+    footer { background: var(--navy-deep); color: rgba(255,255,255,.7); padding: 30px 0; font-size: .85rem; }
+    footer a { color: #fff; }
+
+    @media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } .card { padding: 22px; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">Debt<span>Helper</span></a>
+      <a class="back" href="index.html">&larr; Back to overview</a>
+    </div>
+  </header>
+
+  <section class="intro">
+    <div class="wrap">
+      <span class="eyebrow">For Bankruptcy Attorneys</span>
+      <h1>Refer a client</h1>
+      <p>Send us a struggling client and we'll take it from there &mdash; court-approved counseling, the two required bankruptcy courses, or a debt-management alternative when filing isn't right.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="success" id="success" role="status" aria-live="polite">
+        <strong>Referral received.</strong> Thank you. A DebtHelper counselor will reach out to your client, and we'll keep you posted on their intake.
+      </div>
+
+      <form id="referForm" novalidate>
+        <!-- Referring attorney -->
+        <fieldset>
+          <legend>About you (the referring attorney)</legend>
+          <p class="legend-note">So we can confirm the referral and keep you updated.</p>
+          <div class="grid2">
+            <div class="field">
+              <label for="attyName">Your name <span class="req-star">*</span></label>
+              <input type="text" id="attyName" name="attyName" required />
+              <div class="error-msg">Please enter your name.</div>
+            </div>
+            <div class="field">
+              <label for="firm">Firm</label>
+              <input type="text" id="firm" name="firm" />
+            </div>
+            <div class="field">
+              <label for="attyEmail">Your email <span class="req-star">*</span></label>
+              <input type="email" id="attyEmail" name="attyEmail" required />
+              <div class="error-msg">Please enter a valid email address.</div>
+            </div>
+            <div class="field">
+              <label for="attyPhone">Your phone</label>
+              <input type="tel" id="attyPhone" name="attyPhone" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Client -->
+        <fieldset>
+          <legend>About the client</legend>
+          <p class="legend-note">Only what we need to make contact. Please do not include account numbers or Social Security numbers.</p>
+          <div class="grid2">
+            <div class="field">
+              <label for="clientName">Client name <span class="req-star">*</span></label>
+              <input type="text" id="clientName" name="clientName" required />
+              <div class="error-msg">Please enter the client's name.</div>
+            </div>
+            <div class="field">
+              <label for="clientPhone">Client phone <span class="req-star">*</span></label>
+              <input type="tel" id="clientPhone" name="clientPhone" required />
+              <div class="error-msg">Please enter a phone number where we can reach the client.</div>
+            </div>
+            <div class="field">
+              <label for="clientEmail">Client email</label>
+              <input type="email" id="clientEmail" name="clientEmail" />
+              <div class="error-msg">Please enter a valid email address.</div>
+            </div>
+            <div class="field">
+              <label for="clientState">Client's state</label>
+              <input type="text" id="clientState" name="clientState" maxlength="2" placeholder="e.g. FL" />
+            </div>
+            <div class="field full">
+              <label for="need">What does this client need? <span class="req-star">*</span></label>
+              <select id="need" name="need" required>
+                <option value="">Select the best fit…</option>
+                <option>Pre-filing credit counseling (§109(h))</option>
+                <option>Pre-discharge debtor education (§111 / §727)</option>
+                <option>Both required bankruptcy courses</option>
+                <option>Debt-management / bankruptcy alternative</option>
+                <option>Not sure — please assess</option>
+              </select>
+              <div class="error-msg">Please choose what the client needs.</div>
+            </div>
+            <div class="field full">
+              <label for="notes">Anything else we should know?</label>
+              <textarea id="notes" name="notes" placeholder="Timeline, filing deadline, best time to reach the client, etc."></textarea>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Consent -->
+        <fieldset>
+          <div class="field" id="consentField">
+            <div class="consent">
+              <input type="checkbox" id="consent" name="consent" required />
+              <label for="consent">
+                I confirm the client has consented to this referral and to DebtHelper contacting them,
+                and that I am authorized to share the information above. <span class="req-star">*</span>
+              </label>
+            </div>
+            <div class="error-msg">Client consent is required before we can accept a referral.</div>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn">Submit referral</button>
+
+        <p class="devnote">
+          <strong>Developer note:</strong> this form validates in the browser and currently does not send data anywhere.
+          Wire the <code>submit</code> handler in the script below to your CRM / intake API or a secure email endpoint before going live.
+          Because it collects a third party's personal data, use HTTPS POST to a server you control &mdash; do not send PII via <code>mailto:</code> or query string.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      DebtHelper &mdash; Credit Card Management Services, Inc. &middot; (800) 920-2262 &middot;
+      <a href="mailto:counseling@DebtHelper.com">counseling@DebtHelper.com</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var form = document.getElementById('referForm');
+      var success = document.getElementById('success');
+
+      function setInvalid(field, invalid) {
+        field.classList.toggle('invalid', invalid);
+      }
+      function fieldOf(el) { return el.closest('.field'); }
+      function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var ok = true;
+
+        // Required text/select fields
+        ['attyName', 'clientName', 'clientPhone', 'need'].forEach(function (id) {
+          var el = document.getElementById(id);
+          var bad = !el.value.trim();
+          setInvalid(fieldOf(el), bad);
+          if (bad) ok = false;
+        });
+
+        // Required email
+        var atty = document.getElementById('attyEmail');
+        var attyBad = !isEmail(atty.value.trim());
+        setInvalid(fieldOf(atty), attyBad);
+        if (attyBad) ok = false;
+
+        // Optional email — validate only if filled
+        var cEmail = document.getElementById('clientEmail');
+        if (cEmail.value.trim()) {
+          var cBad = !isEmail(cEmail.value.trim());
+          setInvalid(fieldOf(cEmail), cBad);
+          if (cBad) ok = false;
+        } else {
+          setInvalid(fieldOf(cEmail), false);
+        }
+
+        // Consent
+        var consent = document.getElementById('consent');
+        var consentField = document.getElementById('consentField');
+        setInvalid(consentField, !consent.checked);
+        if (!consent.checked) ok = false;
+
+        if (!ok) {
+          var firstBad = form.querySelector('.field.invalid');
+          if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        // TODO (developer): POST the collected data to your intake API here.
+        // var data = new FormData(form);  fetch('/api/referrals', { method: 'POST', body: data }) ...
+        form.style.display = 'none';
+        success.classList.add('show');
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      // Clear the invalid state as the user fixes a field
+      form.addEventListener('input', function (e) {
+        var f = e.target.closest('.field');
+        if (f) f.classList.remove('invalid');
+      });
+    })();
+  </script>
+</body>
+</html>
