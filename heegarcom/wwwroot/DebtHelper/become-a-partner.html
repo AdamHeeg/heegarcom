@@ -7,8 +7,8 @@
   <meta name="description" content="Set your firm up as an ongoing DebtHelper referral partner and request a referral kit." />
   <style>
     :root {
-      --navy: #12335b; --navy-deep: #0c2440; --navy-soft: #1c4a80;
-      --coral: #e8622e; --coral-dark: #cf5323;
+      --navy: #00355f; --navy-deep: #002544; --navy-soft: #0a4c82;
+      --green: #1e7a3c; --green-dark: #16602f; --green-bright: #00a651; --red: #ed1c24;
       --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
       --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
       --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
@@ -24,14 +24,27 @@
     .site-header { background: #fff; border-bottom: 1px solid var(--line); }
     .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
     .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; }
-    .brand span { color: var(--coral); }
+    .brand span { color: var(--green); }
     .back { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; }
-    .back:hover { color: var(--coral); }
+    .back:hover { color: var(--green); }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .93rem; }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    .nav-links a.active { border-bottom: 1px solid var(--red); padding-bottom: 2px; }
+    .nav-btn { padding: 9px 15px; border-radius: 7px; font-weight: 700; border: 2px solid transparent; }
+    .nav-btn-primary { background: var(--green); color: #fff !important; }
+    .nav-btn-primary:hover { background: var(--green-dark); }
+    .nav-btn-secondary { background: transparent; color: var(--navy) !important; border-color: var(--navy); }
+    .nav-btn-secondary:hover { background: var(--navy); color: #fff !important; }
+    @media (max-width: 720px) {
+      .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding-top: 12px; padding-bottom: 12px; }
+      .nav-links { font-size: .85rem; gap: 4px 14px; }
+    }
 
     .intro { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 70%); color: #fff; padding: 48px 0 40px; }
     .intro h1 { color: #fff; }
     .intro p { color: rgba(255,255,255,.85); margin: 0; max-width: 60ch; }
-    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--coral); margin-bottom: 1rem; }
+    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--green); margin-bottom: 1rem; }
 
     .perks { max-width: 1080px; margin: 34px auto -10px; padding: 0 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
     .perk { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); }
@@ -47,7 +60,7 @@
     .field { margin-bottom: 18px; }
     .field.full { grid-column: 1 / -1; }
     label { display: block; font-weight: 600; font-size: .92rem; margin-bottom: 6px; }
-    .req-star { color: var(--coral); }
+    .req-star { color: var(--red); }
     input, select, textarea {
       width: 100%; padding: 11px 13px; font: inherit; color: var(--ink);
       border: 1px solid var(--line); border-radius: 8px; background: #fff;
@@ -63,14 +76,18 @@
     .check input { width: auto; flex: none; }
     .check label { margin: 0; font-weight: 500; font-size: .9rem; }
 
-    .btn { display: inline-block; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; border: 2px solid transparent; background: var(--coral); color: #fff; }
-    .btn:hover { background: var(--coral-dark); }
+    .btn { display: inline-block; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; border: 2px solid transparent; background: var(--green); color: #fff; }
+    .btn:hover { background: var(--green-dark); }
     .btn:active { transform: translateY(1px); }
 
     .success { display: none; background: #eaf7ef; border: 1px solid #b7e0c6; color: #1e5b37; border-radius: var(--radius); padding: 20px 22px; margin-bottom: 22px; }
     .success.show { display: block; }
+    .formerror { display: none; background: #fdecea; border: 1px solid #f2b8b1; color: #b0281c; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 18px; }
+    .formerror.show { display: block; }
 
     .devnote { font-size: .8rem; color: var(--muted); background: #fff8ec; border: 1px dashed #e6c58a; border-radius: 8px; padding: 12px 14px; margin-top: 20px; }
+    .privnote { font-size: .82rem; color: var(--muted); margin-top: 18px; }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
     footer { background: var(--navy-deep); color: rgba(255,255,255,.7); padding: 30px 0; font-size: .85rem; }
     footer a { color: #fff; }
@@ -83,7 +100,14 @@
   <header class="site-header">
     <div class="inner">
       <a class="brand" href="index.html">Debt<span>Helper</span></a>
-      <a class="back" href="index.html">&larr; Back to overview</a>
+      <nav class="nav-links">
+        <a href="index.html#pipeline">How Referrals Work</a>
+        <a href="index.html#why">Why DebtHelper</a>
+        <a href="index.html#legal">Credentials</a>
+        <a href="deadline-calculator.html">Deadline Calculator</a>
+        <a class="nav-btn nav-btn-primary" href="refer-a-client.html">Refer a Client</a>
+        <a class="nav-btn nav-btn-secondary" href="become-a-partner.html">Become a Referral Partner</a>
+      </nav>
     </div>
   </header>
 
@@ -107,8 +131,15 @@
       <div class="success" id="success" role="status" aria-live="polite">
         <strong>Thank you.</strong> Your firm's partner request has been received. We'll follow up shortly with your referral kit and a direct counselor contact.
       </div>
+      <div class="formerror" id="formError" role="alert">
+        <strong>Something went wrong.</strong> Your request couldn't be submitted. Please try again, or call (800) 920-2262.
+      </div>
 
       <form id="partnerForm" novalidate>
+        <!-- Honeypot: hidden from humans; bots that fill it are silently discarded server-side. -->
+        <div class="hp" aria-hidden="true">
+          <label>Website<input type="text" id="website" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
         <fieldset>
           <legend>Your firm</legend>
           <p class="legend-note">Tell us who you are and how to reach you.</p>
@@ -168,11 +199,13 @@
           </div>
         </fieldset>
 
+        <p class="privnote">For security and follow-up, we also record basic technical details with this submission: your IP address, browser/device, referring page, and time zone.</p>
+
         <button type="submit" class="btn">Request partnership</button>
 
         <p class="devnote">
-          <strong>Developer note:</strong> this form validates in the browser and does not send data anywhere yet.
-          Wire the <code>submit</code> handler below to your CRM / intake API before going live.
+          <strong>Developer note:</strong> this form POSTs JSON to <code>/api/partners</code>, which stores the request in the local
+          <code>Data/debthelper.db</code> SQLite database. Point a CRM at that table (or add a retrieval endpoint) when you're ready. Serve over HTTPS in production.
         </p>
       </form>
     </div>
@@ -188,10 +221,14 @@
   <script>
     (function () {
       var form = document.getElementById('partnerForm');
+      var loadedAt = Date.now();
       var success = document.getElementById('success');
+      var formError = document.getElementById('formError');
+      var submitBtn = form.querySelector('button[type="submit"]');
 
       function fieldOf(el) { return el.closest('.field'); }
       function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+      function val(id) { return document.getElementById(id).value.trim(); }
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -215,10 +252,39 @@
           return;
         }
 
-        // TODO (developer): POST the collected data to your intake API here.
-        form.style.display = 'none';
-        success.classList.add('show');
-        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        var interest = Array.prototype.map.call(
+          document.querySelectorAll('input[name="interest"]:checked'),
+          function (c) { return c.value; }
+        );
+        var payload = {
+          firm: val('firm'), contact: val('contact'), email: val('email'), phone: val('phone'),
+          state: val('state'), volume: val('volume'), interest: interest, notes: val('notes'),
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          website: document.getElementById('website').value,
+          elapsedMs: Date.now() - loadedAt
+        };
+
+        formError.classList.remove('show');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting…';
+
+        fetch('/api/partners', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .then(function (r) { if (!r.ok) throw new Error('Request failed: ' + r.status); return r.json(); })
+          .then(function () {
+            form.style.display = 'none';
+            success.classList.add('show');
+            success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          })
+          .catch(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Request partnership';
+            formError.classList.add('show');
+            formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
       });
 
       form.addEventListener('input', function (e) {

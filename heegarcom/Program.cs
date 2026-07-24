@@ -1,4 +1,6 @@
+using System.Threading.RateLimiting;
 using heegarcom.Components;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Data.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +9,37 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
+// Trust X-Forwarded-For/-Proto so the referral endpoints see the real client IP when the app runs
+// behind a proxy/CDN. NOTE: clearing known proxies trusts these headers from any source (a client
+// could spoof its IP). Acceptable for lead metadata; restrict to known proxies before ever using
+// the IP for a security decision.
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
+// Per-IP rate limit for the public form endpoints — throttles bot floods with no user friction.
+// These are low-volume forms, so a small window is plenty; excess submissions get HTTP 429.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("form-submit", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(5),
+                QueueLimit = 0
+            }));
+});
+
 var app = builder.Build();
+
+app.UseForwardedHeaders();
+app.UseRateLimiter();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -80,6 +112,194 @@ app.MapGet("/api/terminology/search", (string? icd, string? snomed, IWebHostEnvi
     return Results.Ok(rows);
 });
 
+// DebtHelper attorney-referral intake store (local SQLite, write-enabled).
+// Mirrors the read-only terminology.db pattern above, but lives in Data/debthelper.db
+// (outside wwwroot, so it is never served to the browser).
+// NOTE: this file is UNENCRYPTED. It is fine for dev/staging, but the referrals table holds
+// a third party's personal data (referred clients). Move it to an encrypted, access-controlled
+// store before collecting live client data.
+var debtHelperDbPath = Path.Combine(app.Environment.ContentRootPath, "Data", "debthelper.db");
+InitDebtHelperDb(debtHelperDbPath);
+
+// Store an attorney's client referral (from refer-a-client.html).
+app.MapPost("/api/referrals", (ReferralSubmission s, HttpContext ctx, IWebHostEnvironment env) =>
+{
+    // Bot filters: silently accept-and-discard honeypot hits and near-instant submits, so a bot
+    // can't tell it was blocked. Referral form has many fields, so a real fill takes well over 3s.
+    if (!string.IsNullOrWhiteSpace(s.Website) || (s.ElapsedMs is long ms && ms < 3000))
+        return Results.Ok(new { ok = true });
+
+    var dbPath = Path.Combine(env.ContentRootPath, "Data", "debthelper.db");
+    using var conn = new SqliteConnection($"Data Source={dbPath}");
+    conn.Open();
+
+    using var cmd = conn.CreateCommand();
+    cmd.CommandText = @"
+        INSERT INTO referrals
+            (created_utc, atty_name, firm, atty_email, atty_phone,
+             client_name, client_phone, client_email, client_state, need, notes, consent,
+             ip, user_agent, referer, accept_language, timezone)
+        VALUES
+            ($created, $attyName, $firm, $attyEmail, $attyPhone,
+             $clientName, $clientPhone, $clientEmail, $clientState, $need, $notes, $consent,
+             $ip, $userAgent, $referer, $acceptLanguage, $timezone)";
+    cmd.Parameters.AddWithValue("$created", DateTime.UtcNow.ToString("o"));
+    cmd.Parameters.AddWithValue("$attyName", s.AttyName ?? "");
+    cmd.Parameters.AddWithValue("$firm", s.Firm ?? "");
+    cmd.Parameters.AddWithValue("$attyEmail", s.AttyEmail ?? "");
+    cmd.Parameters.AddWithValue("$attyPhone", s.AttyPhone ?? "");
+    cmd.Parameters.AddWithValue("$clientName", s.ClientName ?? "");
+    cmd.Parameters.AddWithValue("$clientPhone", s.ClientPhone ?? "");
+    cmd.Parameters.AddWithValue("$clientEmail", s.ClientEmail ?? "");
+    cmd.Parameters.AddWithValue("$clientState", s.ClientState ?? "");
+    cmd.Parameters.AddWithValue("$need", s.Need ?? "");
+    cmd.Parameters.AddWithValue("$notes", s.Notes ?? "");
+    cmd.Parameters.AddWithValue("$consent", s.Consent ? 1 : 0);
+    cmd.Parameters.AddWithValue("$ip", ctx.Connection.RemoteIpAddress?.ToString() ?? "");
+    cmd.Parameters.AddWithValue("$userAgent", ctx.Request.Headers.UserAgent.ToString());
+    cmd.Parameters.AddWithValue("$referer", ctx.Request.Headers.Referer.ToString());
+    cmd.Parameters.AddWithValue("$acceptLanguage", ctx.Request.Headers.AcceptLanguage.ToString());
+    cmd.Parameters.AddWithValue("$timezone", s.Timezone ?? "");
+    cmd.ExecuteNonQuery();
+
+    return Results.Ok(new { ok = true });
+}).DisableAntiforgery().RequireRateLimiting("form-submit");
+
+// Store a firm's referral-partner request (from become-a-partner.html).
+app.MapPost("/api/partners", (PartnerSubmission s, HttpContext ctx, IWebHostEnvironment env) =>
+{
+    // Bot filters: silently accept-and-discard honeypot hits and near-instant submits.
+    if (!string.IsNullOrWhiteSpace(s.Website) || (s.ElapsedMs is long ms && ms < 2000))
+        return Results.Ok(new { ok = true });
+
+    var dbPath = Path.Combine(env.ContentRootPath, "Data", "debthelper.db");
+    using var conn = new SqliteConnection($"Data Source={dbPath}");
+    conn.Open();
+
+    var interest = string.Join(", ", s.Interest ?? Array.Empty<string>());
+
+    using var cmd = conn.CreateCommand();
+    cmd.CommandText = @"
+        INSERT INTO partners
+            (created_utc, firm, contact, email, phone, state, volume, interest, notes,
+             ip, user_agent, referer, accept_language, timezone)
+        VALUES
+            ($created, $firm, $contact, $email, $phone, $state, $volume, $interest, $notes,
+             $ip, $userAgent, $referer, $acceptLanguage, $timezone)";
+    cmd.Parameters.AddWithValue("$created", DateTime.UtcNow.ToString("o"));
+    cmd.Parameters.AddWithValue("$firm", s.Firm ?? "");
+    cmd.Parameters.AddWithValue("$contact", s.Contact ?? "");
+    cmd.Parameters.AddWithValue("$email", s.Email ?? "");
+    cmd.Parameters.AddWithValue("$phone", s.Phone ?? "");
+    cmd.Parameters.AddWithValue("$state", s.State ?? "");
+    cmd.Parameters.AddWithValue("$volume", s.Volume ?? "");
+    cmd.Parameters.AddWithValue("$interest", interest);
+    cmd.Parameters.AddWithValue("$notes", s.Notes ?? "");
+    cmd.Parameters.AddWithValue("$ip", ctx.Connection.RemoteIpAddress?.ToString() ?? "");
+    cmd.Parameters.AddWithValue("$userAgent", ctx.Request.Headers.UserAgent.ToString());
+    cmd.Parameters.AddWithValue("$referer", ctx.Request.Headers.Referer.ToString());
+    cmd.Parameters.AddWithValue("$acceptLanguage", ctx.Request.Headers.AcceptLanguage.ToString());
+    cmd.Parameters.AddWithValue("$timezone", s.Timezone ?? "");
+    cmd.ExecuteNonQuery();
+
+    return Results.Ok(new { ok = true });
+}).DisableAntiforgery().RequireRateLimiting("form-submit");
+
 app.Run();
 
+// Create the DebtHelper intake database and its tables on startup if they don't exist.
+static void InitDebtHelperDb(string dbPath)
+{
+    Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+
+    using var conn = new SqliteConnection($"Data Source={dbPath}");
+    conn.Open();
+
+    using (var cmd = conn.CreateCommand())
+    {
+        cmd.CommandText = @"
+            CREATE TABLE IF NOT EXISTS referrals (
+                id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                created_utc     TEXT NOT NULL,
+                atty_name       TEXT,
+                firm            TEXT,
+                atty_email      TEXT,
+                atty_phone      TEXT,
+                client_name     TEXT,
+                client_phone    TEXT,
+                client_email    TEXT,
+                client_state    TEXT,
+                need            TEXT,
+                notes           TEXT,
+                consent         INTEGER NOT NULL DEFAULT 0,
+                ip              TEXT,
+                user_agent      TEXT,
+                referer         TEXT,
+                accept_language TEXT,
+                timezone        TEXT
+            );
+            CREATE TABLE IF NOT EXISTS partners (
+                id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                created_utc     TEXT NOT NULL,
+                firm            TEXT,
+                contact         TEXT,
+                email           TEXT,
+                phone           TEXT,
+                state           TEXT,
+                volume          TEXT,
+                interest        TEXT,
+                notes           TEXT,
+                ip              TEXT,
+                user_agent      TEXT,
+                referer         TEXT,
+                accept_language TEXT,
+                timezone        TEXT
+            );";
+        cmd.ExecuteNonQuery();
+    }
+
+    // Additive migration: patch databases created before the metadata columns existed.
+    var metaColumns = new[] { "ip", "user_agent", "referer", "accept_language", "timezone" };
+    foreach (var table in new[] { "referrals", "partners" })
+        foreach (var column in metaColumns)
+            AddColumnIfMissing(conn, table, column);
+}
+
+// Add a TEXT column to a table if it isn't already present (SQLite has no ADD COLUMN IF NOT EXISTS).
+static void AddColumnIfMissing(SqliteConnection conn, string table, string column)
+{
+    var exists = false;
+    using (var check = conn.CreateCommand())
+    {
+        check.CommandText = $"PRAGMA table_info({table})";
+        using var reader = check.ExecuteReader();
+        while (reader.Read())
+        {
+            if (string.Equals(reader.GetString(1), column, StringComparison.OrdinalIgnoreCase))
+            {
+                exists = true;
+                break;
+            }
+        }
+    }
+
+    if (!exists)
+    {
+        using var alter = conn.CreateCommand();
+        alter.CommandText = $"ALTER TABLE {table} ADD COLUMN {column} TEXT";
+        alter.ExecuteNonQuery();
+    }
+}
+
 record MapRow(string IcdCode, string IcdDescription, string SnomedId, string SnomedTerm);
+
+record ReferralSubmission(
+    string? AttyName, string? Firm, string? AttyEmail, string? AttyPhone,
+    string? ClientName, string? ClientPhone, string? ClientEmail, string? ClientState,
+    string? Need, string? Notes, bool Consent, string? Timezone,
+    string? Website, long? ElapsedMs);
+
+record PartnerSubmission(
+    string? Firm, string? Contact, string? Email, string? Phone,
+    string? State, string? Volume, string[]? Interest, string? Notes, string? Timezone,
+    string? Website, long? ElapsedMs);

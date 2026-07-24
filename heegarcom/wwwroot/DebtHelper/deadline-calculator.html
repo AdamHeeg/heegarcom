@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bankruptcy Counseling Deadline Calculator — DebtHelper for Attorneys</title>
+  <meta name="description" content="Calculate the §109(h) pre-filing credit counseling window and the §111/§727 debtor education deadline for a bankruptcy case." />
+  <style>
+    :root {
+      --navy: #00355f; --navy-deep: #002544; --navy-soft: #0a4c82;
+      --green: #1e7a3c; --green-dark: #16602f; --green-bright: #00a651; --red: #ed1c24;
+      --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
+      --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
+      --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
+      --maxw: 820px; --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --ok: #1e7a3c; --ok-bg: #eaf7ef; --ok-line: #b7e0c6;
+      --warn: #9a6a00; --warn-bg: #fff6e5; --warn-line: #f0d38a;
+      --bad: #cf1622; --bad-bg: #fdecea; --bad-line: #f2b8b1;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg-alt); line-height: 1.6; }
+    a { color: var(--navy-soft); }
+    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    .site-header { background: #fff; border-bottom: 1px solid var(--line); }
+    .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; }
+    .brand span { color: var(--green); }
+    .back { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; }
+    .back:hover { color: var(--green); }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .93rem; }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    .nav-links a.active { border-bottom: 1px solid var(--red); padding-bottom: 2px; }
+    .nav-btn { padding: 9px 15px; border-radius: 7px; font-weight: 700; border: 2px solid transparent; }
+    .nav-btn-primary { background: var(--green); color: #fff !important; }
+    .nav-btn-primary:hover { background: var(--green-dark); }
+    .nav-btn-secondary { background: transparent; color: var(--navy) !important; border-color: var(--navy); }
+    .nav-btn-secondary:hover { background: var(--navy); color: #fff !important; }
+    @media (max-width: 720px) {
+      .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding-top: 12px; padding-bottom: 12px; }
+      .nav-links { font-size: .85rem; gap: 4px 14px; }
+    }
+
+    .intro { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 70%); color: #fff; padding: 44px 0 38px; }
+    .intro h1 { color: #fff; }
+    .intro p { color: rgba(255,255,255,.85); margin: 0; max-width: 62ch; }
+    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--green); margin-bottom: 1rem; }
+
+    .topnote {
+      background: var(--bg-navy-tint); border: 1px solid var(--line); border-left: 4px solid var(--green);
+      border-radius: var(--radius); padding: 16px 20px; font-size: .9rem; color: var(--muted); margin: 26px 0 8px;
+    }
+    .topnote strong { color: var(--navy); }
+
+    .calc {
+      background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 28px; margin: 22px 0;
+    }
+    .calc h2 { font-size: 1.25rem; display: flex; align-items: baseline; gap: 10px; }
+    .calc h2 .cite { font-size: .8rem; font-weight: 700; color: var(--green); }
+    .calc > p.desc { color: var(--muted); margin-top: 0; }
+
+    label { display: block; font-weight: 600; font-size: .95rem; margin: 14px 0 6px; }
+    input[type="date"] {
+      font: inherit; color: var(--ink); padding: 11px 13px; border: 1px solid var(--line);
+      border-radius: 8px; background: #fff; max-width: 260px; width: 100%;
+    }
+    input[type="date"]:focus { outline: none; border-color: var(--navy-soft); box-shadow: 0 0 0 3px rgba(28,74,128,.12); }
+
+    /* Per-field rule/law note */
+    .fieldnote { font-size: .82rem; color: var(--muted); margin-top: 8px; max-width: 62ch; }
+    .fieldnote strong { color: var(--navy); }
+
+    /* Result box */
+    .result { margin-top: 18px; border-radius: var(--radius); padding: 18px 20px; border: 1px solid var(--line); background: var(--bg-alt); display: none; }
+    .result.show { display: block; }
+    .result .big { font-size: 1.35rem; font-weight: 800; color: var(--navy); }
+    .result .sub { font-size: .92rem; color: var(--muted); margin-top: 4px; }
+    .result.ok   { background: var(--ok-bg);   border-color: var(--ok-line); }
+    .result.warn { background: var(--warn-bg); border-color: var(--warn-line); }
+    .result.bad  { background: var(--bad-bg);  border-color: var(--bad-line); }
+    .result.ok   .big { color: var(--ok); }
+    .result.warn .big { color: var(--warn); }
+    .result.bad  .big { color: var(--bad); }
+    .rollnote { font-size: .82rem; color: var(--muted); margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); }
+
+    /* Tooltip term */
+    .term {
+      position: relative; border-bottom: 1px dotted var(--navy-soft); color: var(--navy-soft);
+      cursor: help; font-weight: 600; white-space: nowrap;
+    }
+    .term:focus { outline: 2px solid var(--navy-soft); outline-offset: 2px; }
+    .term sup { font-size: .65em; margin-left: 1px; }
+    .term .tip {
+      visibility: hidden; opacity: 0; transition: opacity .15s ease;
+      position: absolute; left: 0; bottom: calc(100% + 8px); z-index: 30;
+      width: max-content; max-width: 300px; white-space: normal;
+      background: var(--navy-deep); color: #fff; font-weight: 400; font-size: .82rem; line-height: 1.45;
+      padding: 10px 13px; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.25);
+    }
+    .term .tip::after {
+      content: ""; position: absolute; top: 100%; left: 16px;
+      border: 6px solid transparent; border-top-color: var(--navy-deep);
+    }
+    .term:hover .tip, .term:focus .tip, .term:focus-within .tip { visibility: visible; opacity: 1; }
+
+    .disclaimer {
+      margin: 24px 0 8px; font-size: .82rem; color: var(--muted);
+      background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 22px;
+    }
+    .disclaimer strong { color: var(--navy); }
+    .disclaimer ul { margin: 8px 0 0; padding-left: 20px; }
+    .disclaimer li { margin-bottom: 5px; }
+
+    footer { background: var(--navy-deep); color: rgba(255,255,255,.7); padding: 30px 0; font-size: .85rem; margin-top: 40px; }
+    footer a { color: #fff; }
+
+    @media (max-width: 560px) { .calc { padding: 20px; } .term .tip { max-width: 220px; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">Debt<span>Helper</span></a>
+      <nav class="nav-links">
+        <a href="index.html#pipeline">How Referrals Work</a>
+        <a href="index.html#why">Why DebtHelper</a>
+        <a href="index.html#legal">Credentials</a>
+        <a class="active" href="deadline-calculator.html">Deadline Calculator</a>
+        <a class="nav-btn nav-btn-primary" href="refer-a-client.html">Refer a Client</a>
+        <a class="nav-btn nav-btn-secondary" href="become-a-partner.html">Become a Referral Partner</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="intro">
+    <div class="wrap">
+      <span class="eyebrow">A Tool For Bankruptcy Attorneys &amp; Paralegals</span>
+      <h1>Counseling &amp; education deadline calculator</h1>
+      <p>Enter one date and see the counseling window or education deadline for a consumer case. It's calendar math with the Bankruptcy Code rules built in &mdash; hover any underlined term for the rule behind it.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+
+    <div class="topnote">
+      <strong>How to use:</strong> pick the calculator that matches the date you already know. Results update as you choose a date.
+      Hover or tab to any <span class="term" tabindex="0">underlined term<sup>?</sup><span class="tip">Underlined terms carry a plain-language note about the statute or rule they come from. Tab to them for keyboard access.</span></span> for the applicable law.
+    </div>
+
+    <!-- ============ 1) Counseling done -> file-by date ============ -->
+    <div class="calc">
+      <h2>Pre-filing counseling completed <span class="cite">11 U.S.C. §109(h)</span></h2>
+      <p class="desc">Your client already finished the required credit counseling. How long is that certificate good for filing?</p>
+
+      <label for="counselDate">Date
+        <span class="term" tabindex="0">credit counseling<sup>?</sup><span class="tip">The pre-filing budget and credit counseling briefing from an EOUST-approved agency, required of individual debtors before a bankruptcy case can be filed. 11 U.S.C. §109(h)(1).</span></span>
+        was completed</label>
+      <input type="date" id="counselDate" />
+
+      <p class="fieldnote">
+        <strong>Rule:</strong> the briefing must fall within the
+        <span class="term" tabindex="0">180-day period ending on the filing date<sup>?</sup><span class="tip">§109(h)(1) requires counseling "during the 180-day period ending on the date of filing." In practice the certificate is treated as valid for filing for 180 calendar days from completion.</span></span>.
+        So the latest you can file on this certificate is 180 days after the completion date.
+      </p>
+
+      <div class="result" id="counselResult" role="status" aria-live="polite">
+        <div class="big" id="counselBig"></div>
+        <div class="sub" id="counselSub"></div>
+        <div class="rollnote" id="counselRoll"></div>
+      </div>
+    </div>
+
+    <!-- ============ 2) Planned filing -> earliest valid counseling ============ -->
+    <div class="calc">
+      <h2>Filing date is set <span class="cite">11 U.S.C. §109(h)</span></h2>
+      <p class="desc">You know when you intend to file. What's the earliest a counseling certificate can be dated and still count?</p>
+
+      <label for="fileDate">Planned
+        <span class="term" tabindex="0">petition / filing date<sup>?</sup><span class="tip">The date the bankruptcy petition is filed with the court, which commences the case (the "order for relief"). 11 U.S.C. §301.</span></span>
+      </label>
+      <input type="date" id="fileDate" />
+
+      <p class="fieldnote">
+        <strong>Rule:</strong> counting back 180 days from the filing date gives the earliest valid counseling date. A certificate dated before that is
+        <span class="term" tabindex="0">stale<sup>?</sup><span class="tip">Counseling done more than 180 days before filing falls outside the §109(h) window and generally will not satisfy the requirement; the client must re-take it.</span></span>
+        and will not satisfy §109(h).
+      </p>
+
+      <div class="result" id="fileResult" role="status" aria-live="polite">
+        <div class="big" id="fileBig"></div>
+        <div class="sub" id="fileSub"></div>
+      </div>
+    </div>
+
+    <!-- ============ 3) 341 meeting -> debtor education deadline ============ -->
+    <div class="calc">
+      <h2>Debtor education deadline (Chapter 7) <span class="cite">11 U.S.C. §111 / §727</span></h2>
+      <p class="desc">After filing, the client must finish the debtor education course before discharge. This estimates the Chapter 7 filing deadline for the completion certificate.</p>
+
+      <label for="meetDate">First date set for the
+        <span class="term" tabindex="0">§341 meeting of creditors<sup>?</sup><span class="tip">The meeting of creditors the trustee conducts under 11 U.S.C. §341, which the debtor must attend. Its first-set date anchors several post-filing deadlines.</span></span>
+      </label>
+      <input type="date" id="meetDate" />
+
+      <p class="fieldnote">
+        <strong>Rule:</strong> the
+        <span class="term" tabindex="0">personal financial management course<sup>?</sup><span class="tip">The pre-discharge "debtor education" course required by 11 U.S.C. §111 and §727(a)(11), separate from and later than the pre-filing counseling.</span></span>
+        completion certificate
+        (<span class="term" tabindex="0">Official Form 423<sup>?</sup><span class="tip">"Certification About a Financial Management Course." The debtor or provider files this to show the course was completed.</span></span>)
+        is generally due within 60 days after the first date set for the §341 meeting in a Chapter 7 case (Fed. R. Bankr. P. 1007(c)).
+      </p>
+
+      <div class="result" id="meetResult" role="status" aria-live="polite">
+        <div class="big" id="meetBig"></div>
+        <div class="sub" id="meetSub"></div>
+        <div class="rollnote" id="meetRoll"></div>
+      </div>
+    </div>
+
+    <!-- ============ Disclaimers ============ -->
+    <div class="disclaimer">
+      <strong>Important &mdash; read before relying on any date above.</strong>
+      <ul>
+        <li>This tool is <strong>informational only and is not legal advice</strong>. DebtHelper (Credit Card Management Services, Inc.) does not provide legal advice or representation. Confirm every deadline against the Bankruptcy Code, the Federal Rules of Bankruptcy Procedure, and your local rules.</li>
+        <li>Results are <strong>calendar-day</strong> counts. Under
+          <span class="term" tabindex="0">Bankruptcy Rule 9006<sup>?</sup><span class="tip">Fed. R. Bankr. P. 9006 governs computing time. When the last day of a court-filing period falls on a Saturday, Sunday, or legal holiday, the period runs to the next day that is not one of those.</span></span>,
+          a court-filing deadline that lands on a weekend or legal holiday rolls to the next business day. This tool adjusts for weekends but <strong>does not know federal or local court holidays</strong>.</li>
+        <li>It does not account for a
+          <span class="term" tabindex="0">§109(h)(3) exigent-circumstances waiver<sup>?</sup><span class="tip">A temporary exemption from pre-filing counseling for debtors who certify exigent circumstances and that they could not get counseling in time. Court approval required. 11 U.S.C. §109(h)(3).</span></span>,
+          Chapter 13 plan-completion timing, or jurisdiction-specific local rules.</li>
+        <li>Dates are computed in your browser; nothing you enter is transmitted or stored.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="wrap">
+      DebtHelper &mdash; Credit Card Management Services, Inc. &middot; (800) 920-2262 &middot;
+      <a href="mailto:counseling@DebtHelper.com">counseling@DebtHelper.com</a> &middot;
+      <a href="refer-a-client.html">Refer a client</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var DAY = 86400000;
+
+      // Parse a yyyy-mm-dd input value into a LOCAL-midnight Date (avoids UTC off-by-one).
+      function parseDate(v) {
+        if (!v) return null;
+        var p = v.split('-');
+        if (p.length !== 3) return null;
+        var d = new Date(+p[0], +p[1] - 1, +p[2]);
+        return isNaN(d.getTime()) ? null : d;
+      }
+      function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+      function today() { var t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); }
+      function daysBetween(a, b) { return Math.round((a - b) / DAY); }
+      function fmt(d) {
+        return d.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      }
+      function isWeekend(d) { var g = d.getDay(); return g === 0 || g === 6; }
+      function nextBusinessDay(d) {
+        var r = new Date(d.getTime());
+        while (isWeekend(r)) r = addDays(r, 1);
+        return r;
+      }
+      function setClass(el, cls) { el.className = 'result show ' + cls; }
+
+      // ---- 1) Counseling completed -> file-by deadline (completed + 180) ----
+      var counselDate = document.getElementById('counselDate');
+      var counselResult = document.getElementById('counselResult');
+      var counselBig = document.getElementById('counselBig');
+      var counselSub = document.getElementById('counselSub');
+      var counselRoll = document.getElementById('counselRoll');
+
+      function calcCounsel() {
+        var d = parseDate(counselDate.value);
+        if (!d) { counselResult.className = 'result'; return; }
+        var deadline = addDays(d, 180);
+        var left = daysBetween(deadline, today());
+        var cls = left < 0 ? 'bad' : (left <= 30 ? 'warn' : 'ok');
+        setClass(counselResult, cls);
+        counselBig.textContent = 'File on or before ' + fmt(deadline);
+        if (left < 0) {
+          counselSub.textContent = 'This certificate is ' + Math.abs(left) + ' day(s) past the 180-day window — it is stale and the client must re-take counseling before filing.';
+        } else {
+          counselSub.textContent = left + ' day(s) left to file on this certificate.';
+        }
+        var rolled = nextBusinessDay(deadline);
+        counselRoll.textContent = (rolled - deadline) > 0
+          ? 'That date is a weekend; under Rule 9006 the practical last day rolls to ' + fmt(rolled) + ' (court holidays not counted).'
+          : 'Note: if a court holiday falls on the deadline, Rule 9006 rolls it to the next business day.';
+      }
+
+      // ---- 2) Planned filing -> earliest valid counseling (filing - 180) ----
+      var fileDate = document.getElementById('fileDate');
+      var fileResult = document.getElementById('fileResult');
+      var fileBig = document.getElementById('fileBig');
+      var fileSub = document.getElementById('fileSub');
+
+      function calcFile() {
+        var d = parseDate(fileDate.value);
+        if (!d) { fileResult.className = 'result'; return; }
+        var earliest = addDays(d, -180);
+        setClass(fileResult, 'ok');
+        fileBig.textContent = 'Counseling must be dated on or after ' + fmt(earliest);
+        fileSub.textContent = 'Any certificate dated before this is outside the 180-day §109(h) window and will not count for a filing on ' + fmt(d) + '.';
+      }
+
+      // ---- 3) 341 meeting -> debtor education deadline (341 + 60), Chapter 7 ----
+      var meetDate = document.getElementById('meetDate');
+      var meetResult = document.getElementById('meetResult');
+      var meetBig = document.getElementById('meetBig');
+      var meetSub = document.getElementById('meetSub');
+      var meetRoll = document.getElementById('meetRoll');
+
+      function calcMeet() {
+        var d = parseDate(meetDate.value);
+        if (!d) { meetResult.className = 'result'; return; }
+        var deadline = addDays(d, 60);
+        var left = daysBetween(deadline, today());
+        var cls = left < 0 ? 'bad' : (left <= 14 ? 'warn' : 'ok');
+        setClass(meetResult, cls);
+        meetBig.textContent = 'Course certificate due by ' + fmt(deadline);
+        if (left < 0) {
+          meetSub.textContent = 'That estimated deadline was ' + Math.abs(left) + ' day(s) ago — confirm the case status immediately.';
+        } else {
+          meetSub.textContent = 'About ' + left + ' day(s) out (60 days after the first-set §341 date, Chapter 7).';
+        }
+        var rolled = nextBusinessDay(deadline);
+        meetRoll.textContent = (rolled - deadline) > 0
+          ? 'That date is a weekend; under Rule 9006 it rolls to ' + fmt(rolled) + ' (court holidays not counted).'
+          : 'Note: if a court holiday falls on the deadline, Rule 9006 rolls it to the next business day.';
+      }
+
+      counselDate.addEventListener('input', calcCounsel);
+      counselDate.addEventListener('change', calcCounsel);
+      fileDate.addEventListener('input', calcFile);
+      fileDate.addEventListener('change', calcFile);
+      meetDate.addEventListener('input', calcMeet);
+      meetDate.addEventListener('change', calcMeet);
+    })();
+  </script>
+</body>
+</html>
