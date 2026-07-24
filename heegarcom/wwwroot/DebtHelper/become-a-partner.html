@@ -85,7 +85,6 @@
     .formerror { display: none; background: #fdecea; border: 1px solid #f2b8b1; color: #b0281c; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 18px; }
     .formerror.show { display: block; }
 
-    .devnote { font-size: .8rem; color: var(--muted); background: #fff8ec; border: 1px dashed #e6c58a; border-radius: 8px; padding: 12px 14px; margin-top: 20px; }
     .privnote { font-size: .82rem; color: var(--muted); margin-top: 18px; }
     .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
@@ -130,6 +129,7 @@
     <div class="card">
       <div class="success" id="success" role="status" aria-live="polite">
         <strong>Thank you.</strong> Your firm's partner request has been received. We'll follow up shortly with your referral kit and a direct counselor contact.
+        <div id="refLine" style="margin-top:8px;font-size:.85rem;font-weight:600;"></div>
       </div>
       <div class="formerror" id="formError" role="alert">
         <strong>Something went wrong.</strong> Your request couldn't be submitted. Please try again, or call (800) 920-2262.
@@ -203,10 +203,9 @@
 
         <button type="submit" class="btn">Request partnership</button>
 
-        <p class="devnote">
-          <strong>Developer note:</strong> this form POSTs JSON to <code>/api/partners</code>, which stores the request in the local
-          <code>Data/debthelper.db</code> SQLite database. Point a CRM at that table (or add a retrieval endpoint) when you're ready. Serve over HTTPS in production.
-        </p>
+        <!-- Developer note (not rendered to visitors): this form POSTs JSON to /api/partners, which stores the
+             request in Data/debthelper.db (SQLite). Point a CRM at that table (or add a retrieval endpoint) when
+             you're ready. Serve over HTTPS in production. -->
       </form>
     </div>
   </div>
@@ -222,6 +221,7 @@
     (function () {
       var form = document.getElementById('partnerForm');
       var loadedAt = Date.now();
+      var qs = new URLSearchParams(location.search);
       var success = document.getElementById('success');
       var formError = document.getElementById('formError');
       var submitBtn = form.querySelector('button[type="submit"]');
@@ -261,7 +261,11 @@
           state: val('state'), volume: val('volume'), interest: interest, notes: val('notes'),
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
           website: document.getElementById('website').value,
-          elapsedMs: Date.now() - loadedAt
+          elapsedMs: Date.now() - loadedAt,
+          partnerCode: qs.get('ref') || '',
+          utmSource: qs.get('utm_source') || '',
+          utmMedium: qs.get('utm_medium') || '',
+          utmCampaign: qs.get('utm_campaign') || ''
         };
 
         formError.classList.remove('show');
@@ -274,7 +278,9 @@
           body: JSON.stringify(payload)
         })
           .then(function (r) { if (!r.ok) throw new Error('Request failed: ' + r.status); return r.json(); })
-          .then(function () {
+          .then(function (data) {
+            var refLine = document.getElementById('refLine');
+            if (refLine && data && data.leadId) refLine.textContent = 'Reference: ' + data.leadId;
             form.style.display = 'none';
             success.classList.add('show');
             success.scrollIntoView({ behavior: 'smooth', block: 'center' });

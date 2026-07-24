@@ -121,6 +121,11 @@ app.MapGet("/api/terminology/search", (string? icd, string? snomed, IWebHostEnvi
 var debtHelperDbPath = Path.Combine(app.Environment.ContentRootPath, "Data", "debthelper.db");
 InitDebtHelperDb(debtHelperDbPath);
 
+// MapStaticAssets serves files at their exact path only (no default-document behavior), so send the
+// bare DebtHelper folder URL to its index page. One route covers both /DebtHelper and /DebtHelper/
+// (routing normalizes the trailing slash).
+app.MapGet("/DebtHelper", () => Results.Redirect("/DebtHelper/index.html"));
+
 // Store an attorney's client referral (from refer-a-client.html).
 app.MapPost("/api/referrals", (ReferralSubmission s, HttpContext ctx, IWebHostEnvironment env) =>
 {
@@ -133,16 +138,20 @@ app.MapPost("/api/referrals", (ReferralSubmission s, HttpContext ctx, IWebHostEn
     using var conn = new SqliteConnection($"Data Source={dbPath}");
     conn.Open();
 
+    var leadId = Guid.NewGuid().ToString();
+
     using var cmd = conn.CreateCommand();
     cmd.CommandText = @"
         INSERT INTO referrals
             (created_utc, atty_name, firm, atty_email, atty_phone,
              client_name, client_phone, client_email, client_state, need, notes, consent,
-             ip, user_agent, referer, accept_language, timezone)
+             ip, user_agent, referer, accept_language, timezone,
+             lead_id, status, source_page, partner_code, utm_source, utm_medium, utm_campaign)
         VALUES
             ($created, $attyName, $firm, $attyEmail, $attyPhone,
              $clientName, $clientPhone, $clientEmail, $clientState, $need, $notes, $consent,
-             $ip, $userAgent, $referer, $acceptLanguage, $timezone)";
+             $ip, $userAgent, $referer, $acceptLanguage, $timezone,
+             $leadId, $status, $sourcePage, $partnerCode, $utmSource, $utmMedium, $utmCampaign)";
     cmd.Parameters.AddWithValue("$created", DateTime.UtcNow.ToString("o"));
     cmd.Parameters.AddWithValue("$attyName", s.AttyName ?? "");
     cmd.Parameters.AddWithValue("$firm", s.Firm ?? "");
@@ -160,9 +169,16 @@ app.MapPost("/api/referrals", (ReferralSubmission s, HttpContext ctx, IWebHostEn
     cmd.Parameters.AddWithValue("$referer", ctx.Request.Headers.Referer.ToString());
     cmd.Parameters.AddWithValue("$acceptLanguage", ctx.Request.Headers.AcceptLanguage.ToString());
     cmd.Parameters.AddWithValue("$timezone", s.Timezone ?? "");
+    cmd.Parameters.AddWithValue("$leadId", leadId);
+    cmd.Parameters.AddWithValue("$status", "new");
+    cmd.Parameters.AddWithValue("$sourcePage", "refer-a-client");
+    cmd.Parameters.AddWithValue("$partnerCode", s.PartnerCode ?? "");
+    cmd.Parameters.AddWithValue("$utmSource", s.UtmSource ?? "");
+    cmd.Parameters.AddWithValue("$utmMedium", s.UtmMedium ?? "");
+    cmd.Parameters.AddWithValue("$utmCampaign", s.UtmCampaign ?? "");
     cmd.ExecuteNonQuery();
 
-    return Results.Ok(new { ok = true });
+    return Results.Ok(new { ok = true, leadId });
 }).DisableAntiforgery().RequireRateLimiting("form-submit");
 
 // Store a firm's referral-partner request (from become-a-partner.html).
@@ -177,15 +193,18 @@ app.MapPost("/api/partners", (PartnerSubmission s, HttpContext ctx, IWebHostEnvi
     conn.Open();
 
     var interest = string.Join(", ", s.Interest ?? Array.Empty<string>());
+    var leadId = Guid.NewGuid().ToString();
 
     using var cmd = conn.CreateCommand();
     cmd.CommandText = @"
         INSERT INTO partners
             (created_utc, firm, contact, email, phone, state, volume, interest, notes,
-             ip, user_agent, referer, accept_language, timezone)
+             ip, user_agent, referer, accept_language, timezone,
+             lead_id, status, source_page, partner_code, utm_source, utm_medium, utm_campaign)
         VALUES
             ($created, $firm, $contact, $email, $phone, $state, $volume, $interest, $notes,
-             $ip, $userAgent, $referer, $acceptLanguage, $timezone)";
+             $ip, $userAgent, $referer, $acceptLanguage, $timezone,
+             $leadId, $status, $sourcePage, $partnerCode, $utmSource, $utmMedium, $utmCampaign)";
     cmd.Parameters.AddWithValue("$created", DateTime.UtcNow.ToString("o"));
     cmd.Parameters.AddWithValue("$firm", s.Firm ?? "");
     cmd.Parameters.AddWithValue("$contact", s.Contact ?? "");
@@ -200,9 +219,16 @@ app.MapPost("/api/partners", (PartnerSubmission s, HttpContext ctx, IWebHostEnvi
     cmd.Parameters.AddWithValue("$referer", ctx.Request.Headers.Referer.ToString());
     cmd.Parameters.AddWithValue("$acceptLanguage", ctx.Request.Headers.AcceptLanguage.ToString());
     cmd.Parameters.AddWithValue("$timezone", s.Timezone ?? "");
+    cmd.Parameters.AddWithValue("$leadId", leadId);
+    cmd.Parameters.AddWithValue("$status", "new");
+    cmd.Parameters.AddWithValue("$sourcePage", "become-a-partner");
+    cmd.Parameters.AddWithValue("$partnerCode", s.PartnerCode ?? "");
+    cmd.Parameters.AddWithValue("$utmSource", s.UtmSource ?? "");
+    cmd.Parameters.AddWithValue("$utmMedium", s.UtmMedium ?? "");
+    cmd.Parameters.AddWithValue("$utmCampaign", s.UtmCampaign ?? "");
     cmd.ExecuteNonQuery();
 
-    return Results.Ok(new { ok = true });
+    return Results.Ok(new { ok = true, leadId });
 }).DisableAntiforgery().RequireRateLimiting("form-submit");
 
 app.Run();
@@ -236,7 +262,14 @@ static void InitDebtHelperDb(string dbPath)
                 user_agent      TEXT,
                 referer         TEXT,
                 accept_language TEXT,
-                timezone        TEXT
+                timezone        TEXT,
+                lead_id         TEXT,
+                status          TEXT,
+                source_page     TEXT,
+                partner_code    TEXT,
+                utm_source      TEXT,
+                utm_medium      TEXT,
+                utm_campaign    TEXT
             );
             CREATE TABLE IF NOT EXISTS partners (
                 id              INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -253,15 +286,26 @@ static void InitDebtHelperDb(string dbPath)
                 user_agent      TEXT,
                 referer         TEXT,
                 accept_language TEXT,
-                timezone        TEXT
+                timezone        TEXT,
+                lead_id         TEXT,
+                status          TEXT,
+                source_page     TEXT,
+                partner_code    TEXT,
+                utm_source      TEXT,
+                utm_medium      TEXT,
+                utm_campaign    TEXT
             );";
         cmd.ExecuteNonQuery();
     }
 
-    // Additive migration: patch databases created before the metadata columns existed.
-    var metaColumns = new[] { "ip", "user_agent", "referer", "accept_language", "timezone" };
+    // Additive migration: patch databases created before these columns existed.
+    var trackedColumns = new[]
+    {
+        "ip", "user_agent", "referer", "accept_language", "timezone",
+        "lead_id", "status", "source_page", "partner_code", "utm_source", "utm_medium", "utm_campaign"
+    };
     foreach (var table in new[] { "referrals", "partners" })
-        foreach (var column in metaColumns)
+        foreach (var column in trackedColumns)
             AddColumnIfMissing(conn, table, column);
 }
 
@@ -297,9 +341,11 @@ record ReferralSubmission(
     string? AttyName, string? Firm, string? AttyEmail, string? AttyPhone,
     string? ClientName, string? ClientPhone, string? ClientEmail, string? ClientState,
     string? Need, string? Notes, bool Consent, string? Timezone,
-    string? Website, long? ElapsedMs);
+    string? Website, long? ElapsedMs,
+    string? PartnerCode, string? UtmSource, string? UtmMedium, string? UtmCampaign);
 
 record PartnerSubmission(
     string? Firm, string? Contact, string? Email, string? Phone,
     string? State, string? Volume, string[]? Interest, string? Notes, string? Timezone,
-    string? Website, long? ElapsedMs);
+    string? Website, long? ElapsedMs,
+    string? PartnerCode, string? UtmSource, string? UtmMedium, string? UtmCampaign);
