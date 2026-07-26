@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources — DebtHelper &amp; Marah Mutual</title>
+  <meta name="description" content="Tools and resources for bankruptcy attorneys and their clients: deadline calculator, the client journey, and guides." />
+  <style>
+    :root {
+      --navy: #00355f; --navy-deep: #002544; --navy-soft: #0a4c82;
+      --green: #1e7a3c; --green-dark: #16602f; --green-bright: #00a651; --red: #ed1c24;
+      --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
+      --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
+      --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
+      --maxw: 1000px; --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg-alt); line-height: 1.6; }
+    a { color: var(--navy-soft); }
+    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    .site-header { background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
+    .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; }
+    .brand span { color: var(--green); }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .93rem; }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    .nav-links a.active { border-bottom: 1px solid var(--red); padding-bottom: 2px; }
+    .nav-btn { padding: 9px 15px; border-radius: 7px; font-weight: 700; border: 2px solid transparent; }
+    .nav-btn-primary { background: var(--green); color: #fff !important; }
+    .nav-btn-primary:hover { background: var(--green-dark); }
+    .nav-btn-secondary { background: transparent; color: var(--navy) !important; border-color: var(--navy); }
+    .nav-btn-secondary:hover { background: var(--navy); color: #fff !important; }
+    @media (max-width: 720px) {
+      .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding-top: 12px; padding-bottom: 12px; }
+      .nav-links { font-size: .85rem; gap: 4px 14px; }
+    }
+
+    .intro { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 70%); color: #fff; padding: 52px 0 44px; }
+    .intro h1 { color: #fff; }
+    .intro p { color: rgba(255,255,255,.85); margin: 0; max-width: 62ch; font-size: 1.08rem; }
+    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--green-bright); margin-bottom: 1rem; }
+
+    section { padding: 48px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+    .res {
+      background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 26px; display: flex; flex-direction: column;
+    }
+    .res .tag { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+    .tag.live { color: var(--green); }
+    .tag.soon { color: var(--muted); }
+    .res h3 { font-size: 1.2rem; }
+    .res p { color: var(--muted); margin: 0 0 18px; flex: 1; }
+    .res .go {
+      align-self: flex-start; display: inline-block; padding: 10px 20px; border-radius: 8px;
+      font-weight: 700; text-decoration: none; background: var(--green); color: #fff;
+    }
+    .res .go:hover { background: var(--green-dark); }
+    .res .soon-btn { align-self: flex-start; display: inline-block; padding: 10px 20px; border-radius: 8px; font-weight: 700; background: var(--bg-navy-tint); color: var(--muted); }
+
+    footer { background: var(--navy-deep); color: rgba(255,255,255,.75); padding: 30px 0; font-size: .9rem; margin-top: 20px; }
+    footer a { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">Debt<span>Helper</span></a>
+      <nav class="nav-links">
+        <a href="index.html#pipeline">How Referrals Work</a>
+        <a href="index.html#why">Why DebtHelper</a>
+        <a href="index.html#legal">Credentials</a>
+        <a href="deadline-calculator.html">Deadline Calculator</a>
+        <a class="nav-btn nav-btn-primary" href="refer-a-client.html">Refer a Client</a>
+        <a class="nav-btn nav-btn-secondary" href="become-a-partner.html">Become a Referral Partner</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="intro">
+    <div class="wrap">
+      <span class="eyebrow">Resources</span>
+      <h1>Tools &amp; resources</h1>
+      <p>Practical tools for bankruptcy attorneys and their staff, plus materials you can share with clients. More is on the way.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid">
+
+        <div class="res">
+          <span class="tag live">Live tool</span>
+          <h3>Counseling &amp; Education Deadline Calculator</h3>
+          <p>Enter one date and get the §109(h) counseling window or the §111/§727 debtor-education deadline, with the rules built in.</p>
+          <a class="go" href="deadline-calculator.html">Open the calculator &rarr;</a>
+        </div>
+
+        <div class="res">
+          <span class="tag live">Overview</span>
+          <h3>The Client Journey</h3>
+          <p>The full path a struggling client takes &mdash; before filing, through discharge, and into restoration &mdash; and who handles each step.</p>
+          <a class="go" href="client-journey.html">See the journey &rarr;</a>
+        </div>
+
+        <div class="res">
+          <span class="tag soon">Coming soon</span>
+          <h3>After-Bankruptcy Restoration Guide</h3>
+          <p>Marah Mutual's guide to rebuilding credit and finances after discharge &mdash; a resource you can hand discharged clients.</p>
+          <span class="soon-btn">In preparation</span>
+        </div>
+
+        <div class="res">
+          <span class="tag soon">Coming soon</span>
+          <h3>Bankruptcy Counseling Compliance Checklist</h3>
+          <p>A quick reference for the required counseling and education steps, so nothing slips before filing or discharge.</p>
+          <span class="soon-btn">In preparation</span>
+        </div>
+
+        <div class="res">
+          <span class="tag soon">Coming soon</span>
+          <h3>Client Handouts</h3>
+          <p>Co-branded, client-ready one-pagers your office can print or email at intake and after discharge.</p>
+          <span class="soon-btn">In preparation</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      DebtHelper &amp; Marah Mutual &middot;
+      <a href="index.html">Overview</a> &middot;
+      <a href="client-journey.html">Client Journey</a> &middot;
+      <a href="refer-a-client.html">Refer a Client</a> &middot;
+      <a href="become-a-partner.html">Become a Referral Partner</a>
+    </div>
+  </footer>
+
+</body>
+</html>

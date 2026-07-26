@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Client Journey — DebtHelper &amp; Marah Mutual</title>
+  <meta name="description" content="How a struggling client moves from first missed payment through bankruptcy to full financial recovery, with DebtHelper and Marah Mutual." />
+  <style>
+    :root {
+      --navy: #00355f; --navy-deep: #002544; --navy-soft: #0a4c82;
+      --green: #1e7a3c; --green-dark: #16602f; --green-bright: #00a651; --red: #ed1c24;
+      --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
+      --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
+      --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
+      --maxw: 900px; --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg); line-height: 1.6; }
+    a { color: var(--navy-soft); }
+    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    .site-header { background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
+    .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; }
+    .brand span { color: var(--green); }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .93rem; }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    .nav-links a.active { border-bottom: 1px solid var(--red); padding-bottom: 2px; }
+    .nav-btn { padding: 9px 15px; border-radius: 7px; font-weight: 700; border: 2px solid transparent; }
+    .nav-btn-primary { background: var(--green); color: #fff !important; }
+    .nav-btn-primary:hover { background: var(--green-dark); }
+    .nav-btn-secondary { background: transparent; color: var(--navy) !important; border-color: var(--navy); }
+    .nav-btn-secondary:hover { background: var(--navy); color: #fff !important; }
+    @media (max-width: 720px) {
+      .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding-top: 12px; padding-bottom: 12px; }
+      .nav-links { font-size: .85rem; gap: 4px 14px; }
+    }
+
+    .intro { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 70%); color: #fff; padding: 56px 0 48px; }
+    .intro h1 { color: #fff; max-width: 20ch; }
+    .intro p { color: rgba(255,255,255,.85); margin: 0; max-width: 62ch; font-size: 1.1rem; }
+    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--green-bright); margin-bottom: 1rem; }
+
+    section { padding: 56px 0; }
+
+    /* Timeline */
+    .timeline { position: relative; margin-top: 8px; padding-left: 42px; }
+    .timeline::before { content: ""; position: absolute; left: 15px; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
+    .step { position: relative; margin-bottom: 30px; }
+    .step::before {
+      content: ""; position: absolute; left: -34px; top: 4px; width: 16px; height: 16px; border-radius: 50%;
+      background: #fff; border: 3px solid var(--navy);
+    }
+    .step.dh::before { border-color: var(--navy); }
+    .step.mm::before { border-color: var(--green); }
+    .step.mid::before { border-color: var(--red); }
+    .who { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+    .who.dh { color: var(--navy-soft); }
+    .who.mm { color: var(--green); }
+    .who.mid { color: var(--red); }
+    .step h3 { font-size: 1.2rem; margin-bottom: .3em; }
+    .step p { color: var(--muted); margin: 0 0 .4rem; }
+    .step .cite { font-size: .8rem; font-weight: 600; color: var(--muted); }
+    .card {
+      background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--navy);
+      border-radius: var(--radius); padding: 20px 24px; box-shadow: var(--shadow);
+    }
+    .card.dh { border-left-color: var(--navy); }
+    .card.mm { border-left-color: var(--green); }
+    .card.mid { border-left-color: var(--red); }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 6px; font-size: .85rem; color: var(--muted); }
+    .legend span { display: inline-flex; align-items: center; gap: 7px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; border: 3px solid; }
+    .dot.dh { border-color: var(--navy); } .dot.mm { border-color: var(--green); } .dot.mid { border-color: var(--red); }
+
+    .cta-band { background: var(--green); color: #fff; text-align: center; }
+    .cta-band h2 { color: #fff; }
+    .cta-band p { color: rgba(255,255,255,.92); max-width: 56ch; margin: 0 auto 1.6rem; }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+    .btn { display: inline-block; padding: 14px 26px; border-radius: 8px; font-weight: 700; text-decoration: none; border: 2px solid transparent; }
+    .btn-primary { background: #fff; color: var(--green-dark); }
+    .btn-primary:hover { background: #f2f2f2; }
+    .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,.8); }
+    .btn-secondary:hover { background: rgba(255,255,255,.12); }
+
+    footer { background: var(--navy-deep); color: rgba(255,255,255,.75); padding: 30px 0; font-size: .9rem; }
+    footer a { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">Debt<span>Helper</span></a>
+      <nav class="nav-links">
+        <a href="index.html#pipeline">How Referrals Work</a>
+        <a href="index.html#why">Why DebtHelper</a>
+        <a href="index.html#legal">Credentials</a>
+        <a href="deadline-calculator.html">Deadline Calculator</a>
+        <a class="nav-btn nav-btn-primary" href="refer-a-client.html">Refer a Client</a>
+        <a class="nav-btn nav-btn-secondary" href="become-a-partner.html">Become a Referral Partner</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="intro">
+    <div class="wrap">
+      <span class="eyebrow">The Full Picture</span>
+      <h1>One partner network, from the first missed payment to a real recovery.</h1>
+      <p>When you send a struggling client into this network, they're supported at every stage &mdash; before filing, through discharge, and long after. Here's the whole path, and who handles each step.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="legend">
+        <span><span class="dot dh"></span> DebtHelper &mdash; before &amp; during</span>
+        <span><span class="dot mid"></span> Decision point</span>
+        <span><span class="dot mm"></span> Marah Mutual &mdash; after discharge</span>
+      </div>
+
+      <div class="timeline">
+
+        <div class="step mid">
+          <div class="who mid">The starting point</div>
+          <div class="card mid">
+            <h3>A client is drowning in debt.</h3>
+            <p>They come to you overwhelmed &mdash; missed payments, collections, maybe facing foreclosure. Bankruptcy may or may not be the right answer yet.</p>
+          </div>
+        </div>
+
+        <div class="step dh">
+          <div class="who dh">DebtHelper &middot; before filing</div>
+          <div class="card dh">
+            <h3>Pre-filing credit counseling.</h3>
+            <p>A court-approved, nonprofit counselor reviews the client's situation and issues the certificate required to file &mdash; at no cost to the client.</p>
+            <span class="cite">11 U.S.C. &sect; 109(h)</span>
+          </div>
+        </div>
+
+        <div class="step mid">
+          <div class="who mid">Decision point</div>
+          <div class="card mid">
+            <h3>Should they even file?</h3>
+            <p>If bankruptcy isn't right, DebtHelper offers a debt-management alternative &mdash; so you're never the one saying "no," and the client still has a path forward.</p>
+            <span class="cite">Debt Management Plan alternative</span>
+          </div>
+        </div>
+
+        <div class="step dh">
+          <div class="who dh">You &middot; the attorney</div>
+          <div class="card dh">
+            <h3>The case is filed.</h3>
+            <p>With the counseling certificate in hand, you file on schedule. No timeline slips waiting on a course provider.</p>
+          </div>
+        </div>
+
+        <div class="step dh">
+          <div class="who dh">DebtHelper &middot; before discharge</div>
+          <div class="card dh">
+            <h3>Debtor education course.</h3>
+            <p>The required personal financial management course is completed and its certificate issued &mdash; the last box to check before discharge.</p>
+            <span class="cite">11 U.S.C. &sect; 111 / &sect; 727</span>
+          </div>
+        </div>
+
+        <div class="step mid">
+          <div class="who mid">The fresh start</div>
+          <div class="card mid">
+            <h3>Discharge is granted.</h3>
+            <p>The debt is gone. But a discharge on paper isn't the same as a recovery in practice &mdash; the client still has damaged credit and no plan.</p>
+          </div>
+        </div>
+
+        <div class="step mm">
+          <div class="who mm">Marah Mutual &middot; after discharge</div>
+          <div class="card mm">
+            <h3>Credit &amp; financial restoration.</h3>
+            <p>Marah Mutual picks up where the discharge leaves off &mdash; credit profile analysis, rebuilding, and financial enhancement &mdash; so the fresh start becomes something the client can actually build on.</p>
+            <span class="cite">Post-discharge restoration</span>
+          </div>
+        </div>
+
+        <div class="step mm">
+          <div class="who mm">The outcome</div>
+          <div class="card mm">
+            <h3>A client who recovers &mdash; and remembers who set it up.</h3>
+            <p>One hand-off, one continuum, one network that carried them the whole way. That reflects on the attorney who pointed them here.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2>Point your next client down this path.</h2>
+      <p>Refer a single client, or set your firm up as an ongoing referral partner. Free to your client, start to finish.</p>
+      <div class="btn-group">
+        <a class="btn btn-primary" href="refer-a-client.html">Refer a Client</a>
+        <a class="btn btn-secondary" href="become-a-partner.html">Become a Referral Partner</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      DebtHelper &amp; Marah Mutual &middot;
+      <a href="index.html">Overview</a> &middot;
+      <a href="resources.html">Resources</a> &middot;
+      <a href="deadline-calculator.html">Deadline Calculator</a> &middot;
+      <a href="refer-a-client.html">Refer a Client</a>
+    </div>
+  </footer>
+
+</body>
+</html>
