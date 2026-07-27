@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Affiliate Program — Marah Mutual</title>
+  <meta name="description" content="Partner with Marah Mutual: refer clients who'd benefit from a stronger financial profile and strengthen your own client relationships." />
+  <style>
+    :root {
+      --navy: #00355f; --navy-deep: #002544; --navy-soft: #0a4c82;
+      --green: #1e7a3c; --green-dark: #16602f; --green-bright: #00a651; --red: #ed1c24;
+      --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
+      --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
+      --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
+      --maxw: 1000px; --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg); line-height: 1.6; }
+    a { color: var(--navy-soft); }
+    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
+    h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); }
+    h2 { font-size: clamp(1.4rem, 3vw, 2rem); }
+    p { margin: 0 0 1rem; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--green-bright); margin-bottom: 1rem; }
+    .lead { font-size: 1.12rem; color: var(--muted); max-width: 62ch; }
+
+    .site-header { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+    .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; }
+    .brand span { color: var(--green); }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .93rem; }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    .nav-links a.active { border-bottom: 1px solid var(--red); padding-bottom: 2px; }
+    .nav-cta { background: var(--green); color: #fff !important; padding: 9px 16px; border-radius: 7px; }
+    .nav-cta:hover { background: var(--green-dark); }
+    .nav-item { position: relative; }
+    .nav-item.has-menu > a { display: inline-flex; align-items: center; gap: 4px; }
+    .caret { font-size: .7em; }
+    .submenu { position: absolute; top: 100%; left: 0; min-width: 235px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px rgba(18,51,91,.15); padding: 8px; display: none; flex-direction: column; gap: 2px; z-index: 40; }
+    .submenu a { padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: .9rem; color: var(--ink); white-space: nowrap; }
+    .submenu a:hover { background: var(--bg-alt); color: var(--green); }
+    .nav-item.has-menu:hover .submenu, .nav-item.has-menu:focus-within .submenu { display: flex; }
+    .cardc { scroll-margin-top: 84px; }
+    @media (max-width: 760px) {
+      .submenu { position: static; display: flex; box-shadow: none; border: none; background: transparent; padding: 2px 0 6px 14px; min-width: 0; }
+      .submenu a { padding: 5px 8px; }
+    }
+    @media (max-width: 760px) {
+      .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 24px; }
+      .nav-links { font-size: .85rem; gap: 4px 14px; }
+    }
+
+    .intro { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 70%); color: #fff; padding: 56px 0 48px; }
+    .intro h1 { color: #fff; max-width: 22ch; }
+    .intro p { color: rgba(255,255,255,.85); margin: 0; }
+
+    section { padding: 52px 0; }
+    section.alt { background: var(--bg-alt); }
+    .section-head { max-width: 64ch; margin-bottom: 2rem; }
+    .section-head p { color: var(--muted); }
+
+    .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .cardc { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow); }
+    .cardc.feat { border-left: 4px solid var(--green); }
+    .cardc h3 { font-size: 1.1rem; margin-bottom: .35em; }
+    .cardc p { color: var(--muted); font-size: .95rem; margin: 0; }
+    .cardc .tag { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--green); }
+
+    .steps { counter-reset: s; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .stepbox { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow); }
+    .stepbox .n { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: var(--navy); color: #fff; font-weight: 800; margin-bottom: 12px; }
+    .stepbox h3 { font-size: 1.05rem; margin-bottom: .3em; }
+    .stepbox p { color: var(--muted); font-size: .93rem; margin: 0; }
+
+    .note { background: var(--bg-navy-tint); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; font-size: .88rem; color: var(--muted); margin-top: 22px; }
+    .note strong { color: var(--navy); }
+
+    .cta-band { background: var(--green); color: #fff; text-align: center; }
+    .cta-band h2 { color: #fff; }
+    .cta-band p { color: rgba(255,255,255,.92); max-width: 54ch; margin: 0 auto 1.5rem; }
+    .btn { display: inline-block; padding: 14px 26px; border-radius: 8px; font-weight: 700; text-decoration: none; border: 2px solid transparent; background: #fff; color: var(--green-dark); }
+    .btn:hover { background: #f2f2f2; }
+
+    footer { background: var(--navy-deep); color: rgba(255,255,255,.75); padding: 30px 0; font-size: .9rem; }
+    footer a { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">Marah<span> Mutual</span></a>
+      <nav class="nav-links">
+        <a href="about.html">About</a>
+        <div class="nav-item has-menu">
+          <a href="services.html">What We Do <span class="caret">&#9662;</span></a>
+          <div class="submenu">
+            <a href="services.html#credit">Credit Score Improvement</a>
+            <a href="services.html#analysis">Financial Profile Analysis</a>
+            <a href="services.html#financing">Financing &amp; Loans</a>
+            <a href="services.html#insurance">Insurance Rate Optimization</a>
+            <a href="services.html#employment">Employment Readiness</a>
+            <a href="services.html#business">Business Ownership</a>
+          </div>
+        </div>
+        <div class="nav-item has-menu">
+          <a class="active" href="affiliate-program.html">Affiliate Program <span class="caret">&#9662;</span></a>
+          <div class="submenu">
+            <a href="affiliate-program.html#lawfirms">Law Firms</a>
+            <a href="affiliate-program.html#realestate">Real Estate Professionals</a>
+            <a href="affiliate-program.html#financial">Financial Professionals</a>
+            <a href="affiliate-program.html#automobile">Automobile Industry</a>
+            <a href="affiliate-program.html#banking">Banking &amp; Credit Unions</a>
+            <a href="affiliate-program.html#civic">Civic &amp; School</a>
+          </div>
+        </div>
+        <a href="testimonials.html">Testimonials</a>
+        <a class="nav-cta" href="index.html#contact">Get Started</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="intro">
+    <div class="wrap">
+      <span class="eyebrow">Affiliate Program</span>
+      <h1>Partner with us to give your clients a real next step.</h1>
+      <p class="lead">If the people you serve would do better with a stronger financial profile, referring them to Marah Mutual helps them recover — and deepens their trust in you.</p>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How It Works</span>
+        <h2>Simple, and built around your clients.</h2>
+      </div>
+      <div class="steps">
+        <div class="stepbox"><div class="n">1</div><h3>Refer</h3><p>Point a client our way when a weak financial profile is holding them back.</p></div>
+        <div class="stepbox"><div class="n">2</div><h3>We help</h3><p>We start with a free analysis and a personalized plan — at no cost to begin.</p></div>
+        <div class="stepbox"><div class="n">3</div><h3>They recover</h3><p>Their profile strengthens, opening doors that were closed before.</p></div>
+        <div class="stepbox"><div class="n">4</div><h3>You benefit</h3><p>A client who's now ready for what you offer — and who remembers you sent real help.</p></div>
+      </div>
+      <p class="note">
+        <strong>Program details:</strong> specific partner terms are arranged directly with Marah Mutual. Reach out
+        and we'll walk you through how the affiliate relationship works for your field.
+      </p>
+    </div>
+  </section>
+
+  <!-- WHO PARTNERS -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Who Partners With Us</span>
+        <h2>Professionals who serve people at a financial turning point.</h2>
+      </div>
+      <div class="cols">
+        <div class="cardc feat" id="lawfirms">
+          <span class="tag">Featured</span>
+          <h3>Law Firms</h3>
+          <p>Especially bankruptcy attorneys: give discharged clients a genuine path to rebuild credit and finances, so the fresh start actually sticks.</p>
+        </div>
+        <div class="cardc" id="realestate"><h3>Real Estate Professionals</h3><p>Help buyers who aren't quite mortgage-ready become ready — and come back to close.</p></div>
+        <div class="cardc" id="financial"><h3>Financial Professionals</h3><p>A resource for clients who need to repair before a real plan can take hold.</p></div>
+        <div class="cardc" id="automobile"><h3>Automobile Industry</h3><p>Turn today's financing denial into an approval down the road.</p></div>
+        <div class="cardc" id="banking"><h3>Banking &amp; Credit Unions</h3><p>Give declined applicants a constructive next step instead of a dead end.</p></div>
+        <div class="cardc" id="civic"><h3>Civic &amp; School</h3><p>Financial-wellness support for members, families, and communities.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY PARTNER -->
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Why Partner</span>
+        <h2>It helps them, and it reflects on you.</h2>
+      </div>
+      <div class="cols">
+        <div class="cardc"><h3>No cost to your client to start</h3><p>The first analysis is free, so a referral never feels like a sales handoff.</p></div>
+        <div class="cardc"><h3>Complements what you do</h3><p>We handle the financial rebuild so you can focus on your own service.</p></div>
+        <div class="cardc"><h3>Stronger client relationships</h3><p>Clients remember the professional who pointed them toward real help.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2>Become an affiliate.</h2>
+      <p>Tell us about your practice and the clients you serve — we'll set up the right partnership.</p>
+      <a class="btn" href="index.html#contact">Start the conversation</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      Marah Mutual &middot;
+      <a href="index.html">Home</a> &middot;
+      <a href="about.html">About</a> &middot;
+      <a href="testimonials.html">Testimonials</a> &middot;
+      Call/Text 1-412-609-3400
+    </div>
+  </footer>
+
+</body>
+</html>

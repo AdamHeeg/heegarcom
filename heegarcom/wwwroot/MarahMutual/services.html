@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Financial Enhancement Services — Credit, Financing, Insurance &amp; More | Marah Mutual</title>
+  <meta name="description" content="Marah Mutual's specialty services: credit score improvement, financial profile analysis, loan and financing readiness, insurance rate optimization, employment readiness, and business ownership guidance." />
+  <style>
+    :root {
+      --navy: #00355f; --navy-deep: #002544; --navy-soft: #0a4c82;
+      --green: #1e7a3c; --green-dark: #16602f; --green-bright: #00a651; --red: #ed1c24;
+      --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
+      --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
+      --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
+      --maxw: 1000px; --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg); line-height: 1.6; }
+    a { color: var(--navy-soft); }
+    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
+    h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); }
+    h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); }
+    h3 { font-size: 1.05rem; }
+    p { margin: 0 0 1rem; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--green-bright); margin-bottom: 1rem; }
+    .lead { font-size: 1.12rem; color: var(--muted); max-width: 64ch; }
+
+    .site-header { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+    .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; }
+    .brand span { color: var(--green); }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .93rem; }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    .nav-links a.active { border-bottom: 1px solid var(--red); padding-bottom: 2px; }
+    .nav-cta { background: var(--green); color: #fff !important; padding: 9px 16px; border-radius: 7px; }
+    .nav-cta:hover { background: var(--green-dark); }
+    .nav-item { position: relative; }
+    .nav-item.has-menu > a { display: inline-flex; align-items: center; gap: 4px; }
+    .caret { font-size: .7em; }
+    .submenu { position: absolute; top: 100%; left: 0; min-width: 235px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px rgba(18,51,91,.15); padding: 8px; display: none; flex-direction: column; gap: 2px; z-index: 40; }
+    .submenu a { padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: .9rem; color: var(--ink); white-space: nowrap; }
+    .submenu a:hover { background: var(--bg-alt); color: var(--green); }
+    .nav-item.has-menu:hover .submenu, .nav-item.has-menu:focus-within .submenu { display: flex; }
+    @media (max-width: 760px) {
+      .submenu { position: static; display: flex; box-shadow: none; border: none; background: transparent; padding: 2px 0 6px 14px; min-width: 0; }
+      .submenu a { padding: 5px 8px; }
+    }
+    @media (max-width: 760px) {
+      .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 24px; }
+      .nav-links { font-size: .85rem; gap: 4px 14px; }
+    }
+
+    .intro { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 70%); color: #fff; padding: 56px 0 48px; }
+    .intro h1 { color: #fff; max-width: 22ch; }
+    .intro p { color: rgba(255,255,255,.85); margin: 0; }
+
+    section { padding: 48px 0; }
+
+    /* Tabs */
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid var(--line); margin-bottom: 28px; }
+    .tab {
+      appearance: none; border: none; background: transparent; cursor: pointer; font: inherit; font-weight: 700;
+      color: var(--muted); padding: 12px 16px; border-bottom: 3px solid transparent; margin-bottom: -2px; border-radius: 6px 6px 0 0;
+    }
+    .tab:hover { color: var(--navy); background: var(--bg-alt); }
+    .tab[aria-selected="true"] { color: var(--green); border-bottom-color: var(--green); }
+    .tab:focus-visible { outline: 2px solid var(--navy-soft); outline-offset: 2px; }
+
+    .panel { display: none; }
+    .panel.active { display: block; animation: fade .2s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    .panel h2 { margin-top: 0; }
+    .panel .kicker { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--green); margin-bottom: 6px; }
+    .panel .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; align-items: start; }
+    @media (max-width: 720px) { .panel .grid { grid-template-columns: 1fr; gap: 20px; } }
+    .bullets { list-style: none; padding: 0; margin: 0; }
+    .bullets li { position: relative; padding-left: 26px; margin-bottom: 10px; color: var(--ink); }
+    .bullets li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--green); font-weight: 800; }
+    .aside { background: var(--bg-alt); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }
+    .aside h3 { margin-top: 0; }
+    .faq { margin-top: 8px; }
+    .faq h3 { margin-bottom: .2em; }
+    .faq p { color: var(--muted); font-size: .95rem; }
+    .panel .cta { display: inline-block; margin-top: 8px; padding: 12px 22px; border-radius: 8px; font-weight: 700; text-decoration: none; background: var(--green); color: #fff; }
+    .panel .cta:hover { background: var(--green-dark); }
+
+    .cta-band { background: var(--green); color: #fff; text-align: center; }
+    .cta-band h2 { color: #fff; }
+    .cta-band p { color: rgba(255,255,255,.92); max-width: 54ch; margin: 0 auto 1.5rem; }
+    .btn { display: inline-block; padding: 14px 26px; border-radius: 8px; font-weight: 700; text-decoration: none; border: 2px solid transparent; background: #fff; color: var(--green-dark); }
+    .btn:hover { background: #f2f2f2; }
+
+    footer { background: var(--navy-deep); color: rgba(255,255,255,.75); padding: 30px 0; font-size: .9rem; }
+    footer a { color: #fff; }
+  </style>
+
+  <!-- Structured data: services offered + FAQs (mirrors on-page content) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialService",
+    "name": "Marah Mutual",
+    "telephone": "+1-412-609-3400",
+    "description": "Personal financial enhancement services: credit score improvement, financial profile analysis, financing readiness, insurance rate optimization, employment readiness, and business ownership guidance.",
+    "areaServed": "US",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Financial Enhancement Services",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Credit Score Improvement" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Financial Profile Analysis" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Financing & Loan Readiness" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Insurance Rate Optimization" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Employment Readiness" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Business Ownership Guidance" } }
+      ]
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "Can I rebuild my credit after bankruptcy?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. A discharge or past collections do not fix your credit on their own, but they also do not make recovery impossible. We build a step-by-step plan to strengthen your profile over time." } },
+      { "@type": "Question", "name": "How long does credit improvement take?", "acceptedAnswer": { "@type": "Answer", "text": "It varies by situation, and no one can honestly guarantee a specific number by a specific date. We focus on consistent, legitimate steps that move your profile in the right direction." } },
+      { "@type": "Question", "name": "What does the free financial analysis include?", "acceptedAnswer": { "@type": "Answer", "text": "A complete review of your financial profile — an $80 value at no charge — so you understand exactly where you stand before deciding on any next steps." } },
+      { "@type": "Question", "name": "Why do I keep getting denied for financing?", "acceptedAnswer": { "@type": "Answer", "text": "Denials usually come down to a few fixable factors in your profile. We help identify what lenders are reacting to and work to position you for approval." } },
+      { "@type": "Question", "name": "Can improving my credit lower my insurance rates?", "acceptedAnswer": { "@type": "Answer", "text": "In many states insurers use a credit-based insurance score, so a stronger profile can translate into better premiums over time." } },
+      { "@type": "Question", "name": "How does my financial profile affect employment?", "acceptedAnswer": { "@type": "Answer", "text": "Some employers review credit as part of hiring. A stronger, well-managed profile removes one more obstacle from your job search." } },
+      { "@type": "Question", "name": "Can you help me get ready to start a business?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We help position both your personal and business financial profile so you are better prepared to seek startup or expansion financing." } }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">Marah<span> Mutual</span></a>
+      <nav class="nav-links">
+        <a href="about.html">About</a>
+        <div class="nav-item has-menu">
+          <a class="active" href="services.html">What We Do <span class="caret">&#9662;</span></a>
+          <div class="submenu">
+            <a href="services.html#credit">Credit Score Improvement</a>
+            <a href="services.html#analysis">Financial Profile Analysis</a>
+            <a href="services.html#financing">Financing &amp; Loans</a>
+            <a href="services.html#insurance">Insurance Rate Optimization</a>
+            <a href="services.html#employment">Employment Readiness</a>
+            <a href="services.html#business">Business Ownership</a>
+          </div>
+        </div>
+        <div class="nav-item has-menu">
+          <a href="affiliate-program.html">Affiliate Program <span class="caret">&#9662;</span></a>
+          <div class="submenu">
+            <a href="affiliate-program.html#lawfirms">Law Firms</a>
+            <a href="affiliate-program.html#realestate">Real Estate Professionals</a>
+            <a href="affiliate-program.html#financial">Financial Professionals</a>
+            <a href="affiliate-program.html#automobile">Automobile Industry</a>
+            <a href="affiliate-program.html#banking">Banking &amp; Credit Unions</a>
+            <a href="affiliate-program.html#civic">Civic &amp; School</a>
+          </div>
+        </div>
+        <a href="testimonials.html">Testimonials</a>
+        <a class="nav-cta" href="index.html#contact">Get Started</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="intro">
+    <div class="wrap">
+      <span class="eyebrow">What We Do</span>
+      <h1>Specialty services that rebuild your financial profile.</h1>
+      <p class="lead">From credit repair after bankruptcy to loan readiness, insurance savings, and business financing — explore each service below.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+
+      <div class="tabs" role="tablist" aria-label="Marah Mutual specialty services">
+        <button class="tab" role="tab" id="tab-credit"     aria-controls="panel-credit"     aria-selected="true">Credit Score Improvement</button>
+        <button class="tab" role="tab" id="tab-analysis"   aria-controls="panel-analysis"   aria-selected="false" tabindex="-1">Financial Profile Analysis</button>
+        <button class="tab" role="tab" id="tab-financing"  aria-controls="panel-financing"  aria-selected="false" tabindex="-1">Financing &amp; Loans</button>
+        <button class="tab" role="tab" id="tab-insurance"  aria-controls="panel-insurance"  aria-selected="false" tabindex="-1">Insurance Rates</button>
+        <button class="tab" role="tab" id="tab-employment" aria-controls="panel-employment" aria-selected="false" tabindex="-1">Employment Readiness</button>
+        <button class="tab" role="tab" id="tab-business"   aria-controls="panel-business"   aria-selected="false" tabindex="-1">Business Ownership</button>
+      </div>
+
+      <!-- CREDIT -->
+      <section class="panel active" id="panel-credit" role="tabpanel" aria-labelledby="tab-credit">
+        <div class="kicker">Credit Repair &amp; Rebuilding</div>
+        <h2>Credit score improvement — including after bankruptcy</h2>
+        <div class="grid">
+          <div>
+            <p>Your credit score quietly decides a lot: whether a loan is approved, the interest rate you pay, sometimes even your insurance premium or a hiring decision. After bankruptcy, collections, or a stretch of missed payments, that score can feel permanently stuck &mdash; but it is not.</p>
+            <p>Marah Mutual reviews your reports across all three bureaus, pinpoints what is holding the number down, and builds a realistic, step-by-step plan to strengthen it. We focus on legitimate, lasting improvement &mdash; not gimmicks or promises no one can keep.</p>
+            <ul class="bullets">
+              <li>Three-bureau report review (Experian, Equifax, TransUnion)</li>
+              <li>Clear read on what is dragging your score down</li>
+              <li>A personalized rebuilding plan you can actually follow</li>
+              <li>Guidance on utilization, payment history, and healthy new credit</li>
+            </ul>
+            <a class="cta" href="index.html#contact">Start with a free analysis</a>
+          </div>
+          <aside class="aside">
+            <div class="faq">
+              <h3>Can I rebuild my credit after bankruptcy?</h3>
+              <p>Yes. A discharge or past collections do not fix your credit on their own, but they also do not make recovery impossible. We build a step-by-step plan to strengthen your profile over time.</p>
+              <h3>How long does credit improvement take?</h3>
+              <p>It varies by situation, and no one can honestly guarantee a specific number by a specific date. We focus on consistent, legitimate steps that move your profile in the right direction.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ANALYSIS -->
+      <section class="panel" id="panel-analysis" role="tabpanel" aria-labelledby="tab-analysis" hidden>
+        <div class="kicker">Where You Stand</div>
+        <h2>Financial profile analysis — free to start</h2>
+        <div class="grid">
+          <div>
+            <p>Before you fix anything, you need a clear picture. Our complete financial analysis &mdash; an $80 value at no charge &mdash; reviews your whole profile so you understand exactly where you stand and what is realistic from here.</p>
+            <p>No pressure and no obligation: you leave with clarity either way. For many people, simply seeing the full picture is the moment things start to feel manageable again.</p>
+            <ul class="bullets">
+              <li>Complete review of your financial profile</li>
+              <li>Access to all three credit reports through the VIP Portal for $1</li>
+              <li>A plain-language explanation of what it all means</li>
+              <li>No obligation to continue</li>
+            </ul>
+            <a class="cta" href="index.html#contact">Claim your free analysis</a>
+          </div>
+          <aside class="aside">
+            <div class="faq">
+              <h3>What does the free financial analysis include?</h3>
+              <p>A complete review of your financial profile &mdash; an $80 value at no charge &mdash; so you understand exactly where you stand before deciding on any next steps.</p>
+              <h3>Is there any obligation?</h3>
+              <p>None. The analysis is a no-cost first step, and how you proceed afterward is entirely up to you.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- FINANCING -->
+      <section class="panel" id="panel-financing" role="tabpanel" aria-labelledby="tab-financing" hidden>
+        <div class="kicker">Get To "Approved"</div>
+        <h2>Financing &amp; loan readiness</h2>
+        <div class="grid">
+          <div>
+            <p>Repeated denials are demoralizing &mdash; and they are usually driven by a handful of fixable factors, not a permanent verdict. Whether you are aiming for an auto loan, a mortgage, or a personal loan, we help you understand what lenders are reacting to and work to position you for a yes.</p>
+            <p>The goal is not just the next application; it is a profile strong enough that approvals stop being a gamble.</p>
+            <ul class="bullets">
+              <li>Identify the factors behind recent denials</li>
+              <li>A plan to strengthen your borrower profile</li>
+              <li>Preparation for auto, mortgage, or personal financing</li>
+            </ul>
+            <a class="cta" href="index.html#contact">Get financing-ready</a>
+          </div>
+          <aside class="aside">
+            <div class="faq">
+              <h3>Why do I keep getting denied for financing?</h3>
+              <p>Denials usually come down to a few fixable factors in your profile. We help identify what lenders are reacting to and work to position you for approval.</p>
+              <h3>Can you help me qualify for a mortgage or auto loan?</h3>
+              <p>We help prepare your profile so you are in a stronger position when you apply. Final approval is always the lender's decision, but readiness is what you can control.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- INSURANCE -->
+      <section class="panel" id="panel-insurance" role="tabpanel" aria-labelledby="tab-insurance" hidden>
+        <div class="kicker">Pay Less For Coverage</div>
+        <h2>Insurance rate optimization</h2>
+        <div class="grid">
+          <div>
+            <p>Many people do not realize that in a lot of states, insurers use a credit-based insurance score to help set premiums. That means the same profile work that lifts your credit can also, over time, lower what you pay for coverage.</p>
+            <p>We help you understand the connection and strengthen the factors that quietly drive your rates.</p>
+            <ul class="bullets">
+              <li>Understand how your profile affects premiums</li>
+              <li>Strengthen the factors insurers weigh</li>
+              <li>Position for better rates as your profile improves</li>
+            </ul>
+            <a class="cta" href="index.html#contact">See where you stand</a>
+          </div>
+          <aside class="aside">
+            <div class="faq">
+              <h3>Can improving my credit lower my insurance rates?</h3>
+              <p>In many states insurers use a credit-based insurance score, so a stronger profile can translate into better premiums over time.</p>
+              <h3>Which types of insurance does this affect?</h3>
+              <p>It most commonly comes up with auto and home policies, depending on your state and insurer.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- EMPLOYMENT -->
+      <section class="panel" id="panel-employment" role="tabpanel" aria-labelledby="tab-employment" hidden>
+        <div class="kicker">Clear The Path</div>
+        <h2>Employment readiness</h2>
+        <div class="grid">
+          <div>
+            <p>Some employers review credit as part of hiring, especially for roles that involve money or sensitive data. A weak or unmanaged profile can quietly become one more obstacle in an already tough job search.</p>
+            <p>We help you get your financial house in order so that, when an employer looks, it is not the thing that holds you back.</p>
+            <ul class="bullets">
+              <li>Understand what an employer credit check may show</li>
+              <li>Strengthen and clean up your profile</li>
+              <li>Remove a hidden obstacle from your job search</li>
+            </ul>
+            <a class="cta" href="index.html#contact">Get prepared</a>
+          </div>
+          <aside class="aside">
+            <div class="faq">
+              <h3>How does my financial profile affect employment?</h3>
+              <p>Some employers review credit as part of hiring. A stronger, well-managed profile removes one more obstacle from your job search.</p>
+              <h3>Do all employers check credit?</h3>
+              <p>No &mdash; it is more common for finance, government, and security-sensitive roles, and rules vary by state.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- BUSINESS -->
+      <section class="panel" id="panel-business" role="tabpanel" aria-labelledby="tab-business" hidden>
+        <div class="kicker">Build Something</div>
+        <h2>Business ownership &amp; expansion</h2>
+        <div class="grid">
+          <div>
+            <p>Starting or growing a business often hinges on financing &mdash; and that means both your personal and business financial profiles need to be ready. We help you get positioned so a lender sees a borrower worth backing.</p>
+            <p>Whether you are launching your first venture or expanding an existing one, readiness is what turns an idea into an approval.</p>
+            <ul class="bullets">
+              <li>Prepare personal and business credit profiles</li>
+              <li>Position for startup or expansion financing</li>
+              <li>Guidance for first-time and growing owners</li>
+            </ul>
+            <a class="cta" href="index.html#contact">Plan your next step</a>
+          </div>
+          <aside class="aside">
+            <div class="faq">
+              <h3>Can you help me get ready to start a business?</h3>
+              <p>Yes. We help position both your personal and business financial profile so you are better prepared to seek startup or expansion financing.</p>
+              <h3>I already own a business — can you still help?</h3>
+              <p>Absolutely. The same readiness work supports expansion financing and better terms as you grow.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2>Not sure which fits? Start with the free analysis.</h2>
+      <p>One conversation covers all of it. Call or text 1-412-609-3400, or reach out online.</p>
+      <a class="btn" href="index.html#contact">Get Started</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      Marah Mutual &middot;
+      <a href="index.html">Home</a> &middot;
+      <a href="about.html">About</a> &middot;
+      <a href="affiliate-program.html">Affiliate Program</a> &middot;
+      <a href="testimonials.html">Testimonials</a> &middot;
+      Call/Text 1-412-609-3400
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+      var panels = Array.prototype.slice.call(document.querySelectorAll('.panel'));
+
+      function panelFor(tab) { return document.getElementById(tab.getAttribute('aria-controls')); }
+      function idOf(tab) { return tab.id.replace('tab-', ''); }
+
+      function activate(tab, focus, updateHash) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+          t.tabIndex = on ? 0 : -1;
+        });
+        panels.forEach(function (p) {
+          var on = p === panelFor(tab);
+          p.classList.toggle('active', on);
+          if (on) { p.removeAttribute('hidden'); } else { p.setAttribute('hidden', ''); }
+        });
+        if (focus) tab.focus();
+        if (updateHash && history.replaceState) history.replaceState(null, '', '#' + idOf(tab));
+      }
+
+      tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () { activate(tab, false, true); });
+        tab.addEventListener('keydown', function (e) {
+          var idx = null;
+          if (e.key === 'ArrowRight') idx = (i + 1) % tabs.length;
+          else if (e.key === 'ArrowLeft') idx = (i - 1 + tabs.length) % tabs.length;
+          else if (e.key === 'Home') idx = 0;
+          else if (e.key === 'End') idx = tabs.length - 1;
+          if (idx !== null) { e.preventDefault(); activate(tabs[idx], true, true); }
+        });
+      });
+
+      // Open a tab from the URL hash (deep link / shared link).
+      var hash = (location.hash || '').replace('#', '');
+      var target = hash && document.getElementById('tab-' + hash);
+      if (target) activate(target, false, false);
+    })();
+  </script>
+</body>
+</html>

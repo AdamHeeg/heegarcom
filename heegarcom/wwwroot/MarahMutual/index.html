@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marah Mutual — Your Financial Advocates</title>
+  <meta name="description" content="Marah Mutual provides personal financial enhancement — credit improvement, financial analysis, and a path to recovery after debt and bankruptcy." />
+  <style>
+    :root {
+      --navy: #00355f; --navy-deep: #002544; --navy-soft: #0a4c82;
+      --green: #1e7a3c; --green-dark: #16602f; --green-bright: #00a651; --red: #ed1c24;
+      --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
+      --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
+      --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
+      --maxw: 1080px; --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --err: #cf1622;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg); line-height: 1.6; }
+    a { color: var(--navy-soft); }
+    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
+    h1 { font-size: clamp(1.9rem, 4vw, 3rem); }
+    h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
+    p { margin: 0 0 1rem; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--green-bright); margin-bottom: 1rem; }
+    .lead { font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+
+    .btn { display: inline-block; padding: 14px 26px; border-radius: 8px; font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer; border: 2px solid transparent; }
+    .btn-primary { background: var(--green); color: #fff; }
+    .btn-primary:hover { background: var(--green-dark); }
+    .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,.7); }
+    .btn-secondary:hover { background: rgba(255,255,255,.12); }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 1.6rem; }
+
+    .site-header { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+    .site-header .inner { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; letter-spacing: -.01em; }
+    .brand span { color: var(--green); }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .93rem; }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    .nav-links a.active { border-bottom: 1px solid var(--red); padding-bottom: 2px; }
+    .nav-cta { background: var(--green); color: #fff !important; padding: 9px 16px; border-radius: 7px; }
+    .nav-cta:hover { background: var(--green-dark); }
+    .nav-item { position: relative; }
+    .nav-item.has-menu > a { display: inline-flex; align-items: center; gap: 4px; }
+    .caret { font-size: .7em; }
+    .submenu { position: absolute; top: 100%; left: 0; min-width: 235px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px rgba(18,51,91,.15); padding: 8px; display: none; flex-direction: column; gap: 2px; z-index: 40; }
+    .submenu a { padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: .9rem; color: var(--ink); white-space: nowrap; }
+    .submenu a:hover { background: var(--bg-alt); color: var(--green); }
+    .nav-item.has-menu:hover .submenu, .nav-item.has-menu:focus-within .submenu { display: flex; }
+    @media (max-width: 760px) {
+      .submenu { position: static; display: flex; box-shadow: none; border: none; background: transparent; padding: 2px 0 6px 14px; min-width: 0; }
+      .submenu a { padding: 5px 8px; }
+    }
+    @media (max-width: 760px) {
+      .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 24px; }
+      .nav-links { font-size: .85rem; gap: 4px 14px; }
+    }
+
+    .hero { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 60%, var(--navy-soft)); color: #fff; padding: 72px 0 80px; }
+    .hero h1 { color: #fff; max-width: 20ch; }
+    .hero .lead { color: rgba(255,255,255,.85); }
+
+    section { padding: 60px 0; }
+    section.alt { background: var(--bg-alt); }
+    .section-head { max-width: 62ch; margin-bottom: 2.2rem; }
+    .section-head p { color: var(--muted); font-size: 1.05rem; }
+
+    .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .cardc { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow); }
+    .cardc h3 { font-size: 1.1rem; margin-bottom: .35em; }
+    .cardc p { color: var(--muted); font-size: .95rem; margin: 0; }
+    .cardc .ic { width: 40px; height: 40px; border-radius: 8px; background: var(--bg-navy-tint); color: var(--navy); display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 12px; }
+
+    /* Offers band */
+    .offers { background: var(--green); color: #fff; }
+    .offers h2 { color: #fff; }
+    .offer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 1.4rem; }
+    .offer { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: var(--radius); padding: 22px 24px; }
+    .offer .big { font-size: 1.6rem; font-weight: 800; }
+    .offer p { color: rgba(255,255,255,.9); margin: 6px 0 0; }
+
+    /* Feasibility self-check */
+    .quiz { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; }
+    .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 6px 0 18px; }
+    .check { display: flex; gap: 10px; align-items: flex-start; background: var(--bg-alt); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+    .check input { margin-top: 4px; flex: none; }
+    .check label { font-size: .92rem; }
+    .quiz-result { font-weight: 600; color: var(--navy); min-height: 1.5em; }
+    @media (max-width: 560px) { .checks { grid-template-columns: 1fr; } }
+
+    /* Contact form */
+    .form-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; max-width: 620px; }
+    .form-card label { display: block; font-weight: 600; font-size: .92rem; margin: 12px 0 6px; }
+    .req-star { color: var(--red); }
+    .form-card input, .form-card textarea { width: 100%; padding: 11px 13px; font: inherit; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .form-card input:focus, .form-card textarea:focus { outline: none; border-color: var(--navy-soft); box-shadow: 0 0 0 3px rgba(28,74,128,.12); }
+    .form-card textarea { min-height: 100px; resize: vertical; }
+    .error-msg { color: var(--err); font-size: .82rem; margin-top: 5px; display: none; }
+    .field { margin-bottom: 4px; }
+    .field.invalid input, .field.invalid textarea { border-color: var(--err); }
+    .field.invalid .error-msg { display: block; }
+    .success { display: none; background: #eaf7ef; border: 1px solid #b7e0c6; color: #1e5b37; border-radius: var(--radius); padding: 18px 20px; margin-bottom: 18px; }
+    .success.show { display: block; }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+    footer { background: var(--navy-deep); color: rgba(255,255,255,.8); padding: 44px 0 30px; font-size: .92rem; }
+    footer h4 { color: #fff; font-size: 1rem; margin: 0 0 10px; }
+    .foot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+    footer a { color: #fff; }
+    .foot-bottom { margin-top: 30px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.15); font-size: .8rem; color: rgba(255,255,255,.6); }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">Marah<span> Mutual</span></a>
+      <nav class="nav-links">
+        <a href="about.html">About</a>
+        <div class="nav-item has-menu">
+          <a href="services.html">What We Do <span class="caret">&#9662;</span></a>
+          <div class="submenu">
+            <a href="services.html#credit">Credit Score Improvement</a>
+            <a href="services.html#analysis">Financial Profile Analysis</a>
+            <a href="services.html#financing">Financing &amp; Loans</a>
+            <a href="services.html#insurance">Insurance Rate Optimization</a>
+            <a href="services.html#employment">Employment Readiness</a>
+            <a href="services.html#business">Business Ownership</a>
+          </div>
+        </div>
+        <div class="nav-item has-menu">
+          <a href="affiliate-program.html">Affiliate Program <span class="caret">&#9662;</span></a>
+          <div class="submenu">
+            <a href="affiliate-program.html#lawfirms">Law Firms</a>
+            <a href="affiliate-program.html#realestate">Real Estate Professionals</a>
+            <a href="affiliate-program.html#financial">Financial Professionals</a>
+            <a href="affiliate-program.html#automobile">Automobile Industry</a>
+            <a href="affiliate-program.html#banking">Banking &amp; Credit Unions</a>
+            <a href="affiliate-program.html#civic">Civic &amp; School</a>
+          </div>
+        </div>
+        <a href="testimonials.html">Testimonials</a>
+        <a class="nav-cta" href="#contact">Get Started</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Your Financial Advocates</span>
+      <h1>A path back to financial health — starting wherever you are.</h1>
+      <p class="lead">
+        Marah Mutual works one-on-one to strengthen your financial profile: rebuilding credit,
+        untangling past-due obligations, and opening doors that a low score keeps shut. Recovery
+        after debt or bankruptcy isn't automatic — we help you build it.
+      </p>
+      <div class="btn-group">
+        <a class="btn btn-primary" href="#contact">Get Started</a>
+        <a class="btn btn-secondary" href="#services">See What We Do</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Who We Are</span>
+        <h2>Advocates, not lenders.</h2>
+        <p>
+          We look at your financial picture differently than a lender does. Instead of a yes-or-no
+          on a single application, we assess the whole profile — credit, obligations, and goals — and
+          build a personalized plan to move it in the right direction. Our job is to be on your side of the table.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Why Marah Mutual</span>
+        <h2>What makes the difference.</h2>
+      </div>
+      <div class="cols">
+        <div class="cardc"><div class="ic">1:1</div><h3>Personalized guidance</h3><p>A plan built around your goals and situation — not a one-size template.</p></div>
+        <div class="cardc"><div class="ic">◑</div><h3>A lender-blind view</h3><p>We read your reports the way an advocate would, and act on what we find.</p></div>
+        <div class="cardc"><div class="ic">↗</div><h3>Whole-profile focus</h3><p>Credit, insurance, financing, employment, and business goals — addressed together.</p></div>
+        <div class="cardc"><div class="ic">✓</div><h3>Built for the fresh start</h3><p>Especially strong for recovery after debt settlement or bankruptcy discharge.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What We Do</span>
+        <h2>Personal financial enhancement.</h2>
+        <p>Practical help across the areas where a weak financial profile costs you the most.</p>
+      </div>
+      <div class="cols">
+        <div class="cardc"><h3>Financial profile analysis</h3><p>A clear assessment of where you stand and what's holding you back.</p></div>
+        <div class="cardc"><h3>Credit score improvement</h3><p>A structured approach to rebuilding and strengthening your credit.</p></div>
+        <div class="cardc"><h3>Financing &amp; loan support</h3><p>Guidance to position you for approvals instead of denials.</p></div>
+        <div class="cardc"><h3>Insurance rate optimization</h3><p>Because a better profile can mean lower premiums.</p></div>
+        <div class="cardc"><h3>Employment readiness</h3><p>Support where financial history affects hiring and opportunity.</p></div>
+        <div class="cardc"><h3>Business ownership guidance</h3><p>Help getting positioned to start or expand a business.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFERS -->
+  <section class="offers">
+    <div class="wrap">
+      <span class="eyebrow" style="color:#fff;">Get Started For Almost Nothing</span>
+      <h2>Two easy first steps.</h2>
+      <div class="offer-grid">
+        <div class="offer">
+          <div class="big">Free $80 analysis</div>
+          <p>A complete financial analysis at no charge — so you know exactly where you stand before deciding anything.</p>
+        </div>
+        <div class="offer">
+          <div class="big">All 3 reports for $1</div>
+          <p>Access your Experian, Equifax, and TransUnion reports through the VIP Portal for just $1.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEASIBILITY SELF-CHECK -->
+  <section id="quiz" class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Feasibility Check</span>
+        <h2>Would working with us help you?</h2>
+        <p>Check any that apply. If even a couple do, a conversation is worth your time.</p>
+      </div>
+      <div class="quiz">
+        <div class="checks" id="checks">
+          <div class="check"><input type="checkbox" /><label>My credit score is 660 or below</label></div>
+          <div class="check"><input type="checkbox" /><label>My insurance rates feel too high</label></div>
+          <div class="check"><input type="checkbox" /><label>I'm looking for work</label></div>
+          <div class="check"><input type="checkbox" /><label>I'm considering starting or growing a business</label></div>
+          <div class="check"><input type="checkbox" /><label>I've been denied financing recently</label></div>
+          <div class="check"><input type="checkbox" /><label>I have past-due accounts or obligations</label></div>
+          <div class="check"><input type="checkbox" /><label>My credit cards are near their limits</label></div>
+          <div class="check"><input type="checkbox" /><label>I've been through bankruptcy, legal, or tax issues</label></div>
+          <div class="check"><input type="checkbox" /><label>Collectors are contacting me</label></div>
+          <div class="check"><input type="checkbox" /><label>I'm carrying student loans</label></div>
+        </div>
+        <p class="quiz-result" id="quizResult"></p>
+        <a class="btn btn-primary" href="#contact">Talk to an advocate</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- AFFILIATE PROGRAM -->
+  <section id="affiliates">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Affiliate Program</span>
+        <h2>We partner with professionals who serve the same people.</h2>
+        <p>If your clients would benefit from a stronger financial profile, referring them to Marah Mutual helps them — and strengthens your relationship with them.</p>
+      </div>
+      <div class="cols">
+        <div class="cardc"><h3>Law Firms</h3><p>Especially bankruptcy attorneys — give discharged clients a real path to recovery.</p></div>
+        <div class="cardc"><h3>Real Estate Professionals</h3><p>Help buyers who aren't quite mortgage-ready get there.</p></div>
+        <div class="cardc"><h3>Financial Professionals</h3><p>A resource for clients who need to repair before they can plan.</p></div>
+        <div class="cardc"><h3>Automobile Industry</h3><p>Turn financing denials into future approvals.</p></div>
+        <div class="cardc"><h3>Banking &amp; Credit Unions</h3><p>Give declined applicants a constructive next step.</p></div>
+        <div class="cardc"><h3>Civic &amp; School</h3><p>Financial-wellness support for members and communities.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Let's Get You Started</span>
+        <h2>Reach out — the first step is free.</h2>
+        <p>Call or text <strong>1-412-609-3400</strong>, or send us a note and we'll follow up.</p>
+      </div>
+      <div class="form-card">
+        <div class="success" id="success" role="status" aria-live="polite">
+          <strong>Thanks — message received.</strong> A Marah Mutual advocate will reach out shortly.
+        </div>
+        <form id="contactForm" novalidate>
+          <!-- Honeypot: hidden from humans; discard if filled when this form is wired to a backend. -->
+          <div class="hp" aria-hidden="true"><label>Website<input type="text" id="website" tabindex="-1" autocomplete="off" /></label></div>
+
+          <div class="field">
+            <label for="name">Name <span class="req-star">*</span></label>
+            <input type="text" id="name" name="name" required />
+            <div class="error-msg">Please enter your name.</div>
+          </div>
+          <div class="field">
+            <label for="email">Email <span class="req-star">*</span></label>
+            <input type="email" id="email" name="email" required />
+            <div class="error-msg">Please enter a valid email address.</div>
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" />
+          </div>
+          <div class="field">
+            <label for="message">How can we help?</label>
+            <textarea id="message" name="message" placeholder="Tell us a little about your situation."></textarea>
+          </div>
+
+          <!-- Developer note (not rendered to visitors): front-end only for now. Wire this submit to a
+               backend/CRM (e.g., a /api/marah-contact endpoint) before going live; do not send PII via mailto. -->
+          <div style="margin-top:16px;"><button type="submit" class="btn btn-primary">Send message</button></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <h4>Marah Mutual</h4>
+          <p>Your financial advocates.<br />Call or text: 1-412-609-3400</p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <p><a href="#services">What We Do</a><br /><a href="#affiliates">Affiliate Program</a><br /><a href="#quiz">Feasibility Check</a></p>
+        </div>
+        <div>
+          <h4>Get Started</h4>
+          <p><a href="#contact">Contact us</a><br />Free $80 analysis · $1 credit reports</p>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        &copy; <span id="year">2026</span> Marah Mutual. Personalized financial enhancement services. This page is informational and is not financial or legal advice.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Feasibility self-check: tally checked boxes and give an encouraging, non-judgmental prompt.
+    (function () {
+      var boxes = Array.prototype.slice.call(document.querySelectorAll('#checks input[type="checkbox"]'));
+      var out = document.getElementById('quizResult');
+      function update() {
+        var n = boxes.filter(function (b) { return b.checked; }).length;
+        if (n === 0) { out.textContent = ''; return; }
+        if (n === 1) { out.textContent = 'Even one of these is worth a conversation.'; return; }
+        out.textContent = n + ' apply — Marah Mutual can very likely help. Reach out below.';
+      }
+      boxes.forEach(function (b) { b.addEventListener('change', update); });
+    })();
+
+    // Contact form: client-side validation only for now (see developer note above).
+    (function () {
+      var form = document.getElementById('contactForm');
+      var success = document.getElementById('success');
+      function fieldOf(el) { return el.closest('.field'); }
+      function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var ok = true;
+        var name = document.getElementById('name');
+        var nameBad = !name.value.trim();
+        fieldOf(name).classList.toggle('invalid', nameBad);
+        if (nameBad) ok = false;
+
+        var email = document.getElementById('email');
+        var emailBad = !isEmail(email.value.trim());
+        fieldOf(email).classList.toggle('invalid', emailBad);
+        if (emailBad) ok = false;
+
+        if (!ok) {
+          var firstBad = form.querySelector('.field.invalid');
+          if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        // TODO (developer): POST to a backend/CRM endpoint before going live.
+        form.style.display = 'none';
+        success.classList.add('show');
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      form.addEventListener('input', function (e) {
+        var f = e.target.closest('.field');
+        if (f) f.classList.remove('invalid');
+      });
+    })();
+  </script>
+</body>
+</html>
