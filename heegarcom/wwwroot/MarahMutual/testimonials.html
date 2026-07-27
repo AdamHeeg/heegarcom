@@ -5,90 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Testimonials — Marah Mutual</title>
   <meta name="description" content="Real client experiences with Marah Mutual." />
-  <style>
-    :root {
-      --navy: #00355f; --navy-deep: #002544; --navy-soft: #0a4c82;
-      --green: #1e7a3c; --green-dark: #16602f; --green-bright: #00a651; --red: #ed1c24;
-      --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
-      --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
-      --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
-      --maxw: 1000px; --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg); line-height: 1.6; }
-    a { color: var(--navy-soft); }
-    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
-    h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); }
-    h2 { font-size: clamp(1.4rem, 3vw, 2rem); }
-    p { margin: 0 0 1rem; }
-    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
-    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--green-bright); margin-bottom: 1rem; }
-    .lead { font-size: 1.12rem; color: var(--muted); max-width: 62ch; }
-
-    .site-header { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
-    .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
-    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; }
-    .brand span { color: var(--green); }
-    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
-    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .93rem; }
-    .nav-links a:hover, .nav-links a.active { color: var(--green); }
-    .nav-links a.active { border-bottom: 1px solid var(--red); padding-bottom: 2px; }
-    .nav-cta { background: var(--green); color: #fff !important; padding: 9px 16px; border-radius: 7px; }
-    .nav-cta:hover { background: var(--green-dark); }
-    .nav-item { position: relative; }
-    .nav-item.has-menu > a { display: inline-flex; align-items: center; gap: 4px; }
-    .caret { font-size: .7em; }
-    .submenu { position: absolute; top: 100%; left: 0; min-width: 235px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px rgba(18,51,91,.15); padding: 8px; display: none; flex-direction: column; gap: 2px; z-index: 40; }
-    .submenu a { padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: .9rem; color: var(--ink); white-space: nowrap; }
-    .submenu a:hover { background: var(--bg-alt); color: var(--green); }
-    .nav-item.has-menu:hover .submenu, .nav-item.has-menu:focus-within .submenu { display: flex; }
-    @media (max-width: 760px) {
-      .submenu { position: static; display: flex; box-shadow: none; border: none; background: transparent; padding: 2px 0 6px 14px; min-width: 0; }
-      .submenu a { padding: 5px 8px; }
-    }
-    @media (max-width: 760px) {
-      .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 24px; }
-      .nav-links { font-size: .85rem; gap: 4px 14px; }
-    }
-
-    .intro { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 70%); color: #fff; padding: 56px 0 48px; }
-    .intro h1 { color: #fff; max-width: 20ch; }
-    .intro p { color: rgba(255,255,255,.85); margin: 0; }
-
-    section { padding: 52px 0; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
-
-    .quote {
-      background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--green);
-      border-radius: var(--radius); padding: 24px 26px; box-shadow: var(--shadow);
-    }
-    .quote .mark { font-size: 2.4rem; line-height: .6; color: var(--green); font-weight: 800; }
-    .quote p { color: var(--ink); font-style: italic; margin: 10px 0 14px; }
-    .quote .who { font-weight: 700; color: var(--navy); font-size: .92rem; font-style: normal; }
-
-    /* Placeholder styling — clearly not a real quote */
-    .quote.ph { border-left-style: dashed; background: var(--bg-alt); }
-    .quote.ph p { color: var(--muted); font-style: normal; }
-
-    .editor-note { background: var(--bg-navy-tint); border: 1px dashed var(--navy-soft); border-radius: var(--radius); padding: 18px 22px; color: var(--muted); font-size: .9rem; margin-bottom: 26px; }
-    .editor-note strong { color: var(--navy); }
-
-    .cta-band { background: var(--green); color: #fff; text-align: center; }
-    .cta-band h2 { color: #fff; }
-    .cta-band p { color: rgba(255,255,255,.92); max-width: 54ch; margin: 0 auto 1.5rem; }
-    .btn { display: inline-block; padding: 14px 26px; border-radius: 8px; font-weight: 700; text-decoration: none; border: 2px solid transparent; background: #fff; color: var(--green-dark); }
-    .btn:hover { background: #f2f2f2; }
-
-    footer { background: var(--navy-deep); color: rgba(255,255,255,.75); padding: 30px 0; font-size: .9rem; }
-    footer a { color: #fff; }
-  </style>
+  <link rel="icon" type="image/png" href="MMFavicon.png" />
+  <link rel="stylesheet" href="marah.css" />
 </head>
 <body>
 
   <header class="site-header">
     <div class="inner">
-      <a class="brand" href="index.html">Marah<span> Mutual</span></a>
+      <a class="brand" href="index.html"><img src="MMFavicon.png" alt="Marah Mutual logo" />Marah<span> Mutual</span></a>
       <nav class="nav-links">
         <a href="about.html">About</a>
         <div class="nav-item has-menu">

@@ -5,94 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Become a Referral Partner — DebtHelper for Attorneys</title>
   <meta name="description" content="Set your firm up as an ongoing DebtHelper referral partner and request a referral kit." />
-  <style>
-    :root {
-      --navy: #00355f; --navy-deep: #002544; --navy-soft: #0a4c82;
-      --green: #1e7a3c; --green-dark: #16602f; --green-bright: #00a651; --red: #ed1c24;
-      --ink: #1f2933; --muted: #5b6b7a; --line: #e2e8f0;
-      --bg: #ffffff; --bg-alt: #f5f8fc; --bg-navy-tint: #eef3fa;
-      --radius: 12px; --shadow: 0 6px 24px rgba(18,51,91,.08);
-      --maxw: 760px; --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      --err: #c0392b;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg-alt); line-height: 1.6; }
-    a { color: var(--navy-soft); }
-    h1, h2, h3 { line-height: 1.2; color: var(--navy); margin: 0 0 .5em; }
-    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
-
-    .site-header { background: #fff; border-bottom: 1px solid var(--line); }
-    .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
-    .brand { font-weight: 800; font-size: 1.25rem; color: var(--navy); text-decoration: none; }
-    .brand span { color: var(--green); }
-    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
-    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .93rem; }
-    .nav-links a:hover, .nav-links a.active { color: var(--green); }
-    .nav-links a.active { border-bottom: 1px solid var(--red); padding-bottom: 2px; }
-    .nav-btn { padding: 9px 15px; border-radius: 7px; font-weight: 700; border: 2px solid transparent; }
-    .nav-btn-primary { background: var(--green); color: #fff !important; }
-    .nav-btn-primary:hover { background: var(--green-dark); }
-    .nav-btn-secondary { background: transparent; color: var(--navy) !important; border-color: var(--navy); }
-    .nav-btn-secondary:hover { background: var(--navy); color: #fff !important; }
-    @media (max-width: 720px) {
-      .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding-top: 12px; padding-bottom: 12px; }
-      .nav-links { font-size: .85rem; gap: 4px 14px; }
-    }
-
-    .intro { background: linear-gradient(160deg, var(--navy-deep), var(--navy) 70%); color: #fff; padding: 48px 0 40px; }
-    .intro h1 { color: #fff; }
-    .intro p { color: rgba(255,255,255,.85); margin: 0; max-width: 60ch; }
-    .eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 700; color: var(--green); margin-bottom: 1rem; }
-
-    .perks { max-width: 1080px; margin: 34px auto -10px; padding: 0 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-    .perk { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); }
-    .perk h3 { font-size: 1rem; margin: 0 0 4px; }
-    .perk p { font-size: .9rem; color: var(--muted); margin: 0; }
-
-    .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; margin: 34px 0 48px; }
-    fieldset { border: none; padding: 0; margin: 0 0 28px; }
-    legend { font-weight: 800; color: var(--navy); font-size: 1.1rem; padding: 0; margin-bottom: 4px; }
-    .legend-note { font-size: .88rem; color: var(--muted); margin-bottom: 18px; }
-
-    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    .field { margin-bottom: 18px; }
-    .field.full { grid-column: 1 / -1; }
-    label { display: block; font-weight: 600; font-size: .92rem; margin-bottom: 6px; }
-    .req-star { color: var(--red); }
-    input, select, textarea {
-      width: 100%; padding: 11px 13px; font: inherit; color: var(--ink);
-      border: 1px solid var(--line); border-radius: 8px; background: #fff;
-    }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--navy-soft); box-shadow: 0 0 0 3px rgba(28,74,128,.12); }
-    textarea { min-height: 90px; resize: vertical; }
-    .error-msg { color: var(--err); font-size: .82rem; margin-top: 5px; display: none; }
-    .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--err); }
-    .field.invalid .error-msg { display: block; }
-
-    .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .check { display: flex; gap: 10px; align-items: center; background: var(--bg-navy-tint); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
-    .check input { width: auto; flex: none; }
-    .check label { margin: 0; font-weight: 500; font-size: .9rem; }
-
-    .btn { display: inline-block; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; border: 2px solid transparent; background: var(--green); color: #fff; }
-    .btn:hover { background: var(--green-dark); }
-    .btn:active { transform: translateY(1px); }
-
-    .success { display: none; background: #eaf7ef; border: 1px solid #b7e0c6; color: #1e5b37; border-radius: var(--radius); padding: 20px 22px; margin-bottom: 22px; }
-    .success.show { display: block; }
-    .formerror { display: none; background: #fdecea; border: 1px solid #f2b8b1; color: #b0281c; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 18px; }
-    .formerror.show { display: block; }
-
-    .privnote { font-size: .82rem; color: var(--muted); margin-top: 18px; }
-    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-
-    footer { background: var(--navy-deep); color: rgba(255,255,255,.7); padding: 30px 0; font-size: .85rem; }
-    footer a { color: #fff; }
-
-    @media (max-width: 560px) { .grid2, .checks { grid-template-columns: 1fr; } .card { padding: 22px; } }
-  </style>
+  <link rel="stylesheet" href="debthelper.css" />
 </head>
-<body>
+<body class="dh-form">
 
   <header class="site-header">
     <div class="inner">
