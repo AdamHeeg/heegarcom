@@ -26,9 +26,10 @@
     <div class="mt-6 h-1 w-16 rounded-full bg-orange"></div>
 
     <p class="mt-8 max-w-2xl text-lg leading-relaxed text-muted">
-        Software developer with 15+ years building and maintaining enterprise
-        applications across healthcare and financial services — C#/.NET, SQL Server,
-        and long-term ownership of production systems.
+        Software developer with 15+ years building and maintaining enterprise applications
+        across healthcare and financial services — C#/.NET, SQL Server, agentic AI workflows,
+        and the long-term ownership that comes from living in a production codebase through
+        years of change.
     </p>
 </section>
 
@@ -46,11 +47,12 @@
                 </div>
                 <div class="text-sm font-medium text-ink">Optivate Health</div>
                 <ul class="mt-3 list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-muted marker:text-orange">
-                    <li>Develop and maintain healthcare software systems supporting EMR workflows, clinical documentation, patient data, and operational integrations.</li>
-                    <li>Design and implement backend systems in C#/.NET and SQL Server, including schema changes, complex queries, and data correction scripts.</li>
-                    <li>Joined the codebase when the core platform ran on .NET 2; contributed to ongoing architecture modernization over 10+ years.</li>
-                    <li>Implement agentic AI workflows for EMR document generation.</li>
-                    <li>Build and support durable backend workflows, production troubleshooting, and targeted, reliable fixes.</li>
+                    <li>Delivered agentic AI workflows that auto-generate EMR documents, cutting provider documentation time by ~60%.</li>
+                    <li>Designed agentic command and orchestration structures that improved output consistency and reduced review edits.</li>
+                    <li>Built third-party integrations and data exchanges that cut manual processing steps ~30% and sped up data exchange ~80%, with improved accuracy.</li>
+                    <li>Modernized a production healthcare platform from .NET 2 to .NET 10 over 10+ years — zero full rewrites, no planned downtime.</li>
+                    <li>Developed and maintained healthcare software (EMR workflows, clinical documentation, patient data, integrations) in daily use across 500+ clinics and 10,000+ users.</li>
+                    <li>Designed and implemented C#/.NET and SQL Server backends — schema changes, complex queries, and data-correction scripts.</li>
                 </ul>
             </div>
 
@@ -62,9 +64,9 @@
                 </div>
                 <div class="text-sm font-medium text-ink">Black Knight Financial Services</div>
                 <ul class="mt-3 list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-muted marker:text-orange">
-                    <li>Delivered targeted enhancements and maintenance across internal mortgage business applications.</li>
+                    <li>Delivered targeted enhancements across internal mortgage business applications, improving day-to-day workflow efficiency.</li>
                     <li>Partnered with business stakeholders to translate operational requests into practical C#/.NET and JavaScript solutions.</li>
-                    <li>Improved usability, workflow efficiency, and day-to-day system functionality through focused feature updates.</li>
+                    <li>Improved usability and system reliability through focused, well-tested feature updates.</li>
                 </ul>
             </div>
 
@@ -77,8 +79,8 @@
                 <div class="text-sm font-medium text-ink">ISO Group Inc.</div>
                 <ul class="mt-3 list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-muted marker:text-orange">
                     <li>Extended, upgraded, and re-architected an internal business application using C#, VB.NET, Telerik, and SQL Server 2012.</li>
-                    <li>Split a 20,000-line monolithic project into a basic N-Tier architecture.</li>
-                    <li>Encapsulated LINQ2SQL connections dispersed across 200+ class files into a unified base class.</li>
+                    <li>Split a 20,000-line monolith into a basic N-tier architecture, isolating change risk and improving maintainability.</li>
+                    <li>Consolidated data access spread across 200+ class files into a single unified base class, cutting duplication and connection-handling bugs.</li>
                     <li>Resolved end-user issues via a ticketing system and delivered enhancements based on feedback.</li>
                 </ul>
             </div>
@@ -91,9 +93,9 @@
                 </div>
                 <div class="text-sm font-medium text-ink">Computer Sciences Corporation / Raytheon</div>
                 <ul class="mt-3 list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-muted marker:text-orange">
-                    <li>Core team member (3 people) on a process management system for the United States Air Force at Patrick AFB.</li>
+                    <li>Core team member (3) that developed software supporting mission-critical U.S. Air Force operations at Patrick AFB.</li>
                     <li>Architected the solution using Visual Studio 2010, C#, the MVP design pattern, Entity Framework 5, and SQL Server 2008.</li>
-                    <li>Reverse engineered a legacy MS Access 2000 application and migrated its data to the new SQL Server system.</li>
+                    <li>Reverse engineered a legacy MS Access 2000 application and migrated its data to the new SQL Server system with no data loss.</li>
                     <li>Designed a custom ranking system using Telerik RadDocks, AJAX, and C#; implemented a revision/approval workflow.</li>
                 </ul>
             </div>
@@ -106,7 +108,7 @@
                 </div>
                 <div class="text-sm font-medium text-ink">Nelson Publishing</div>
                 <ul class="mt-3 list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-muted marker:text-orange">
-                    <li>Developed a dynamic custom CMS for blogging with a SQL Server backend, abstracted for use across multiple websites.</li>
+                    <li>Developed a dynamic custom CMS for blogging with a SQL Server backend, abstracted for reuse across multiple client websites.</li>
                     <li>Used ASP.NET and the AJAX toolkit to build and enhance sophisticated administration pages for internal users.</li>
                 </ul>
             </div>
@@ -173,16 +175,24 @@
     </div>
 </section>
 
-<!-- Skills -->
+<!-- Skills & technologies -->
 <section class="border-t border-line">
     <div class="mx-auto max-w-4xl px-6 py-14">
         <h2 class="text-sm font-semibold uppercase tracking-widest text-orange">Skills &amp; technologies</h2>
-        <div class="mt-6 flex flex-wrap gap-2.5">
-            @foreach (var skill in Skills)
+        <div class="mt-8 space-y-6">
+            @foreach (var group in Tech)
             {
-                <span class="rounded-full border border-line px-3.5 py-1.5 text-sm text-ink transition-colors hover:border-orange hover:text-orange">
-                    @skill
-                </span>
+                <div>
+                    <h3 class="text-xs font-semibold uppercase tracking-wide text-ink">@group.Name</h3>
+                    <div class="mt-2 flex flex-wrap gap-2.5">
+                        @foreach (var item in group.Items)
+                        {
+                            <span class="rounded-full border border-line px-3.5 py-1.5 text-sm text-ink transition-colors hover:border-orange hover:text-orange">
+                                @item
+                            </span>
+                        }
+                    </div>
+                </div>
             }
         </div>
     </div>
@@ -222,12 +232,13 @@
 </section>
 
 @code {
-    private static readonly string[] Skills =
+    private record TechGroup(string Name, string[] Items);
+
+    private static readonly TechGroup[] Tech =
     {
-        "C# / .NET", "SQL Server", "Healthcare / EMR", "Database Design",
-        "AI-Assisted Dev", "Workflow Automation", "Legacy Modernization",
-        "System Integration", "ASP.NET", "T-SQL", "Entity Framework",
-        "JavaScript", "jQuery", "Git", "TFS", "Visual Studio", "SSMS",
-        "GitHub Copilot", "ChatGPT", "Claude"
+        new("AI & Automation", new[] { "agentic AI", "AI agents", "GitHub Copilot", "ChatGPT", "Claude", "Workflow Automation" }),
+        new("Languages", new[] { "C#", ".NET", "ASP.NET", "VB.NET", "JavaScript", "T-SQL" }),
+        new("Data", new[] { "SQL Server", "Entity Framework", "SSMS", "Database Design" }),
+        new("Tools & Practice", new[] { "Git", "TFS", "Visual Studio", "Legacy Modernization", "System Integration", "Healthcare / EMR" }),
     };
 }

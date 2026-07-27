@@ -125,6 +125,7 @@ InitDebtHelperDb(debtHelperDbPath);
 // bare DebtHelper folder URL to its index page. One route covers both /DebtHelper and /DebtHelper/
 // (routing normalizes the trailing slash).
 app.MapGet("/DebtHelper", () => Results.Redirect("/DebtHelper/index.html"));
+app.MapGet("/MarahMutual", () => Results.Redirect("/MarahMutual/index.html"));
 
 // Store an attorney's client referral (from refer-a-client.html).
 app.MapPost("/api/referrals", (ReferralSubmission s, HttpContext ctx, IWebHostEnvironment env) =>
