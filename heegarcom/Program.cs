@@ -126,6 +126,7 @@ InitDebtHelperDb(debtHelperDbPath);
 // (routing normalizes the trailing slash).
 app.MapGet("/DebtHelper", () => Results.Redirect("/DebtHelper/index.html"));
 app.MapGet("/MarahMutual", () => Results.Redirect("/MarahMutual/index.html"));
+app.MapGet("/UBD", () => Results.Redirect("/UBD/index.html"));
 
 // Store an attorney's client referral (from refer-a-client.html).
 app.MapPost("/api/referrals", (ReferralSubmission s, HttpContext ctx, IWebHostEnvironment env) =>
