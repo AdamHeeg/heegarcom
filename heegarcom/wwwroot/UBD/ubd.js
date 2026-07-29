@@ -5,8 +5,8 @@
   if (y) y.textContent = new Date().getFullYear();
 
   // Contact form: client-side validation only for now.
-  // NOTE (developer): wire the submit to a backend/CRM (e.g. /api/ucb-contact) before going live.
-  var form = document.getElementById('ucbForm');
+  // NOTE (developer): wire the submit to a backend/CRM (e.g. /api/ubd-contact) before going live.
+  var form = document.getElementById('ubdForm');
   if (!form) return;
   var success = document.getElementById('success');
 
