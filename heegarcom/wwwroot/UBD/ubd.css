@@ -3,16 +3,21 @@
    Vanilla CSS. All colors are declared here as named variables.
    Start palette = 5 brand colors; extended neutrals/functional added below,
    each with a clear name. Add new colors here (named) rather than inline.
+
+   THEMING: the color-wheel button in the header cycles palettes. Palettes
+   live in ubd.js as raw hex sets; that script recomputes every --on-* token
+   (black/white text per background, via WCAG contrast) each time. The values
+   here are only fallbacks for the no-JS case.
    ========================================================================== */
 :root {
   /* ============================================================
      1) PALETTE — drop in any 5 brand colors here to try a look.
      ============================================================ */
-  --deep-space-blue: #1c3144;
-  --granite:         #596f62;
-  --sage-green:      #7ea16b;
-  --tea-green:       #c3d898;
-  --burgundy:        #70161e;
+  --deep-space-blue: #F26419;
+  --granite:         #2F4858;
+  --sage-green:      #33658A;
+  --tea-green:       #86BBD8;
+  --burgundy:        #F6AE2d;
 
   /* Neutrals & auto-shades (rarely need changing) */
   --white:         #ffffff;
@@ -39,6 +44,16 @@
   --pop-deep:     var(--burgundy-deep);    /* pop hover */
   --on-dark:      var(--tea-green);        /* light text/detail on dark surfaces */
 
+  /* ---- Auto-contrast foregrounds ----
+     Set by ubd.js per palette (black or white, whichever clears WCAG contrast
+     against the matching background role). Values below are no-JS fallbacks. */
+  --on-surface:      var(--ink);     /* text on --surface        */
+  --on-section-alt:  var(--ink);     /* text on --section-alt    */
+  --on-card:         var(--white);   /* text on --card           */
+  --on-heading:      var(--ink);     /* text on --heading panels */
+  --on-heading-deep: var(--white);   /* text on --heading-deep   */
+  --on-pop:          var(--ink);     /* text on --pop            */
+
   /* Functional */
   --err: #b0342b;
   --ok: #2f7d4f; --ok-bg: #e7f4ec; --ok-line: #bfe0c9;
@@ -64,7 +79,7 @@ p { margin: 0 0 1rem; }
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
 /* Eyebrow = a flat deep-space-blue label tag (NOT a button): squared corners, no shadow.
    Buttons are raised burgundy pills with an arrow, so the two never confuse. */
-.eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .1em; font-size: .88rem; font-weight: 800; color: var(--on-dark); background: var(--heading); padding: 6px 14px; border-radius: 6px; margin-bottom: .8rem; }
+.eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: .1em; font-size: .88rem; font-weight: 800; color: var(--on-heading); background: var(--heading); padding: 6px 14px; border-radius: 6px; margin-bottom: .8rem; }
 /* On dark-navy backgrounds (hero, partner card) flip to a light tea-green chip so it still pops. */
 .hero .eyebrow, .aud-card.aff .eyebrow { color: var(--heading); background: var(--on-dark); }
 .lead { font-size: 1.18rem; color: var(--text); max-width: 60ch; }
@@ -73,7 +88,7 @@ p { margin: 0 0 1rem; }
 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 15px 30px; border-radius: 999px; font-weight: 800; font-size: 1rem; text-decoration: none; cursor: pointer; border: 2px solid transparent; transition: transform .1s ease, background .2s ease, box-shadow .2s ease; }
 .btn:hover { transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
-.btn-primary { background: var(--pop); color: var(--white); box-shadow: 0 6px 16px rgba(112,22,30,.30); }
+.btn-primary { background: var(--pop); color: var(--on-pop); box-shadow: 0 6px 16px rgba(112,22,30,.30); }
 .btn-primary:hover { background: var(--pop-deep); box-shadow: 0 10px 22px rgba(112,22,30,.38); }
 .btn-light { background: var(--white); color: var(--heading); box-shadow: 0 6px 16px rgba(0,0,0,.18); }
 .btn-light:hover { background: #f4f5fb; box-shadow: 0 10px 22px rgba(0,0,0,.24); }
@@ -91,18 +106,25 @@ p { margin: 0 0 1rem; }
 .nav-links { display: flex; flex-wrap: wrap; gap: 6px 24px; align-items: center; }
 .nav-links a { color: var(--text); text-decoration: none; font-weight: 700; font-size: .93rem; }
 .nav-links a:hover { color: var(--heading); }
-.nav-cta { background: var(--heading); color: var(--white) !important; padding: 10px 20px; border-radius: 999px; }
+.nav-cta { background: var(--heading); color: var(--on-heading) !important; padding: 10px 20px; border-radius: 999px; }
 .nav-cta:hover { background: var(--heading-deep); }
+/* Theme color-wheel toggle — a small rainbow disc; cycles palettes (see ubd.js). */
+.theme-wheel { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--border); cursor: pointer; padding: 0; flex: none; background: conic-gradient(from 0deg, #f26419, #f6ae2d, #7ea16b, #33658a, #70161e, #f26419); box-shadow: var(--shadow-sm); transition: transform .12s ease; }
+.theme-wheel:hover { transform: rotate(30deg) scale(1.08); }
+.theme-wheel:active { transform: scale(.96); }
+.theme-name { font-size: .78rem; font-weight: 700; color: var(--muted); letter-spacing: .01em; }
+/* Theme switcher hidden for now — palette is fixed to the JS default (GoldenBlues). */
+.theme-wheel, .theme-name { display: none; }
 @media (max-width: 820px) {
   .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 24px; }
   .nav-links { font-size: .86rem; gap: 4px 16px; }
 }
 
 /* ---- Hero ---- */
-.hero { position: relative; background: radial-gradient(120% 120% at 15% 0%, var(--heading), var(--heading-deep) 70%); color: var(--white); padding: 92px 0 96px; overflow: hidden; }
+.hero { position: relative; background: radial-gradient(120% 120% at 15% 0%, var(--heading), var(--heading-deep) 70%); color: var(--on-heading); padding: 92px 0 96px; overflow: hidden; }
 .hero::after { content: ""; position: absolute; right: -120px; top: -120px; width: 420px; height: 420px; border-radius: 50%; background: rgba(210,214,239,.10); }
-.hero h1 { color: var(--white); max-width: 16ch; }
-.hero .lead { color: rgba(255,255,255,.88); }
+.hero h1 { color: var(--on-heading); max-width: 16ch; }
+.hero .lead { color: color-mix(in srgb, var(--on-heading) 85%, transparent); }
 .hero .tagline { margin-top: 1.6rem; font-size: 1.05rem; font-style: italic; color: var(--on-dark); }
 
 /* ---- Sections ---- */
@@ -115,7 +137,7 @@ section.soft { background: var(--section-alt); }
 /* ---- Pillars ---- */
 .pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
 .pillar { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 28px; box-shadow: var(--shadow-sm); }
-.chip { width: 52px; height: 52px; border-radius: 14px; background: var(--heading); color: var(--heading); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; margin-bottom: 16px; }
+.chip { width: 52px; height: 52px; border-radius: 14px; background: var(--heading); color: var(--on-heading); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; margin-bottom: 16px; }
 .pillar h3 { margin-bottom: .35em; }
 .pillar p { color: var(--muted); margin: 0; }
 
@@ -123,14 +145,15 @@ section.soft { background: var(--section-alt); }
 .audience { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
 .aud-card { border-radius: var(--radius); padding: 34px 32px; border: 1px solid var(--border); }
 .aud-card.ind { background: var(--white); }
-.aud-card.aff { background: var(--heading); color: var(--white); border-color: transparent; }
+.aud-card.aff { background: var(--heading); color: var(--on-heading); border-color: transparent; }
 .aud-card.aff h3 { color: var(--on-dark); }
 .aud-card h3 { font-size: 1.5rem; }
 .aud-card p { color: var(--muted); }
-.aud-card.aff p { color: rgba(255,255,255,.85); }
+.aud-card.aff p { color: color-mix(in srgb, var(--on-heading) 85%, transparent); }
 .aud-card ul { list-style: none; padding: 0; margin: 0 0 22px; }
 .aud-card li { position: relative; padding-left: 26px; margin-bottom: 9px; }
 .aud-card li::before { content: "✦"; position: absolute; left: 0; color: var(--pop); font-weight: 800; }
+.aud-card.aff li { color: color-mix(in srgb, var(--on-heading) 90%, transparent); }
 .aud-card.aff li::before { color: var(--on-dark); }
 
 /* ---- Programs / learning center ---- */
@@ -139,20 +162,20 @@ section.soft { background: var(--section-alt); }
 .program .tag { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--pop); margin-bottom: 10px; }
 .program h3 { font-size: 1.25rem; }
 .program p { color: var(--muted); flex: 1; }
-.program .more { align-self: flex-start; margin-top: 16px; font-weight: 800; color: var(--heading); text-decoration: none; border-bottom: 2px solid var(--on-dark); padding-bottom: 2px; }
-.program .more:hover { border-color: var(--heading); }
+.program .more { align-self: flex-start; margin-top: 16px; font-weight: 800; color: var(--on-card); text-decoration: none; border-bottom: 2px solid var(--pop); padding-bottom: 2px; }
+.program .more:hover { border-color: var(--on-card); }
 
 /* ---- Battle plan (steps) ---- */
 .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; }
 .step { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 26px; box-shadow: var(--shadow-sm); }
-.step .n { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; background: var(--heading); color: var(--white); font-weight: 800; margin-bottom: 14px; }
+.step .n { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; background: var(--heading); color: var(--on-heading); font-weight: 800; margin-bottom: 14px; }
 .step h3 { font-size: 1.1rem; margin-bottom: .3em; }
 .step p { color: var(--muted); margin: 0; font-size: .96rem; }
 
 /* ---- Tagline band ---- */
-.band { background: var(--pop); color: var(--white); text-align: center; }
-.band h2 { color: var(--white); max-width: 22ch; margin-inline: auto; }
-.band p { color: rgba(255,255,255,.9); max-width: 52ch; margin: 0 auto 1.6rem; }
+.band { background: var(--pop); color: var(--on-pop); text-align: center; }
+.band h2 { color: var(--on-pop); max-width: 22ch; margin-inline: auto; }
+.band p { color: color-mix(in srgb, var(--on-pop) 90%, transparent); max-width: 52ch; margin: 0 auto 1.6rem; }
 .band .btn-primary { background: var(--white); color: var(--pop); box-shadow: 0 6px 16px rgba(0,0,0,.22); }
 .band .btn-primary:hover { background: #f1ebec; }
 
@@ -160,7 +183,7 @@ section.soft { background: var(--section-alt); }
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
 @media (max-width: 780px) { .contact-grid { grid-template-columns: 1fr; gap: 26px; } }
 .form-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; }
-.form-card label { display: block; font-weight: 700; font-size: .92rem; color: var(--text); margin: 14px 0 6px; }
+.form-card label { display: block; font-weight: 700; font-size: .92rem; color: var(--on-card); margin: 14px 0 6px; }
 .req-star { color: var(--err); }
 .form-card input, .form-card select, .form-card textarea { width: 100%; padding: 12px 14px; font: inherit; color: var(--text); border: 1px solid var(--border); border-radius: 10px; background: var(--white); }
 .form-card input:focus, .form-card select:focus, .form-card textarea:focus { outline: none; border-color: var(--heading); box-shadow: 0 0 0 3px rgba(28,57,59,.14); }
@@ -169,7 +192,7 @@ section.soft { background: var(--section-alt); }
 .error-msg { color: var(--err); font-size: .82rem; margin-top: 5px; display: none; }
 .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--err); }
 .field.invalid .error-msg { display: block; }
-.form-note { font-size: .82rem; color: var(--muted); margin-top: 16px; }
+.form-note { font-size: .82rem; color: color-mix(in srgb, var(--on-card) 70%, transparent); margin-top: 16px; }
 .success { display: none; background: var(--ok-bg); border: 1px solid var(--ok-line); color: var(--ok); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 18px; }
 .success.show { display: block; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -178,19 +201,20 @@ section.soft { background: var(--section-alt); }
 .contact-copy li::before { content: "✓"; position: absolute; left: 0; color: var(--heading); font-weight: 800; }
 
 /* ---- Colored card treatment: sage surface + granite edge so cards contrast strongly
-   on both white and tea-green sections. Card text darkened for legibility on sage;
-   icon tiles use a dark navy chip. ---- */
+   on both white and tea-green sections. Text auto-flips to --on-card (black/white by
+   contrast). Icon tiles use a dark navy chip with --on-heading text. ---- */
 .pillar, .program, .step, .form-card, .aud-card.ind { background: var(--card); border-color: var(--card-edge); }
-.pillar p, .program p, .step p, .aud-card.ind p { color: var(--text); }
-.chip { background: var(--heading); color: var(--on-dark); }
+.pillar h3, .program h3, .step h3, .aud-card.ind h3 { color: var(--on-card); }
+.pillar p, .program p, .step p, .aud-card.ind p { color: color-mix(in srgb, var(--on-card) 80%, transparent); }
+.aud-card.ind li { color: color-mix(in srgb, var(--on-card) 90%, transparent); }
 
 /* ---- Footer ---- */
-footer { background: var(--heading-deep); color: rgba(255,255,255,.8); padding: 52px 0 34px; font-size: .92rem; }
-footer h4 { color: var(--white); font-size: 1rem; margin: 0 0 10px; }
+footer { background: var(--heading-deep); color: color-mix(in srgb, var(--on-heading-deep) 80%, transparent); padding: 52px 0 34px; font-size: .92rem; }
+footer h4 { color: var(--on-heading-deep); font-size: 1rem; margin: 0 0 10px; }
 .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 30px; }
 @media (max-width: 720px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
 footer a { color: var(--on-dark); text-decoration: none; }
-footer a:hover { color: var(--white); }
-.foot-brand { font-weight: 900; font-size: 1.2rem; color: var(--white); letter-spacing: -.02em; }
+footer a:hover { color: var(--on-heading-deep); }
+.foot-brand { font-weight: 900; font-size: 1.2rem; color: var(--on-heading-deep); letter-spacing: -.02em; }
 .foot-brand span { color: var(--pop); }
-.foot-bottom { margin-top: 34px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.15); font-size: .8rem; color: rgba(255,255,255,.55); }
+.foot-bottom { margin-top: 34px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.15); font-size: .8rem; color: color-mix(in srgb, var(--on-heading-deep) 55%, transparent); }
