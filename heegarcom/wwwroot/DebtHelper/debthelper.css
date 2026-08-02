@@ -1,7 +1,7 @@
 /* DebtHelper — shared styles for all /DebtHelper pages.
    Brand palette: navy + green (unchanged). Page-specific rules that would collide across
    pages (.card, .step, .disclaimer, form label/input) are isolated under a per-page <body>
-   class: dh-home, dh-form, dh-calc, dh-journey, dh-res. */
+   class: dh-home, dh-form, dh-calc, dh-journey, dh-res, dh-course. */
 :root {
   --navy: #00355f;          /* DebtHelper brand navy */
   --navy-deep: #002544;     /* darker navy for gradients */
@@ -124,7 +124,7 @@ footer a { color: #fff; }
 .legal-card h3 { font-size: 1.05rem; }
 .legal-card p { font-size: .92rem; color: var(--muted); }
 .legal-card a { font-weight: 600; }
-.dh-home .disclaimer { margin-top: 28px; font-size: .82rem; color: var(--muted); background: var(--bg-navy-tint); border-radius: var(--radius); padding: 18px 22px; border: 1px solid var(--line); }
+.dh-home .disclaimer, .dh-course .disclaimer { margin-top: 28px; font-size: .82rem; color: var(--muted); background: var(--bg-navy-tint); border-radius: var(--radius); padding: 18px 22px; border: 1px solid var(--line); }
 
 /* ============ FORM pages (refer-a-client, become-a-partner) ============ */
 .dh-form .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; margin: 28px 0 48px; }
