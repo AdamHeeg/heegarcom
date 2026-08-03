@@ -10,18 +10,32 @@
 <body class="dh-calc">
 
   <header class="site-header">
-    <div class="inner">
+    <div class="topbar">
+      <div class="inner">
       <a class="brand" href="index.html" aria-label="DebtHelper.com"><svg class="brand-pulse" viewBox="0 0 40 24" aria-hidden="true" focusable="false"><path d="M0 12 H10 L13 9 L15 12 L17 3 L20 21 L22 12 H40" fill="none" stroke="#ed1c24" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="brand-text"><span class="b-debt">DEBT</span><span class="b-helper">HELPER</span><span class="b-com">.COM</span></span></a>
-      <nav class="nav-links">
-        <a href="index.html#pipeline">How Referrals Work</a>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+        <div class="top-right">
+          <span class="callus">Call Us: <a href="tel:+18009202262">(800) 920-2262</a></span>
+          <a class="nav-btn nav-btn-navy" href="https://www.debthelper.com/" target="_blank" rel="noopener">Portal Login</a>
+          <a class="nav-btn nav-btn-primary" href="https://www.debthelper.com/" target="_blank" rel="noopener">Bankruptcy Login</a>
+        </div>
+      </div>
+    </div>
+    <nav class="navbar">
+      <div class="inner">
+        <div class="navbar-links">
+          <a href="index.html#pipeline">How Referrals Work</a>
         <a href="index.html#why">Why DebtHelper</a>
         <a href="index.html#legal">Credentials</a>
         <a class="active" href="deadline-calculator.html">Deadline Calculator</a>
         <a href="course-3.html">After-Bankruptcy Course</a>
-        <a class="nav-btn nav-btn-primary" href="refer-a-client.html">Refer a Client</a>
-        <a class="nav-btn nav-btn-secondary" href="become-a-partner.html">Become a Referral Partner</a>
-      </nav>
-    </div>
+        </div>
+        <div class="navbar-cta">
+          <a class="nav-btn nav-btn-primary" href="refer-a-client.html">Refer a Client</a>
+          <a class="nav-btn nav-btn-ghost" href="become-a-partner.html">Become a Referral Partner</a>
+        </div>
+      </div>
+    </nav>
   </header>
 
   <section class="intro">
@@ -235,5 +249,6 @@
       meetDate.addEventListener('change', calcMeet);
     })();
   </script>
+  <script src="debthelper.js?v=1"></script>
 </body>
 </html>

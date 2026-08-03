@@ -52,20 +52,33 @@ p { margin: 0 0 1rem; }
 .btn-group { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 1.6rem; }
 
 /* Header + nav */
-.site-header { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+.site-header { position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(18,51,91,.06); }
+.topbar { background: #fff; border-bottom: 1px solid var(--line); }
+.navbar { background: var(--navy-deep); }
+.nav-toggle { display: none; background: none; border: 0; font-size: 1.5rem; line-height: 1; color: var(--navy); cursor: pointer; padding: 4px 10px; }
 .site-header .wrap, .site-header .inner { max-width: 1080px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
 .brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.3rem; text-decoration: none; letter-spacing: 0; text-transform: uppercase; line-height: 1; }
 .brand-pulse { width: 34px; height: 20px; flex: none; }
 .brand .b-debt { color: var(--red); }
 .brand .b-helper { color: var(--green); }
 .brand .b-com { color: var(--navy); }
-.nav-links { display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
-.nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .93rem; }
-.nav-links a:hover, .nav-links a.active { color: var(--green); }
-.nav-links a.active { border-bottom: 1px solid var(--red); padding-bottom: 2px; }
+/* Top row: call + login buttons (mirrors DebtHelper.com) */
+.top-right { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.callus { font-size: .9rem; font-weight: 700; color: var(--navy); }
+.callus a { color: var(--navy); text-decoration: none; }
+/* Navy nav bar: section links + attorney CTAs */
+.navbar-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; }
+.navbar-links a { color: #fff; text-decoration: none; font-weight: 600; font-size: .93rem; }
+.navbar-links a:hover, .navbar-links a.active { color: var(--green-bright); }
+.navbar-links a.active { border-bottom: 2px solid var(--red); padding-bottom: 3px; }
+.navbar-cta { display: flex; flex-wrap: wrap; gap: 10px; }
 .nav-btn { padding: 9px 15px; border-radius: 7px; font-weight: 700; border: 2px solid transparent; }
 .nav-btn-primary { background: var(--green); color: #fff !important; }
 .nav-btn-primary:hover { background: var(--green-dark); }
+.nav-btn-navy { background: var(--navy); color: #fff !important; }
+.nav-btn-navy:hover { background: var(--navy-deep); }
+.nav-btn-ghost { background: transparent; color: #fff !important; border-color: rgba(255,255,255,.6); }
+.nav-btn-ghost:hover { background: rgba(255,255,255,.14); }
 .nav-btn-secondary { background: transparent; color: var(--navy) !important; border-color: var(--navy); }
 .nav-btn-secondary:hover { background: var(--navy); color: #fff !important; }
 
@@ -247,8 +260,15 @@ footer a { color: #fff; }
 
 /* Responsive */
 @media (max-width: 720px) {
-  .site-header .wrap, .site-header .inner { height: auto; flex-direction: column; align-items: flex-start; gap: 8px; padding-top: 12px; padding-bottom: 12px; }
-  .nav-links { font-size: .85rem; gap: 4px 14px; }
+  /* Collapse the nav behind a hamburger. Closed = just logo + button. */
+  .nav-toggle { display: inline-flex; align-items: center; }
+  .topbar .inner { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+  .top-right { flex-basis: 100%; display: none; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 2px; }
+  .navbar { display: none; }
+  .navbar .inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .navbar-links { font-size: .95rem; gap: 10px 16px; }
+  .site-header.nav-open .top-right { display: flex; }
+  .site-header.nav-open .navbar { display: block; }
 }
 @media (max-width: 640px) {
   .hero { padding: 52px 0 60px; }
