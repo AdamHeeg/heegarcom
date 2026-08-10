@@ -7,10 +7,10 @@ public sealed class AiIntegration : IProjectSource
     public ProjectItem Card => new()
     {
         Title = "AI Integration",
-        Summary = "Agentic AI workflows built into an EMR for automated document generation and integrated prescribing and billing.",
+        Summary = "Decreased visit documentation time by 75% using agentic AI workflows.  ",
         Tags = new[] { "AI", "C# / .NET", "Healthcare", "Automation" },
         Kind = "Case Study",
-        Problem = "Leverage AI into medical documentation workflows.",
+        Problem = "Leverage AI into medical documentation workflows to improve documentation clarity and speed.",
         Built = @"Agentic AI workflows that generate EMR documents. <br /> 
         <ul>
         <li><strong>Version 1:</strong> inline I-Frame linked to provider and patient with import logic.</li>
