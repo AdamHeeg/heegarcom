@@ -28,3 +28,6 @@ tools/tailwindcss.exe
 ## OS
 Thumbs.db
 .DS_Store
+
+## Stray logs
+debug.log
