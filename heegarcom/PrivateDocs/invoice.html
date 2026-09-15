@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Heegar — Invoice</title>
+<style>
+  :root{
+    --navy:#0A3161; --orange:#D24B14; --surface:#faf9f7;
+    --ink:#1a1a1a; --muted:#5b6470; --line:#e7e5e1;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color:var(--ink); background:var(--surface); line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:840px; margin:0 auto; padding:36px 48px 60px;}
+
+  .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:18px;}
+  .toolbar button{font:inherit; font-weight:700; font-size:13px; cursor:pointer; border:0; border-radius:7px; padding:9px 16px;}
+  .btn-print{background:var(--navy); color:#fff;}
+  .btn-add{background:var(--orange); color:#fff;}
+  .btn-ghost{background:#fff; color:var(--navy); border:1px solid var(--line);}
+  .settings{display:flex; flex-wrap:wrap; gap:18px; padding:12px 15px; margin-bottom:24px; background:rgba(10,49,97,.05); border-left:3px solid var(--navy); border-radius:4px; font-size:12.5px;}
+  .settings label{display:flex; flex-direction:column; gap:3px; font-weight:700; color:var(--navy);}
+  .settings select, .settings input{font:inherit; font-size:13px; padding:6px 8px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink);}
+  .settings .tax{width:70px;}
+
+  .head{display:flex; justify-content:space-between; align-items:flex-start; border-bottom:3px solid var(--navy); padding-bottom:16px;}
+  .brand{font-size:30px; font-weight:800; letter-spacing:-.02em; color:var(--navy); line-height:1;}
+  .brand .dot{color:var(--orange);}
+  .brand-sub{margin-top:6px; font-size:11.5px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--orange);}
+  .invtitle{text-align:right;}
+  .invtitle .word{font-size:26px; font-weight:800; color:var(--navy); letter-spacing:.02em; line-height:1;}
+
+  .f{font:inherit; color:var(--ink); border:0; border-bottom:1px dotted var(--line); background:transparent; padding:2px;}
+  .f:focus{outline:none; border-bottom-color:var(--orange);}
+  input.f::-webkit-outer-spin-button, input.f::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+
+  .parties{display:flex; justify-content:space-between; gap:40px; margin-top:22px;}
+  .lab{font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--orange); margin-bottom:5px;}
+  .from .f{display:block; width:230px; font-size:12.5px; margin-bottom:2px;}
+  .from .name{font-weight:800; color:var(--navy); font-size:14px;}
+  .billto textarea.f{width:250px; height:82px; resize:none; border:1px solid var(--line); border-radius:6px; padding:7px 9px; font-size:12.5px;}
+  .invmeta{margin-top:22px;}
+  .invmeta div{display:flex; gap:8px; justify-content:flex-end; font-size:12.5px; margin-bottom:3px;}
+  .invmeta .k{color:var(--muted); font-weight:600;}
+  .invmeta .f{width:120px; text-align:right;}
+
+  table.items{width:100%; border-collapse:collapse; margin-top:26px; font-size:13px;}
+  table.items thead th{text-align:left; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--navy); padding:6px 8px;}
+  table.items th.num, table.items td.num{text-align:right;}
+  table.items tbody td{border-bottom:1px solid var(--line); padding:8px; vertical-align:top;}
+  td.item{width:44%;}
+  td.item .itemsel{display:block; width:100%; margin-bottom:4px; font:inherit; font-size:12px; padding:4px 6px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--navy); font-weight:600;}
+  td.item .itemname{width:100%; font-size:13px;}
+  td.rate .f{width:78px; text-align:right;}
+  td.units .qty{width:60px; text-align:right;}
+  td.units .cycle{font:inherit; font-size:12.5px; padding:3px 4px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink);}
+  td.disc .f{width:56px; text-align:right;}
+  td.amount{white-space:nowrap; font-weight:700; text-align:right;}
+  td.amount .std{color:var(--muted); font-weight:500; text-decoration:line-through; margin-right:6px;}
+  td.amount .app{color:var(--navy);}
+  .rm{cursor:pointer; color:var(--muted); border:0; background:none; font-size:16px; line-height:1; padding:0 4px;}
+  .rm:hover{color:var(--orange);}
+
+  .totwrap{display:flex; justify-content:flex-end; margin-top:20px;}
+  .totals{width:320px; font-size:13px;}
+  .totals .r{display:flex; justify-content:space-between; padding:5px 0;}
+  .totals .r.sub{color:var(--muted);}
+  .totals .r.grand{border-top:2px solid var(--navy); margin-top:5px; padding-top:9px; font-size:17px; font-weight:800; color:var(--navy);}
+
+  .notesrow{margin-top:26px; font-size:12.5px;}
+  .notesrow .paynote{margin-top:8px; font-weight:600; color:var(--navy);}
+  textarea.notes{width:100%; height:56px; resize:none; border:1px solid var(--line); border-radius:6px; padding:8px 10px; font:inherit; font-size:12.5px; color:var(--ink); margin-top:8px;}
+
+  @media print{
+    body{background:#fff;}
+    .page{max-width:none; padding:0.5in 0.6in;}
+    .no-print{display:none !important;}
+    .f{border-bottom-color:transparent;}
+    .billto textarea.f, textarea.notes{border:0; padding:0;}
+    td.units .cycle{-webkit-appearance:none; appearance:none; border:0; background:transparent; padding:0;}
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="toolbar no-print">
+      <button class="btn-add" type="button" onclick="addRow()">+ Add line</button>
+      <button class="btn-print" type="button" onclick="printInvoice()">Print / Save PDF</button>
+      <button class="btn-ghost" type="button" onclick="resetSaved()">Reset saved &ldquo;From&rdquo; &amp; number</button>
+    </div>
+
+    <div class="settings no-print">
+      <label>Payment method
+        <select id="method" onchange="recalc()">
+          <option value="check">Check / ACH (no fee)</option>
+          <option value="card">Credit card (+5%, $10 min)</option>
+        </select>
+      </label>
+      <label>Tax %
+        <input class="tax" id="tax" type="number" min="0" step="0.01" value="0" oninput="recalc()" />
+      </label>
+    </div>
+
+    <div class="head">
+      <div>
+        <div class="brand">Adam&nbsp;Heeg<span class="dot">.</span></div>
+        <div class="brand-sub">Web Design &middot; Website Management &middot; Online Presence</div>
+      </div>
+      <div class="invtitle"><div class="word">INVOICE</div></div>
+    </div>
+
+    <div class="parties">
+      <div class="from">
+        <div class="lab">From</div>
+        <input class="f name" id="fromName" placeholder="Adam Heeg (Heegar)" />
+        <input class="f" id="fromSite" placeholder="heegar.com" />
+        <input class="f" id="fromEmail" placeholder="your email" />
+        <input class="f" id="fromPhone" placeholder="your phone" />
+        <input class="f" id="fromCity" placeholder="City, ST" />
+      </div>
+      <div style="text-align:right;">
+        <div class="billto" style="text-align:left; display:inline-block;">
+          <div class="lab">Bill To</div>
+          <textarea class="f" id="billTo" placeholder="Client name&#10;Company&#10;Address"></textarea>
+        </div>
+        <div class="invmeta">
+          <div><span class="k">Invoice #</span><input class="f" id="invNum" /></div>
+          <div><span class="k">Date</span><input class="f" id="invDate" /></div>
+          <div><span class="k">Due</span><input class="f" id="invDue" placeholder="On receipt" /></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="items">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th class="num">Rate</th>
+          <th class="num">Term / Qty</th>
+          <th class="num">Disc %</th>
+          <th class="num">Amount</th>
+          <th class="no-print"></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+
+    <div class="totwrap"><div class="totals" id="totals"></div></div>
+
+    <div class="notesrow">
+      <div class="lab">Payment &amp; Notes</div>
+      <div class="paynote" id="paynote"></div>
+      <textarea class="notes" id="notes">50% non-refundable deposit due before work begins; balance on launch. Thank you.</textarea>
+    </div>
+
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  var FROM_IDS = ["fromName","fromSite","fromEmail","fromPhone","fromCity"];
+  var CATALOG = [];
+  var PREPAY = { 1: 0, 6: 0.05, 12: 0.10 };   // months -> prepay discount
+
+  function money(n){
+    var v = Math.round((n + Number.EPSILON) * 100) / 100;
+    return "$" + v.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function num(el){ var n = parseFloat(el && el.value); return isNaN(n) ? 0 : n; }
+  function keyFromUrl(){ try { return new URLSearchParams(location.search).get("key") || ""; } catch(e){ return ""; } }
+
+  // Build the <select> of catalog items (grouped by billing type) + a Custom option.
+  function itemSelectHtml(){
+    var once = "", monthly = "";
+    CATALOG.forEach(function(it, i){
+      var opt = '<option value="' + i + '">' + it.name + '</option>';
+      if (it.billing === "monthly") monthly += opt; else once += opt;
+    });
+    return '<select class="itemsel no-print" onchange="pickItem(this)">' +
+             '<option value="">— Pick an item / Custom —</option>' +
+             (once ? '<optgroup label="One-time">' + once + '</optgroup>' : '') +
+             (monthly ? '<optgroup label="Monthly">' + monthly + '</optgroup>' : '') +
+           '</select>';
+  }
+
+  // Fill the Term/Qty cell for the row's current type.
+  function setUnitsCell(row){
+    var cell = row.querySelector("td.units");
+    if (row.dataset.type === "monthly") {
+      cell.innerHTML =
+        '<select class="cycle" onchange="recalc()">' +
+          '<option value="1">1 month</option>' +
+          '<option value="6">6 months (−5%)</option>' +
+          '<option value="12" selected>12 months (−10%)</option>' +
+        '</select>';
+    } else {
+      cell.innerHTML = '<input class="f qty" type="number" min="0" step="1" value="1" oninput="recalc()" />';
+    }
+  }
+
+  window.addRow = function(){
+    var tr = document.createElement("tr");
+    tr.dataset.type = "once";
+    tr.innerHTML =
+      '<td class="item">' + itemSelectHtml() + '<input class="f itemname" placeholder="Line description" oninput="recalc()" /></td>' +
+      '<td class="rate num"><input class="f rate" type="number" min="0" step="0.01" placeholder="0.00" oninput="recalc()" /></td>' +
+      '<td class="units num"></td>' +
+      '<td class="disc num"><input class="f disc" type="number" min="0" max="100" step="1" placeholder="0" oninput="recalc()" /></td>' +
+      '<td class="amount">$0.00</td>' +
+      '<td class="no-print"><button class="rm" type="button" title="Remove" onclick="removeRow(this)">&times;</button></td>';
+    document.getElementById("rows").appendChild(tr);
+    setUnitsCell(tr);
+    recalc();
+    return tr;
+  };
+  window.removeRow = function(btn){ btn.closest("tr").remove(); recalc(); };
+
+  // Catalog pick -> prepopulate name, rate, type, and the units control.
+  window.pickItem = function(sel){
+    var row = sel.closest("tr");
+    var v = sel.value;
+    if (v === "") { return; }           // Custom: leave what's there
+    var it = CATALOG[parseInt(v, 10)];
+    if (!it) return;
+    row.querySelector(".itemname").value = it.name;
+    row.querySelector(".rate").value = it.rate;
+    row.dataset.type = it.billing;
+    setUnitsCell(row);
+    recalc();
+  };
+
+  window.recalc = function(){
+    var subtotal = 0;
+    document.querySelectorAll("#rows tr").forEach(function(row){
+      var rate = num(row.querySelector(".rate"));
+      var manual = Math.min(Math.max(num(row.querySelector(".disc")), 0), 100) / 100;
+      var base, prepay = 0;
+      if (row.dataset.type === "monthly") {
+        var months = parseInt(row.querySelector(".cycle").value, 10) || 1;
+        prepay = PREPAY[months] || 0;
+        base = rate * months;
+      } else {
+        var qtyEl = row.querySelector(".qty");
+        var qty = qtyEl ? num(qtyEl) : 1;
+        base = rate * qty;
+      }
+      var final = base * (1 - prepay) * (1 - manual);
+      var cell = row.querySelector(".amount");
+      if (Math.abs(final - base) > 0.005) {
+        cell.innerHTML = '<span class="std">' + money(base) + '</span><span class="app">' + money(final) + '</span>';
+      } else {
+        cell.textContent = money(base);
+      }
+      subtotal += final;
+    });
+
+    var method  = document.getElementById("method").value;
+    var taxRate = num(document.getElementById("tax"));
+
+    var lines = [["Subtotal", subtotal, "sub"]];
+    var tax = subtotal * taxRate / 100;
+    if (taxRate > 0) lines.push(["Tax (" + taxRate + "%)", tax, "sub"]);
+
+    var preFee = subtotal + tax;
+    var fee = 0;
+    if (method === "card") { fee = Math.max(preFee * 0.05, 10); lines.push(["Card processing fee (5%, $10 min)", fee, "sub"]); }
+    var total = preFee + fee;
+
+    var html = "";
+    lines.forEach(function(l){ html += '<div class="r ' + (l[2]||"") + '"><span>' + l[0] + '</span><span>' + money(l[1]) + '</span></div>'; });
+    html += '<div class="r grand"><span>Total</span><span>' + money(total) + '</span></div>';
+    document.getElementById("totals").innerHTML = html;
+
+    document.getElementById("paynote").textContent = (method === "card")
+      ? "Paid by credit card — a 5% processing fee ($10 minimum) is applied."
+      : "Payable by check or ACH.";
+
+    saveFrom();
+  };
+
+  // ---- Persistence (per-browser) ----
+  function saveFrom(){
+    try {
+      var data = {};
+      FROM_IDS.forEach(function(id){ data[id] = document.getElementById(id).value; });
+      localStorage.setItem("heegar_inv_from", JSON.stringify(data));
+    } catch (e) {}
+  }
+  function loadFrom(){
+    try {
+      var raw = localStorage.getItem("heegar_inv_from"); if (!raw) return;
+      var data = JSON.parse(raw);
+      FROM_IDS.forEach(function(id){ if (data[id] != null) document.getElementById(id).value = data[id]; });
+    } catch (e) {}
+  }
+  function nextNumber(){
+    var n = 1001;
+    try { var s = localStorage.getItem("heegar_inv_next"); if (s) n = parseInt(s, 10) || 1001; } catch (e) {}
+    return n;
+  }
+  window.printInvoice = function(){
+    try { var cur = parseInt(document.getElementById("invNum").value, 10); if (!isNaN(cur)) localStorage.setItem("heegar_inv_next", String(cur + 1)); } catch (e) {}
+    window.print();
+  };
+  window.resetSaved = function(){
+    try { localStorage.removeItem("heegar_inv_from"); localStorage.removeItem("heegar_inv_next"); } catch (e) {}
+    location.reload();
+  };
+
+  function loadCatalog(){
+    return fetch("/api/docs/line-items?key=" + encodeURIComponent(keyFromUrl()))
+      .then(function(r){ return r.ok ? r.json() : []; })
+      .then(function(data){ CATALOG = Array.isArray(data) ? data : []; })
+      .catch(function(){ CATALOG = []; });
+  }
+
+  // ---- Init ----
+  loadCatalog().then(function(){
+    loadFrom();
+    document.getElementById("invNum").value = "INV-" + nextNumber();
+    document.getElementById("invDate").value = new Date().toLocaleDateString("en-US");
+    FROM_IDS.forEach(function(id){ document.getElementById(id).addEventListener("input", saveFrom); });
+    addRow();
+  });
+})();
+</script>
+</body>
+</html>

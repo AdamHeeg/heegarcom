@@ -21,6 +21,14 @@
     </Content>
   </ItemGroup>
 
+  <!-- Private, unlinked HTML docs (pricing sheet, services agreement) — copied to output/publish,
+       served only through the keyed /docs routes in Program.cs (outside wwwroot, never served directly). -->
+  <ItemGroup>
+    <Content Include="PrivateDocs\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <!-- The pinned Tailwind CLI is git-ignored (108 MB > GitHub's 100 MB limit);
        download it on a fresh checkout so the build is self-contained. Windows-only. -->
   <Target Name="EnsureTailwindCli" BeforeTargets="BuildTailwindCss"

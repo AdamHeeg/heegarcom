@@ -128,6 +128,29 @@ app.MapGet("/DebtHelper", () => Results.Redirect("/DebtHelper/index.html"));
 app.MapGet("/MarahMutual", () => Results.Redirect("/MarahMutual/index.html"));
 app.MapGet("/UBD", () => Results.Redirect("/UBD/index.html"));
 
+// Private, unlinked business docs (pricing sheet, services agreement). Files live in PrivateDocs/
+// (outside wwwroot, so MapStaticAssets never serves them). Access is gated by a shared key; a wrong
+// or missing key returns 404 so the routes look like they don't exist. Obscurity, not authentication.
+const string DocsKey = "fourim";
+app.MapGet("/docs/pricing", (string? key, IWebHostEnvironment env) =>
+{
+    if (key != DocsKey) return Results.NotFound();
+    return Results.File(Path.Combine(env.ContentRootPath, "PrivateDocs", "pricing.html"), "text/html");
+});
+app.MapGet("/docs/agreement", (string? key, IWebHostEnvironment env) =>
+{
+    if (key != DocsKey) return Results.NotFound();
+    return Results.File(Path.Combine(env.ContentRootPath, "PrivateDocs", "services-agreement.html"), "text/html");
+});
+app.MapGet("/docs/invoice", (string? key, IWebHostEnvironment env) =>
+{
+    if (key != DocsKey) return Results.NotFound();
+    return Results.File(Path.Combine(env.ContentRootPath, "PrivateDocs", "invoice.html"), "text/html");
+});
+// Billable line-item catalog for the invoice page (name/rate/billing from LineItemCatalog.cs).
+app.MapGet("/api/docs/line-items", (string? key) =>
+    key != DocsKey ? Results.NotFound() : Results.Ok(LineItemCatalog.Items));
+
 // Store an attorney's client referral (from refer-a-client.html).
 app.MapPost("/api/referrals", (ReferralSubmission s, HttpContext ctx, IWebHostEnvironment env) =>
 {
