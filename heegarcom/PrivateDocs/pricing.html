@@ -13,21 +13,20 @@
   html,body{margin:0;}
   body{
     font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    color:var(--ink); background:var(--surface); line-height:1.5;
-    -webkit-font-smoothing:antialiased;
+    color:var(--ink); background:var(--surface); line-height:1.5; -webkit-font-smoothing:antialiased;
   }
   .page{max-width:820px; margin:0 auto; padding:44px 48px 60px;}
-  /* Letterhead */
   .head{display:flex; justify-content:space-between; align-items:flex-end; border-bottom:3px solid var(--navy); padding-bottom:18px;}
   .brand{font-size:34px; font-weight:800; letter-spacing:-.02em; color:var(--navy); line-height:1;}
   .brand .dot{color:var(--orange);}
   .brand-sub{margin-top:6px; font-size:13px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--orange);}
   .contact{text-align:right; font-size:12.5px; color:var(--muted); line-height:1.7;}
   .contact a{color:var(--muted); text-decoration:none;}
-  /* Title row */
   .title{margin:26px 0 4px; font-size:22px; font-weight:800; color:var(--navy);}
   .subtitle{font-size:13px; color:var(--muted); margin-bottom:22px;}
-  /* Sections */
+  .badge{display:inline-block; background:rgba(210,75,20,.10); color:var(--orange); font-weight:700; font-size:11px; padding:3px 10px; border-radius:999px;}
+  .paybox{margin:16px 0 4px; padding:12px 15px; background:rgba(10,49,97,.05); border-left:3px solid var(--navy); border-radius:4px; font-size:12.5px; color:var(--ink); line-height:1.55;}
+  .paybox b{color:var(--navy);}
   .sec{margin-top:26px; break-inside:avoid;}
   .sec h2{font-size:12px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--orange); margin:0 0 2px;}
   .sec .lead{font-size:12.5px; color:var(--muted); margin:0 0 12px;}
@@ -36,13 +35,9 @@
   .row .name{font-weight:700; color:var(--navy); font-size:15px;}
   .row .desc{display:block; font-weight:400; color:var(--muted); font-size:12.5px; margin-top:2px; max-width:52ch;}
   .row .price{white-space:nowrap; font-weight:800; color:var(--ink); font-size:16px;}
-  .row .price small{display:block; text-align:right; font-weight:500; color:var(--muted); font-size:11px;}
-  .note{font-size:11.5px; color:var(--muted); margin-top:9px;}
-  /* Footer */
+  .row .price small{font-weight:500; color:var(--muted); font-size:11px;}
   .foot{margin-top:34px; padding-top:16px; border-top:1px solid var(--line); font-size:11px; color:var(--muted); line-height:1.6;}
-  .badge{display:inline-block; background:rgba(210,75,20,.10); color:var(--orange); font-weight:700; font-size:11px; padding:3px 10px; border-radius:999px;}
-  .paybox{margin:16px 0 4px; padding:12px 15px; background:rgba(10,49,97,.05); border-left:3px solid var(--navy); border-radius:4px; font-size:12.5px; color:var(--ink); line-height:1.55;}
-  .paybox b{color:var(--navy);}
+  .loaderr{color:var(--orange); font-size:12.5px; margin-top:20px;}
   @media print{
     body{background:#fff;}
     .page{max-width:none; padding:0.5in 0.65in;}
@@ -68,64 +63,72 @@
     <div class="title">Services &amp; Pricing</div>
     <div class="subtitle">
       <span class="badge">Friendly, relationship-based rates</span>
-      &nbsp; Effective [Month YYYY] &middot; Quotes valid 30 days.
+      &nbsp; Quotes valid 30 days.
     </div>
 
     <div class="paybox">
       <b>How payment works.</b> A card is placed on file, and a <b>50% non-refundable deposit is charged before work begins</b> &mdash; balance due on launch. Monthly plans are charged for the first month at signing and auto-billed to the card each month.
     </div>
 
-    <div class="sec">
-      <h2>Website Design &amp; Build</h2>
-      <p class="lead">One-time. Mobile-responsive, basic on-page SEO, and a contact form included.</p>
-      <div class="rows">
-        <div class="row"><div><span class="name">Landing</span><span class="desc">Single page &mdash; hero, key info, contact form.</span></div><div class="price">$400</div></div>
-        <div class="row"><div><span class="name">Standard</span><span class="desc">Up to 5 pages &mdash; a full small-business site.</span></div><div class="price">$900</div></div>
-        <div class="row"><div><span class="name">Premium</span><span class="desc">Up to 10 pages, plus custom features / integrations.</span></div><div class="price">$2,000</div></div>
-        <div class="row"><div><span class="name">Additional page</span><span class="desc">Added to any build.</span></div><div class="price">$100<small>each</small></div></div>
-      </div>
-    </div>
-
-    <div class="sec">
-      <h2>Online Presence Setup</h2>
-      <p class="lead">One-time. Profile creation, branding, About/description, and initial content.</p>
-      <div class="rows">
-        <div class="row"><div><span class="name">LinkedIn Company Page</span><span class="desc">Branded page, About, first posts.</span></div><div class="price">$200</div></div>
-        <div class="row"><div><span class="name">YouTube Channel</span><span class="desc">Branded channel, About, initial video uploads &amp; organization.</span></div><div class="price">$200</div></div>
-        <div class="row"><div><span class="name">Bundle &mdash; both</span><span class="desc">LinkedIn + YouTube set up together.</span></div><div class="price">$350</div></div>
-      </div>
-    </div>
-
-    <div class="sec">
-      <h2>Website Care Plan</h2>
-      <p class="lead">Monthly. Hosting coordination, updates, backups, security, and small edits.</p>
-      <div class="rows">
-        <div class="row"><div><span class="name">Basic</span><span class="desc">Updates, backups, security, and up to 1 hr of edits / month.</span></div><div class="price">$50<small>/ month</small></div></div>
-        <div class="row"><div><span class="name">Plus</span><span class="desc">Everything in Basic, priority turnaround, up to 3 hrs of edits / month.</span></div><div class="price">$120<small>/ month</small></div></div>
-      </div>
-    </div>
-
-    <div class="sec">
-      <h2>Social Content</h2>
-      <p class="lead">Monthly. AI-assisted, human-reviewed posts for LinkedIn and the site. Packages include tooling &amp; AI costs. No video production.</p>
-      <div class="rows">
-        <div class="row"><div><span class="name">Basic</span><span class="desc">~4 posts / month plus light profile upkeep.</span></div><div class="price">$125<small>/ month</small></div></div>
-        <div class="row"><div><span class="name">Extra</span><span class="desc">~8 posts / month plus one page/blog update.</span></div><div class="price">$225<small>/ month</small></div></div>
-      </div>
-    </div>
-
-    <div class="sec">
-      <h2>Ad-Hoc</h2>
-      <div class="rows">
-        <div class="row"><div><span class="name">Hourly</span><span class="desc">One-off work or changes outside a plan.</span></div><div class="price">$75<small>/ hour</small></div></div>
-      </div>
-    </div>
+    <div id="catalog"></div>
 
     <div class="foot">
       Third-party costs (domain registration, hosting, premium platform features) are billed at cost or paid directly by the client.
-      Rates are a starting proposal and may be tailored to scope. This sheet is not a contract; a signed services agreement governs any engagement.
+      Prices may be tailored to scope. This sheet is not a contract; a signed services agreement governs any engagement.
     </div>
 
   </div>
+
+<script>
+(function(){
+  "use strict";
+
+  // Section order + intro text. Prices/items themselves come from LineItemCatalog.cs.
+  var SECTIONS = [
+    ["Website Build",         "One-time. Mobile-responsive, basic on-page SEO, and a contact form included. 50% non-refundable deposit to begin; balance on launch."],
+    ["Online Presence Setup", "One-time. Profile creation, branding, About/description, and initial content."],
+    ["Website Care",          "Monthly. Hosting coordination, updates, backups, security, and small edits."],
+    ["Social Content",        "Monthly. AI-assisted, human-reviewed posts for LinkedIn and the site. Packages include tooling & AI costs. No video production."],
+    ["Ad-Hoc",                "For one-off work outside a plan."]
+  ];
+
+  function money(n){
+    return "$" + Number(n).toLocaleString("en-US", {minimumFractionDigits:0, maximumFractionDigits:0});
+  }
+  function unit(it){
+    if (it.billing === "monthly") return " / month";
+    if (it.category === "Ad-Hoc") return " / hour";
+    return "";
+  }
+  function esc(s){ var d = document.createElement("div"); d.textContent = s == null ? "" : s; return d.innerHTML; }
+  function keyFromUrl(){ try { return new URLSearchParams(location.search).get("key") || ""; } catch(e){ return ""; } }
+
+  function render(items){
+    var host = document.getElementById("catalog");
+    var html = "";
+    SECTIONS.forEach(function(sec){
+      var cat = sec[0], lead = sec[1];
+      var inCat = items.filter(function(it){ return it.category === cat; });
+      if (!inCat.length) return;
+      html += '<div class="sec"><h2>' + esc(cat) + '</h2><p class="lead">' + esc(lead) + '</p><div class="rows">';
+      inCat.forEach(function(it){
+        html += '<div class="row"><div><span class="name">' + esc(it.name) + '</span>' +
+                '<span class="desc">' + esc(it.description) + '</span></div>' +
+                '<div class="price">' + money(it.rate) + '<small>' + unit(it) + '</small></div></div>';
+      });
+      html += '</div></div>';
+    });
+    host.innerHTML = html || '<p class="loaderr">No items in the catalog.</p>';
+  }
+
+  fetch("/api/docs/line-items?key=" + encodeURIComponent(keyFromUrl()))
+    .then(function(r){ if (!r.ok) throw new Error("load"); return r.json(); })
+    .then(render)
+    .catch(function(){
+      document.getElementById("catalog").innerHTML =
+        '<p class="loaderr">Could not load prices. Open this page through the app link (…/docs/pricing?key=…).</p>';
+    });
+})();
+</script>
 </body>
 </html>
