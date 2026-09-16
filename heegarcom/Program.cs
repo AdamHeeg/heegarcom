@@ -131,25 +131,31 @@ app.MapGet("/UBD", () => Results.Redirect("/UBD/index.html"));
 // Private, unlinked business docs (pricing sheet, services agreement). Files live in PrivateDocs/
 // (outside wwwroot, so MapStaticAssets never serves them). Access is gated by a shared key; a wrong
 // or missing key returns 404 so the routes look like they don't exist. Obscurity, not authentication.
+// Responses are marked no-store so a browser never serves a stale copy of these
+// frequently-edited docs.
 const string DocsKey = "fourim";
-app.MapGet("/docs/pricing", (string? key, IWebHostEnvironment env) =>
+IResult ServeDoc(string? key, HttpContext ctx, IWebHostEnvironment env, string file)
 {
     if (key != DocsKey) return Results.NotFound();
-    return Results.File(Path.Combine(env.ContentRootPath, "PrivateDocs", "pricing.html"), "text/html");
-});
-app.MapGet("/docs/agreement", (string? key, IWebHostEnvironment env) =>
+    ctx.Response.Headers["Cache-Control"] = "no-store, must-revalidate";
+    return Results.File(Path.Combine(env.ContentRootPath, "PrivateDocs", file), "text/html");
+}
+app.MapGet("/docs/pricing",   (string? key, HttpContext ctx, IWebHostEnvironment env) => ServeDoc(key, ctx, env, "pricing.html"));
+app.MapGet("/docs/agreement", (string? key, HttpContext ctx, IWebHostEnvironment env) => ServeDoc(key, ctx, env, "services-agreement.html"));
+app.MapGet("/docs/invoice",   (string? key, HttpContext ctx, IWebHostEnvironment env) => ServeDoc(key, ctx, env, "invoice.html"));
+// Shared stylesheet for the docs. Not sensitive (styling only), so no key is required.
+app.MapGet("/docs/docs.css", (HttpContext ctx, IWebHostEnvironment env) =>
 {
-    if (key != DocsKey) return Results.NotFound();
-    return Results.File(Path.Combine(env.ContentRootPath, "PrivateDocs", "services-agreement.html"), "text/html");
-});
-app.MapGet("/docs/invoice", (string? key, IWebHostEnvironment env) =>
-{
-    if (key != DocsKey) return Results.NotFound();
-    return Results.File(Path.Combine(env.ContentRootPath, "PrivateDocs", "invoice.html"), "text/html");
+    ctx.Response.Headers["Cache-Control"] = "no-store, must-revalidate";
+    return Results.File(Path.Combine(env.ContentRootPath, "PrivateDocs", "docs.css"), "text/css");
 });
 // Billable line-item catalog for the invoice page (name/rate/billing from LineItemCatalog.cs).
-app.MapGet("/api/docs/line-items", (string? key) =>
-    key != DocsKey ? Results.NotFound() : Results.Ok(LineItemCatalog.Items));
+app.MapGet("/api/docs/line-items", (string? key, HttpContext ctx) =>
+{
+    if (key != DocsKey) return Results.NotFound();
+    ctx.Response.Headers["Cache-Control"] = "no-store, must-revalidate";
+    return Results.Ok(LineItemCatalog.Items);
+});
 
 // Store an attorney's client referral (from refer-a-client.html).
 app.MapPost("/api/referrals", (ReferralSubmission s, HttpContext ctx, IWebHostEnvironment env) =>

@@ -1,0 +1,14 @@
+/* Shared base for the gated /docs pages (pricing, agreement, invoice).
+   Brand palette + reset only — page-specific layout stays inline in each doc,
+   so the single source of truth for colors and the base type lives here. */
+:root{
+  --navy:#0A3161; --orange:#D24B14; --surface:#faf9f7;
+  --ink:#1a1a1a; --muted:#5b6470; --line:#e7e5e1;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;}
+body{
+  font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink); background:var(--surface); line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+.brand .dot{color:var(--orange);}

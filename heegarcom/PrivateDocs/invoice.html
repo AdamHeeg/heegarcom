@@ -4,17 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Heegar — Invoice</title>
+<link rel="stylesheet" href="docs.css" />
 <style>
-  :root{
-    --navy:#0A3161; --orange:#D24B14; --surface:#faf9f7;
-    --ink:#1a1a1a; --muted:#5b6470; --line:#e7e5e1;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;}
-  body{
-    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    color:var(--ink); background:var(--surface); line-height:1.5; -webkit-font-smoothing:antialiased;
-  }
   .page{max-width:840px; margin:0 auto; padding:36px 48px 60px;}
 
   .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:18px;}
@@ -55,10 +46,10 @@
   td.item{width:44%;}
   td.item .itemsel{display:block; width:100%; margin-bottom:4px; font:inherit; font-size:12px; padding:4px 6px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--navy); font-weight:600;}
   td.item .itemname{width:100%; font-size:13px;}
-  td.rate .f{width:78px; text-align:right;}
+  td.col-rate .f{width:78px; text-align:right;}
   td.units .qty{width:60px; text-align:right;}
   td.units .cycle{font:inherit; font-size:12.5px; padding:3px 4px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink);}
-  td.disc .f{width:56px; text-align:right;}
+  td.col-disc .f{width:56px; text-align:right;}
   td.amount{white-space:nowrap; font-weight:700; text-align:right;}
   td.amount .std{color:var(--muted); font-weight:500; text-decoration:line-through; margin-right:6px;}
   td.amount .app{color:var(--navy);}
@@ -89,20 +80,20 @@
   <div class="page">
 
     <div class="toolbar no-print">
-      <button class="btn-add" type="button" onclick="addRow()">+ Add line</button>
-      <button class="btn-print" type="button" onclick="printInvoice()">Print / Save PDF</button>
-      <button class="btn-ghost" type="button" onclick="resetSaved()">Reset saved &ldquo;From&rdquo; &amp; number</button>
+      <button class="btn-add" type="button">+ Add line</button>
+      <button class="btn-print" type="button">Print / Save PDF</button>
+      <button class="btn-ghost" type="button">Reset saved &ldquo;From&rdquo; &amp; number</button>
     </div>
 
     <div class="settings no-print">
       <label>Payment method
-        <select id="method" onchange="recalc()">
+        <select id="method">
           <option value="check">Check / ACH (no fee)</option>
           <option value="card">Credit card (+5%, $10 min)</option>
         </select>
       </label>
       <label>Tax %
-        <input class="tax" id="tax" type="number" min="0" step="0.01" value="0" oninput="recalc()" />
+        <input class="tax" id="tax" type="number" min="0" step="0.01" value="0" />
       </label>
     </div>
 
@@ -119,9 +110,9 @@
         <div class="lab">From</div>
         <input class="f name" id="fromName" placeholder="Adam Heeg (Heegar)" />
         <input class="f" id="fromSite" placeholder="heegar.com" />
-        <input class="f" id="fromEmail" placeholder="your email" />
-        <input class="f" id="fromPhone" placeholder="your phone" />
-        <input class="f" id="fromCity" placeholder="City, ST" />
+        <input class="f" id="fromEmail" placeholder="AdamHeeg@outlook.com" />
+        <input class="f" id="fromPhone" placeholder="(941) 286-1356" />
+        <input class="f" id="fromCity" placeholder="Englewood, FL" />
       </div>
       <div style="text-align:right;">
         <div class="billto" style="text-align:left; display:inline-block;">
@@ -167,6 +158,9 @@
   var FROM_IDS = ["fromName","fromSite","fromEmail","fromPhone","fromCity"];
   var CATALOG = [];
   var PREPAY = { 1: 0, 6: 0.05, 12: 0.10 };   // months -> prepay discount
+  var CYCLES = [1, 6, 12];                      // cycle options, in display order
+  var DEFAULT_CYCLE = 12;
+  var CARD_FEE_RATE = 0.05, CARD_FEE_MIN = 10;  // credit-card surcharge: max(rate, min)
 
   function money(n){
     var v = Math.round((n + Number.EPSILON) * 100) / 100;
@@ -182,67 +176,70 @@
       var opt = '<option value="' + i + '">' + it.name + '</option>';
       if (it.billing === "monthly") monthly += opt; else once += opt;
     });
-    return '<select class="itemsel no-print" onchange="pickItem(this)">' +
+    return '<select class="itemsel no-print">' +
              '<option value="">— Pick an item / Custom —</option>' +
              (once ? '<optgroup label="One-time">' + once + '</optgroup>' : '') +
              (monthly ? '<optgroup label="Monthly">' + monthly + '</optgroup>' : '') +
            '</select>';
   }
 
+  // Cycle <option>s, with each prepay % read from PREPAY so the labels never drift.
+  function cycleOptionsHtml(){
+    return CYCLES.map(function(m){
+      var pct = Math.round((PREPAY[m] || 0) * 100);
+      var label = m + (m === 1 ? " month" : " months") + (pct > 0 ? " (−" + pct + "%)" : "");
+      return '<option value="' + m + '"' + (m === DEFAULT_CYCLE ? " selected" : "") + '>' + label + '</option>';
+    }).join("");
+  }
+
   // Fill the Term/Qty cell for the row's current type.
   function setUnitsCell(row){
     var cell = row.querySelector("td.units");
     if (row.dataset.type === "monthly") {
-      cell.innerHTML =
-        '<select class="cycle" onchange="recalc()">' +
-          '<option value="1">1 month</option>' +
-          '<option value="6">6 months (−5%)</option>' +
-          '<option value="12" selected>12 months (−10%)</option>' +
-        '</select>';
+      cell.innerHTML = '<select class="cycle">' + cycleOptionsHtml() + '</select>';
     } else {
-      cell.innerHTML = '<input class="f qty" type="number" min="0" step="1" value="1" oninput="recalc()" />';
+      cell.innerHTML = '<input class="f qty" type="number" min="0" step="1" value="1" />';
     }
   }
 
-  window.addRow = function(){
+  function addRow(){
     var tr = document.createElement("tr");
     tr.dataset.type = "once";
     tr.innerHTML =
-      '<td class="item">' + itemSelectHtml() + '<input class="f itemname" placeholder="Line description" oninput="recalc()" /></td>' +
-      '<td class="rate num"><input class="f rate" type="number" min="0" step="0.01" placeholder="0.00" oninput="recalc()" /></td>' +
+      '<td class="item">' + itemSelectHtml() + '<input class="f itemname" placeholder="Line description" /></td>' +
+      '<td class="col-rate num"><input class="f rate" type="number" min="0" step="0.01" placeholder="0.00" /></td>' +
       '<td class="units num"></td>' +
-      '<td class="disc num"><input class="f disc" type="number" min="0" max="100" step="1" placeholder="0" oninput="recalc()" /></td>' +
+      '<td class="col-disc num"><input class="f disc" type="number" min="0" max="100" step="1" placeholder="0" /></td>' +
       '<td class="amount">$0.00</td>' +
-      '<td class="no-print"><button class="rm" type="button" title="Remove" onclick="removeRow(this)">&times;</button></td>';
+      '<td class="no-print"><button class="rm" type="button" title="Remove">&times;</button></td>';
     document.getElementById("rows").appendChild(tr);
     setUnitsCell(tr);
     recalc();
     return tr;
-  };
-  window.removeRow = function(btn){ btn.closest("tr").remove(); recalc(); };
+  }
 
   // Catalog pick -> prepopulate name, rate, type, and the units control.
-  window.pickItem = function(sel){
+  function pickItem(sel){
     var row = sel.closest("tr");
-    var v = sel.value;
-    if (v === "") { return; }           // Custom: leave what's there
-    var it = CATALOG[parseInt(v, 10)];
+    if (sel.value === "") { return; }        // Custom: leave what's there
+    var it = CATALOG[parseInt(sel.value, 10)];
     if (!it) return;
     row.querySelector(".itemname").value = it.name;
-    row.querySelector(".rate").value = it.rate;
+    row.querySelector("input.rate").value = it.rate;
     row.dataset.type = it.billing;
     setUnitsCell(row);
     recalc();
-  };
+  }
 
-  window.recalc = function(){
+  function recalc(){
     var subtotal = 0;
     document.querySelectorAll("#rows tr").forEach(function(row){
-      var rate = num(row.querySelector(".rate"));
-      var manual = Math.min(Math.max(num(row.querySelector(".disc")), 0), 100) / 100;
+      var rate = num(row.querySelector("input.rate"));
+      var manual = Math.min(Math.max(num(row.querySelector("input.disc")), 0), 100) / 100;
       var base, prepay = 0;
       if (row.dataset.type === "monthly") {
-        var months = parseInt(row.querySelector(".cycle").value, 10) || 1;
+        var cyc = row.querySelector(".cycle");
+        var months = cyc ? (parseInt(cyc.value, 10) || 1) : 1;
         prepay = PREPAY[months] || 0;
         base = rate * months;
       } else {
@@ -250,14 +247,14 @@
         var qty = qtyEl ? num(qtyEl) : 1;
         base = rate * qty;
       }
-      var final = base * (1 - prepay) * (1 - manual);
+      var lineTotal = base * (1 - prepay) * (1 - manual);
       var cell = row.querySelector(".amount");
-      if (Math.abs(final - base) > 0.005) {
-        cell.innerHTML = '<span class="std">' + money(base) + '</span><span class="app">' + money(final) + '</span>';
+      if (Math.abs(lineTotal - base) > 0.005) {
+        cell.innerHTML = '<span class="std">' + money(base) + '</span><span class="app">' + money(lineTotal) + '</span>';
       } else {
         cell.textContent = money(base);
       }
-      subtotal += final;
+      subtotal += lineTotal;
     });
 
     var method  = document.getElementById("method").value;
@@ -269,7 +266,10 @@
 
     var preFee = subtotal + tax;
     var fee = 0;
-    if (method === "card") { fee = Math.max(preFee * 0.05, 10); lines.push(["Card processing fee (5%, $10 min)", fee, "sub"]); }
+    if (method === "card") {
+      fee = Math.max(preFee * CARD_FEE_RATE, CARD_FEE_MIN);
+      lines.push(["Card processing fee (" + Math.round(CARD_FEE_RATE * 100) + "%, $" + CARD_FEE_MIN + " min)", fee, "sub"]);
+    }
     var total = preFee + fee;
 
     var html = "";
@@ -278,11 +278,11 @@
     document.getElementById("totals").innerHTML = html;
 
     document.getElementById("paynote").textContent = (method === "card")
-      ? "Paid by credit card — a 5% processing fee ($10 minimum) is applied."
+      ? "Paid by credit card — a " + Math.round(CARD_FEE_RATE * 100) + "% processing fee ($" + CARD_FEE_MIN + " minimum) is applied."
       : "Payable by check or ACH.";
 
     saveFrom();
-  };
+  }
 
   // ---- Persistence (per-browser) ----
   function saveFrom(){
@@ -304,14 +304,14 @@
     try { var s = localStorage.getItem("heegar_inv_next"); if (s) n = parseInt(s, 10) || 1001; } catch (e) {}
     return n;
   }
-  window.printInvoice = function(){
+  function printInvoice(){
     try { var cur = parseInt(document.getElementById("invNum").value, 10); if (!isNaN(cur)) localStorage.setItem("heegar_inv_next", String(cur + 1)); } catch (e) {}
     window.print();
-  };
-  window.resetSaved = function(){
+  }
+  function resetSaved(){
     try { localStorage.removeItem("heegar_inv_from"); localStorage.removeItem("heegar_inv_next"); } catch (e) {}
     location.reload();
-  };
+  }
 
   function loadCatalog(){
     return fetch("/api/docs/line-items?key=" + encodeURIComponent(keyFromUrl()))
@@ -322,10 +322,29 @@
 
   // ---- Init ----
   loadCatalog().then(function(){
+    // Event delegation on document — fires no matter when a control is created,
+    // and cannot fail to attach to a per-row element.
+    document.addEventListener("click", function(e){
+      var t = e.target;
+      if (t.closest(".btn-add")) { addRow(); }
+      else if (t.closest(".btn-print")) { printInvoice(); }
+      else if (t.closest(".btn-ghost")) { resetSaved(); }
+      else if (t.closest(".rm")) { var tr = t.closest("tr"); if (tr) { tr.remove(); recalc(); } }
+    });
+    document.addEventListener("input", function(e){
+      var t = e.target;
+      if (t.matches && t.matches(".rate, .disc, .qty, .itemname, #tax")) { recalc(); }
+      if (t.id && FROM_IDS.indexOf(t.id) > -1) { saveFrom(); }
+    });
+    document.addEventListener("change", function(e){
+      var t = e.target;
+      if (t.matches && t.matches(".itemsel")) { pickItem(t); }
+      else if (t.matches && t.matches(".cycle, #method")) { recalc(); }
+    });
+
     loadFrom();
     document.getElementById("invNum").value = "INV-" + nextNumber();
     document.getElementById("invDate").value = new Date().toLocaleDateString("en-US");
-    FROM_IDS.forEach(function(id){ document.getElementById(id).addEventListener("input", saveFrom); });
     addRow();
   });
 })();
