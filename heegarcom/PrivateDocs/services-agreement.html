@@ -8,6 +8,9 @@
 <style>
   body{line-height:1.55;}   /* contract runs long — a touch more leading */
   .page{max-width:820px; margin:0 auto; padding:44px 48px 60px;}
+  .toolbar{display:flex; gap:10px; margin-bottom:18px;}
+  .toolbar button{font:inherit; font-weight:700; font-size:13px; cursor:pointer; border:0; border-radius:7px; padding:9px 16px;}
+  .btn-print{background:var(--navy); color:#fff;}
   .head{display:flex; justify-content:space-between; align-items:flex-end; border-bottom:3px solid var(--navy); padding-bottom:18px;}
   .brand{font-size:30px; font-weight:800; letter-spacing:-.02em; color:var(--navy); line-height:1;}
   .brand .dot{color:var(--orange);}
@@ -30,11 +33,16 @@
     body{background:#fff;}
     .page{max-width:none; padding:0.5in 0.7in;}
     .disclaimer{background:#f4f4f4;}
+    .no-print{display:none !important;}
   }
 </style>
 </head>
 <body>
   <div class="page">
+
+    <div class="toolbar no-print">
+      <button class="btn-print" type="button">Print / Save PDF</button>
+    </div>
 
     <div class="head">
       <div>
@@ -43,7 +51,7 @@
       </div>
       <div class="contact">
         heegar.com<br />
-        AdamHeeg@outlook.com<br /
+        AdamHeeg@outlook.com<br />
         (941) 286-1356 &middot; Englewood, FL
       </div>
     </div>
@@ -60,7 +68,7 @@
 
       <li><b>Fees &amp; Payment.</b> Fees are as stated in the SOW / current pricing sheet. The Client places a payment card on file. For one-time builds, a <b>50% non-refundable deposit is charged to the card before work begins</b>, with the balance due on delivery/launch. Monthly plans are charged for the first month at signing and auto-billed to the card on the <span class="fill">[1st]</span> of each month thereafter. Balances over <span class="fill">[15]</span> days past due may pause work and accrue interest of <span class="fill">[1.5%]</span> per month.</li>
 
-      <li><b>Third-Party Costs.</b> Domain registration, hosting, platform/subscription fees, stock media, and similar third-party costs are the Client&rsquo;s responsibility and are paid directly by the Client or reimbursed to Provider at cost.</li>
+      <li><b>Third-Party Costs.</b> For Clients on a monthly Website Care plan, standard web hosting and domain registration/renewal are included in the monthly fee and managed by Provider. Premium or high-traffic hosting, paid platform/subscription features, stock media, and similar third-party costs remain the Client&rsquo;s responsibility and are paid directly by the Client or reimbursed to Provider at cost. For one-time builds without a Care plan, all hosting, domain, and platform costs are the Client&rsquo;s responsibility.</li>
 
       <li><b>AI-Assisted Content.</b> Some deliverables (website copy and social posts) may be produced with AI assistance and are reviewed by Provider. The Client is responsible for final review and approval of all content before it is published.</li>
 
@@ -68,7 +76,7 @@
 
       <li><b>Revisions &amp; Scope.</b> Each build includes <span class="fill">[2]</span> rounds of revisions. Additional changes or new scope are billed hourly at <span class="fill">[$75/hr]</span> or under a new SOW.</li>
 
-      <li><b>Ownership.</b> Upon full payment, the Client owns the final delivered website design and content. Provider retains ownership of its underlying tools, frameworks, and reusable templates, and may display the completed work in a portfolio unless the Client requests otherwise in writing.</li>
+      <li><b>Ownership.</b> Upon full payment, the Client owns the final delivered website design and content. Provider retains ownership of its underlying tools, frameworks, and reusable templates, and may display the completed work in a portfolio unless the Client requests otherwise in writing. The Client&rsquo;s domain name is registered in the Client&rsquo;s name and remains the Client&rsquo;s property; on termination, Provider will unlock the domain and provide any transfer authorization code so the Client may move it to a registrar of their choice.</li>
 
       <li><b>Term &amp; Termination.</b> Monthly services continue until cancelled by either party with <span class="fill">[15]</span> days&rsquo; written notice. Either party may terminate for a material breach that remains uncured <span class="fill">[10]</span> days after written notice. On termination, the Client pays for all work performed through the termination date.</li>
 
@@ -101,5 +109,14 @@
     </div>
 
   </div>
+
+<script>
+(function(){
+  "use strict";
+  document.addEventListener("click", function(e){
+    if (e.target.closest(".btn-print")) { window.print(); }
+  });
+})();
+</script>
 </body>
 </html>
