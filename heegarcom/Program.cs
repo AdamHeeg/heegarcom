@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Threading.RateLimiting;
 using heegarcom.Components;
+using heegarcom.Services;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Data.Sqlite;
 
@@ -37,8 +38,12 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
-// Used by the NPI lookup endpoint to call the external CMS registry server-side (via IHttpClientFactory).
+// Used by the NPI lookup endpoints to call the external CMS registry server-side (via IHttpClientFactory).
 builder.Services.AddHttpClient();
+
+// Resolves + queries the Medicare and Open Payments datasets by NPI. Singleton so the resolved dataset
+// IDs and data year are cached across requests (see CmsProviderService).
+builder.Services.AddSingleton<CmsProviderService>();
 
 var app = builder.Build();
 
@@ -128,9 +133,11 @@ app.MapGet("/api/npi/search", async (string? firstName, string? lastName, string
     if (last.Length < 2 && st.Length == 0)
         return Results.Ok(Array.Empty<NpiResult>());
 
-    // Search the CMS API by last name + state only; first-name matching is done locally (below) so it can
-    // also match a former/other first name, not just the current one.
+    // First name is a "starts with" search done by the CMS wildcard (it needs >=2 chars before the '*').
+    // Filtering server-side matches every prefix hit across the full result set, not just the page we
+    // could fetch. A 1-char prefix can't use the wildcard, so it's enforced by the local filter below.
     var query = new List<string> { "version=2.1", "limit=200" };
+    if (first.Length >= 2) query.Add("first_name=" + Uri.EscapeDataString(first) + "*");
     if (last.Length > 0) query.Add("last_name=" + Uri.EscapeDataString(last));
     if (st.Length > 0) query.Add("state=" + Uri.EscapeDataString(st));
     var url = "https://npiregistry.cms.hhs.gov/api/?" + string.Join("&", query);
@@ -161,7 +168,7 @@ app.MapGet("/api/npi/search", async (string? firstName, string? lastName, string
         var name = "";
         var status = "";
         var also = "";
-        var firstMatch = false; // did the typed first name start any of this provider's first names (current or former)?
+        var firstMatch = false; // did the typed first name start the current OR an other/former first name?
         if (item.TryGetProperty("basic", out var basic))
         {
             if (isOrg)
@@ -176,13 +183,14 @@ app.MapGet("/api/npi/search", async (string? firstName, string? lastName, string
                 name = (fn + " " + ln).Trim();
                 if (cred.Length > 0) name += ", " + cred;
 
-                // Local first-name "starts with" against the current first name...
+                // "starts with" on the current first name...
                 var currentFirstOk = first.Length == 0 || fn.StartsWith(first, StringComparison.OrdinalIgnoreCase);
                 var currentLastOk = last.Length == 0 || ln.StartsWith(last, StringComparison.OrdinalIgnoreCase);
                 firstMatch = currentFirstOk;
 
-                // ...and also against former/other first names. When the current name isn't what matched,
-                // surface the other_names entry that did, shown the same way as a maiden (former last) name.
+                // ...but the CMS API also matches former/other names, so a record can surface under a
+                // current name that isn't what was typed. Accept an alternate first-name match too, and
+                // surface the other_names entry that matched so the row explains why it appeared.
                 if (!(currentFirstOk && currentLastOk) && item.TryGetProperty("other_names", out var others) && others.ValueKind == JsonValueKind.Array)
                 {
                     foreach (var o in others.EnumerateArray())
@@ -205,8 +213,8 @@ app.MapGet("/api/npi/search", async (string? firstName, string? lastName, string
             status = rawStatus == "A" ? "Active" : rawStatus;
         }
 
-        // Local first-name filter: if a first name was typed, keep only providers whose current first name
-        // or one of their other/former first names starts with it. (Organizations have no first name.)
+        // Keep the record if a typed first name matched the current OR an alternate/former first name.
+        // Organizations have no first name, so a first-name search excludes them.
         if (first.Length > 0 && !firstMatch)
             continue;
 
@@ -247,6 +255,18 @@ app.MapGet("/api/npi/search", async (string? firstName, string? lastName, string
     }
 
     return Results.Ok(results);
+});
+
+// Per-provider detail for the search expander: Medicare billing + Open Payments industry payments,
+// fetched by NPI server-side. Returns both sections (each null when the provider has no record).
+app.MapGet("/api/npi/details", async (string? npi, CmsProviderService cms, CancellationToken ct) =>
+{
+    var clean = (npi ?? "").Trim();
+    if (clean.Length != 10 || !clean.All(char.IsDigit))
+        return Results.Ok(new ProviderDetails(null, false, null, false));
+
+    var details = await cms.GetDetailsAsync(clean, ct);
+    return Results.Ok(details);
 });
 
 // DebtHelper attorney-referral intake store (local SQLite, write-enabled).

@@ -7,7 +7,11 @@ public sealed class NpiLookupDemo : IProjectSource
     public ProjectItem Card => new()
     {
         Title = "NPI Provider Lookup",
-        Summary = "Search the national registry of U.S. healthcare providers by name and state — live against the federal CMS NPI Registry API.",
+        Summary = "A forward take on a clunky federal tool. Search providers live by name and state, then "
+            + "<strong>expand any result</strong> for that provider's Medicare billing and industry payments "
+            + "(CMS Open Payments), each shown with its data year. Plus a <strong>starts-with</strong> name "
+            + "search that still catches <strong>maiden and former names</strong>, practice location over "
+            + "mailing address, and a state picker that rejects bad input.",
         Tags = new[] { "Blazor WASM", "REST API", "Healthcare", "CMS" },
         Kind = "Demo",
         Url = "/demos/npi",
