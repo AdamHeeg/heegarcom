@@ -47,7 +47,7 @@
     }
     else if (rows.Count > 0)
     {
-        <p class="mt-4 text-sm text-muted">@rows.Count result@(rows.Count == 1 ? "" : "s")@(rows.Count == 50 ? " (showing first 50)" : "")</p>
+        <p class="mt-4 text-sm text-muted">@rows.Count result@(rows.Count == 1 ? "" : "s")@(rows.Count == 200 ? " (showing first 200)" : "")</p>
         <div class="mt-3 overflow-x-auto">
             <table class="w-full border-collapse text-left text-sm">
                 <thead>

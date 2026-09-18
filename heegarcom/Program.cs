@@ -128,10 +128,9 @@ app.MapGet("/api/npi/search", async (string? firstName, string? lastName, string
     if (last.Length < 2 && st.Length == 0)
         return Results.Ok(Array.Empty<NpiResult>());
 
-    var query = new List<string> { "version=2.1", "limit=50" };
-    // First name is a "starts with" search: append the CMS wildcard (it needs >=2 chars before the '*').
-    // A 1-char prefix is left off the API call and enforced by the local filter below instead.
-    if (first.Length >= 2) query.Add("first_name=" + Uri.EscapeDataString(first) + "*");
+    // Search the CMS API by last name + state only; first-name matching is done locally (below) so it can
+    // also match a former/other first name, not just the current one.
+    var query = new List<string> { "version=2.1", "limit=200" };
     if (last.Length > 0) query.Add("last_name=" + Uri.EscapeDataString(last));
     if (st.Length > 0) query.Add("state=" + Uri.EscapeDataString(st));
     var url = "https://npiregistry.cms.hhs.gov/api/?" + string.Join("&", query);
@@ -162,7 +161,7 @@ app.MapGet("/api/npi/search", async (string? firstName, string? lastName, string
         var name = "";
         var status = "";
         var also = "";
-        var firstNm = "";
+        var firstMatch = false; // did the typed first name start any of this provider's first names (current or former)?
         if (item.TryGetProperty("basic", out var basic))
         {
             if (isOrg)
@@ -174,29 +173,30 @@ app.MapGet("/api/npi/search", async (string? firstName, string? lastName, string
                 var fn = basic.TryGetProperty("first_name", out var f) ? (f.GetString() ?? "") : "";
                 var ln = basic.TryGetProperty("last_name", out var l) ? (l.GetString() ?? "") : "";
                 var cred = basic.TryGetProperty("credential", out var c) ? (c.GetString() ?? "") : "";
-                firstNm = fn;
                 name = (fn + " " + ln).Trim();
                 if (cred.Length > 0) name += ", " + cred;
 
-                // The CMS API also matches former/other names, so a record can surface under a name that
-                // isn't the current one. If the current name doesn't match what was typed, find the
-                // other_names entry that did and surface it, so the row explains why it appeared.
-                var currentMatches = (last.Length == 0 || ln.StartsWith(last, StringComparison.OrdinalIgnoreCase))
-                                  && (first.Length == 0 || fn.StartsWith(first, StringComparison.OrdinalIgnoreCase));
-                if (!currentMatches && item.TryGetProperty("other_names", out var others) && others.ValueKind == JsonValueKind.Array)
+                // Local first-name "starts with" against the current first name...
+                var currentFirstOk = first.Length == 0 || fn.StartsWith(first, StringComparison.OrdinalIgnoreCase);
+                var currentLastOk = last.Length == 0 || ln.StartsWith(last, StringComparison.OrdinalIgnoreCase);
+                firstMatch = currentFirstOk;
+
+                // ...and also against former/other first names. When the current name isn't what matched,
+                // surface the other_names entry that did, shown the same way as a maiden (former last) name.
+                if (!(currentFirstOk && currentLastOk) && item.TryGetProperty("other_names", out var others) && others.ValueKind == JsonValueKind.Array)
                 {
                     foreach (var o in others.EnumerateArray())
                     {
                         var ofn = o.TryGetProperty("first_name", out var of) ? (of.GetString() ?? "") : "";
                         var oln = o.TryGetProperty("last_name", out var ol) ? (ol.GetString() ?? "") : "";
                         var otype = o.TryGetProperty("type", out var ot) ? (ot.GetString() ?? "") : "";
-                        var oLastOk = last.Length == 0 || oln.StartsWith(last, StringComparison.OrdinalIgnoreCase);
                         var oFirstOk = first.Length == 0 || ofn.StartsWith(first, StringComparison.OrdinalIgnoreCase);
-                        if (oLastOk && oFirstOk)
+                        var oLastOk = last.Length == 0 || oln.StartsWith(last, StringComparison.OrdinalIgnoreCase);
+                        if (oFirstOk) firstMatch = true;
+                        if (also.Length == 0 && oFirstOk && oLastOk)
                         {
                             var full = (ofn + " " + oln).Trim();
                             also = otype.Contains("Former", StringComparison.OrdinalIgnoreCase) ? "formerly " + full : "also " + full;
-                            break;
                         }
                     }
                 }
@@ -205,10 +205,9 @@ app.MapGet("/api/npi/search", async (string? firstName, string? lastName, string
             status = rawStatus == "A" ? "Active" : rawStatus;
         }
 
-        // Enforce a strict "starts with" on the first name the user typed — covers the 1-char case the CMS
-        // wildcard can't, and drops any first-name aliases the API adds. Organizations have no first name,
-        // so a first-name search excludes them.
-        if (first.Length > 0 && !firstNm.StartsWith(first, StringComparison.OrdinalIgnoreCase))
+        // Local first-name filter: if a first name was typed, keep only providers whose current first name
+        // or one of their other/former first names starts with it. (Organizations have no first name.)
+        if (first.Length > 0 && !firstMatch)
             continue;
 
         // Primary taxonomy is the provider's listed specialty; fall back to the first if none is flagged primary.
