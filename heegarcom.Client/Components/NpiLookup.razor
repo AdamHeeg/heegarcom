@@ -1,0 +1,167 @@
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<div class="mx-auto max-w-4xl px-6 pb-24">
+    <div class="grid gap-3 sm:grid-cols-3">
+        <div>
+            <label class="mb-1 block text-xs font-semibold uppercase tracking-widest text-muted">First name</label>
+            <input value="@firstName" @oninput="OnFirst" @onkeydown="OnKey" type="search" autocomplete="off"
+                   placeholder="e.g. John"
+                   class="w-full rounded-md border border-line bg-white px-4 py-3 text-ink shadow-sm outline-none transition-colors focus:border-orange" />
+        </div>
+        <div>
+            <label class="mb-1 block text-xs font-semibold uppercase tracking-widest text-muted">Last name</label>
+            <input value="@lastName" @oninput="OnLast" @onkeydown="OnKey" type="search" autocomplete="off"
+                   placeholder="e.g. Smith"
+                   class="w-full rounded-md border border-line bg-white px-4 py-3 text-ink shadow-sm outline-none transition-colors focus:border-orange" />
+        </div>
+        <div>
+            <label class="mb-1 block text-xs font-semibold uppercase tracking-widest text-muted">State</label>
+            <select value="@stateText" @onchange="OnState"
+                    class="w-full rounded-md border border-line bg-white px-4 py-3 text-ink shadow-sm outline-none transition-colors focus:border-orange">
+                <option value="">Any state</option>
+                @foreach (var s in States)
+                {
+                    <option value="@s.Code">@s.Code &mdash; @s.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <button @onclick="OnSearch" disabled="@(!CanSearch || loading)"
+            class="mt-4 rounded-md bg-orange px-6 py-2.5 text-sm font-medium text-white transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50">
+        Search
+    </button>
+
+    @if (loading)
+    {
+        <p class="mt-4 text-sm text-muted">Searching…</p>
+    }
+    else if (error)
+    {
+        <p class="mt-4 text-sm text-muted">Lookup failed — please try again.</p>
+    }
+    else if (searched && rows.Count == 0)
+    {
+        <p class="mt-4 text-sm text-muted">No matches. Try a last name or a 2-letter state.</p>
+    }
+    else if (rows.Count > 0)
+    {
+        <p class="mt-4 text-sm text-muted">@rows.Count result@(rows.Count == 1 ? "" : "s")@(rows.Count == 50 ? " (showing first 50)" : "")</p>
+        <div class="mt-3 overflow-x-auto">
+            <table class="w-full border-collapse text-left text-sm">
+                <thead>
+                    <tr class="border-b border-line text-xs uppercase tracking-widest text-muted">
+                        <th class="py-2 pr-4">NPI</th>
+                        <th class="py-2 pr-4">Name</th>
+                        <th class="py-2 pr-4">Type</th>
+                        <th class="py-2 pr-4">Primary specialty</th>
+                        <th class="py-2 pr-4">Location</th>
+                        <th class="py-2">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in rows)
+                    {
+                        <tr class="border-b border-line align-top">
+                            <td class="whitespace-nowrap py-2 pr-4 font-mono font-medium text-navy">@r.Npi</td>
+                            <td class="py-2 pr-4 text-ink">
+                                @r.Name
+                                @if (r.Also.Length > 0)
+                                {
+                                    <span class="block text-xs italic text-muted">@r.Also</span>
+                                }
+                            </td>
+                            <td class="whitespace-nowrap py-2 pr-4 text-muted">@r.Type</td>
+                            <td class="py-2 pr-4 text-ink">@r.Specialty</td>
+                            <td class="whitespace-nowrap py-2 pr-4 text-muted">@LocationText(r)</td>
+                            <td class="whitespace-nowrap py-2 text-muted">@r.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private string firstName = "";
+    private string lastName = "";
+    private string stateText = "";
+    private List<NpiRow> rows = new();
+    private bool loading;
+    private bool searched;
+    private bool error;
+
+    private bool CanSearch => lastName.Trim().Length >= 2 || stateText.Trim().Length == 2;
+
+    private void OnFirst(ChangeEventArgs e) => firstName = e.Value?.ToString() ?? "";
+    private void OnLast(ChangeEventArgs e) => lastName = e.Value?.ToString() ?? "";
+    private void OnState(ChangeEventArgs e) => stateText = e.Value?.ToString() ?? "";
+
+    private Task OnKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            return OnSearch();
+        return Task.CompletedTask;
+    }
+
+    private async Task OnSearch()
+    {
+        if (!CanSearch)
+            return;
+
+        loading = true;
+        error = false;
+        StateHasChanged();
+
+        var url = $"api/npi/search?firstName={Uri.EscapeDataString(firstName.Trim())}"
+                + $"&lastName={Uri.EscapeDataString(lastName.Trim())}"
+                + $"&state={Uri.EscapeDataString(stateText.Trim())}";
+
+        try
+        {
+            var found = await Http.GetFromJsonAsync<List<NpiRow>>(url);
+            rows = found ?? new();
+            searched = true;
+        }
+        catch
+        {
+            rows = new();
+            error = true;
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private static string LocationText(NpiRow r)
+    {
+        if (r.City.Length > 0 && r.State.Length > 0)
+            return $"{r.City}, {r.State}";
+        return r.City.Length > 0 ? r.City : r.State;
+    }
+
+    private record NpiRow(string Npi, string Name, string Also, string Type, string Specialty, string City, string State, string Status);
+
+    private static readonly (string Code, string Name)[] States =
+    {
+        ("AL", "Alabama"), ("AK", "Alaska"), ("AZ", "Arizona"), ("AR", "Arkansas"),
+        ("CA", "California"), ("CO", "Colorado"), ("CT", "Connecticut"), ("DE", "Delaware"),
+        ("FL", "Florida"), ("GA", "Georgia"), ("HI", "Hawaii"), ("ID", "Idaho"),
+        ("IL", "Illinois"), ("IN", "Indiana"), ("IA", "Iowa"), ("KS", "Kansas"),
+        ("KY", "Kentucky"), ("LA", "Louisiana"), ("ME", "Maine"), ("MD", "Maryland"),
+        ("MA", "Massachusetts"), ("MI", "Michigan"), ("MN", "Minnesota"), ("MS", "Mississippi"),
+        ("MO", "Missouri"), ("MT", "Montana"), ("NE", "Nebraska"), ("NV", "Nevada"),
+        ("NH", "New Hampshire"), ("NJ", "New Jersey"), ("NM", "New Mexico"), ("NY", "New York"),
+        ("NC", "North Carolina"), ("ND", "North Dakota"), ("OH", "Ohio"), ("OK", "Oklahoma"),
+        ("OR", "Oregon"), ("PA", "Pennsylvania"), ("RI", "Rhode Island"), ("SC", "South Carolina"),
+        ("SD", "South Dakota"), ("TN", "Tennessee"), ("TX", "Texas"), ("UT", "Utah"),
+        ("VT", "Vermont"), ("VA", "Virginia"), ("WA", "Washington"), ("WV", "West Virginia"),
+        ("WI", "Wisconsin"), ("WY", "Wyoming"), ("DC", "District of Columbia"),
+        ("PR", "Puerto Rico"), ("VI", "U.S. Virgin Islands"), ("GU", "Guam"),
+        ("AS", "American Samoa"), ("MP", "Northern Mariana Islands"),
+    };
+}

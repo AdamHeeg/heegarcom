@@ -1,0 +1,20 @@
+@page "/demos/npi"
+@using heegarcom.Client.Components
+
+<PageTitle>NPI Provider Lookup — Adam Heeg</PageTitle>
+
+<section class="mx-auto max-w-4xl px-6 pt-20 pb-8 sm:pt-24">
+    <p class="text-sm font-medium uppercase tracking-widest text-orange">Live demo</p>
+    <h1 class="mt-4 text-4xl font-bold tracking-tight text-navy">NPI Provider Lookup</h1>
+    <div class="mt-6 h-1 w-16 rounded-full bg-orange"></div>
+    <p class="mt-8 text-lg leading-relaxed text-muted">
+        Search the national registry of U.S. healthcare providers by name and state. Enter a last name
+        or a 2-letter state (both narrows it), then Search. Results run live through this site, which
+        proxies the federal CMS registry server-side.
+    </p>
+    <p class="mt-2 text-xs text-muted">
+        Data from the CMS National Plan &amp; Provider Enumeration System (NPPES) NPI Registry API.
+    </p>
+</section>
+
+<NpiLookup @rendermode="@(new InteractiveWebAssemblyRenderMode(prerender: false))" />
