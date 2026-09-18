@@ -25,6 +25,11 @@ tools/tailwindcss.exe
 *.db-shm
 *.db-wal
 
+## OIG LEIE exclusion cache — downloaded and built at runtime (see ExclusionService)
+leie.db
+leie_new.db
+leie_download.csv
+
 ## OS
 Thumbs.db
 .DS_Store

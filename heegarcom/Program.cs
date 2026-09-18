@@ -41,9 +41,12 @@ builder.Services.AddRateLimiter(options =>
 // Used by the NPI lookup endpoints to call the external CMS registry server-side (via IHttpClientFactory).
 builder.Services.AddHttpClient();
 
-// Resolves + queries the Medicare and Open Payments datasets by NPI. Singleton so the resolved dataset
-// IDs and data year are cached across requests (see CmsProviderService).
+// Resolves + queries the CMS provider datasets (Part D, Open Payments, Care Compare) by NPI. Singleton so
+// resolved dataset IDs and data years are cached across requests (see CmsProviderService).
 builder.Services.AddSingleton<CmsProviderService>();
+
+// OIG LEIE exclusion check. Singleton so the imported list and its refresh state persist across requests.
+builder.Services.AddSingleton<ExclusionService>();
 
 var app = builder.Build();
 
@@ -257,16 +260,22 @@ app.MapGet("/api/npi/search", async (string? firstName, string? lastName, string
     return Results.Ok(results);
 });
 
-// Per-provider detail for the search expander: Medicare billing + Open Payments industry payments,
-// fetched by NPI server-side. Returns both sections (each null when the provider has no record).
-app.MapGet("/api/npi/details", async (string? npi, CmsProviderService cms, CancellationToken ct) =>
+// Per-provider detail for the search expander: OIG exclusion check plus Care Compare profile/affiliations,
+// Part D prescribing, Open Payments industry payments, and MIPS — all by NPI, server-side. Each section
+// reports its own success/empty/failure state.
+app.MapGet("/api/npi/details", async (string? npi, CmsProviderService cms, ExclusionService exclusions, CancellationToken ct) =>
 {
     var clean = (npi ?? "").Trim();
     if (clean.Length != 10 || !clean.All(char.IsDigit))
-        return Results.Ok(new ProviderDetails(null, false, null, false));
+        return Results.Ok(new ProviderDetails(
+            new ExclusionResult("unavailable", null, null),
+            new CmsSections(null, false, Array.Empty<string>(), false, null, false, null, false, null, false)));
 
-    var details = await cms.GetDetailsAsync(clean, ct);
-    return Results.Ok(details);
+    var sectionsTask = cms.GetDetailsAsync(clean, ct);
+    var exclusionTask = exclusions.CheckAsync(clean, ct);
+    await Task.WhenAll(sectionsTask, exclusionTask);
+
+    return Results.Ok(new ProviderDetails(exclusionTask.Result, sectionsTask.Result));
 });
 
 // DebtHelper attorney-referral intake store (local SQLite, write-enabled).
@@ -526,6 +535,9 @@ static void AddColumnIfMissing(SqliteConnection conn, string table, string colum
 record MapRow(string IcdCode, string IcdDescription, string SnomedId, string SnomedTerm);
 
 record NpiResult(string Npi, string Name, string Also, string Type, string Specialty, string City, string State, string Status);
+
+// Composite returned by /api/npi/details: the OIG exclusion check plus the CMS-sourced sections.
+record ProviderDetails(ExclusionResult Exclusion, CmsSections Cms);
 
 record ReferralSubmission(
     string? AttyName, string? Firm, string? AttyEmail, string? AttyPhone,
