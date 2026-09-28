@@ -45,6 +45,10 @@ public sealed class CmsProviderService
     private static readonly TimeSpan FetchTimeout = TimeSpan.FromSeconds(30);
     private static readonly TimeSpan ResolveTimeout = TimeSpan.FromSeconds(30);
 
+    // openpaymentsdata.cms.gov's WAF returns 403 to requests with no User-Agent or a browser-like
+    // ("Mozilla/...") one, but allows a plain tool UA. data.cms.gov and provider-data accept it too.
+    private const string UserAgent = "heegarcom/1.0 (+https://heegar.com)";
+
     private readonly IHttpClientFactory _httpFactory;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private Resolved? _resolved;
@@ -55,6 +59,7 @@ public sealed class CmsProviderService
     public async Task<CmsSections> GetDetailsAsync(string npi, CancellationToken ct)
     {
         var client = _httpFactory.CreateClient();
+        client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
         var r = await EnsureResolvedAsync(client, ct);
 
         var profileTask = FetchProfileAsync(client, r, npi, ct);
