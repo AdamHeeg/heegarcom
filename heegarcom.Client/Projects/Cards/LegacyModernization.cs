@@ -17,7 +17,7 @@ public sealed class LegacyModernization : IProjectSource
         {
             new MetricItem { Value = "10+ yrs", Label = "continuous ownership" },
             new MetricItem { Value = "6", Label = "framework jumps" },
-            new MetricItem { Value = "0", Label = "big-bang rewrites" },
+            new MetricItem { Value = "Zero", Label = "hours client downtime" },
         },
         Visual = "version-trail",
     };
