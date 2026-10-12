@@ -11,6 +11,8 @@
     <ProjectReference Include="..\heegarcom.Client\heegarcom.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.5" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
+    <!-- Override the bundled native SQLite to fix CVE-2025-6965. -->
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
   </ItemGroup>
 
   <!-- Terminology SQLite DB — copied to output/publish, queried server-side only
